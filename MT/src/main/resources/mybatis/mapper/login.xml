@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="loginMapper">
+<select id="login" resultType="userDto">
+SELECT *
+  FROM UUSER
+ WHERE ID = #{id}
+   AND PASSWORD = #{password}
+</select>
+<select id="searchId" resultType="userDto">
+SELECT *
+  FROM UUSER
+ WHERE ID = #{id}
+</select>
+<select id="findId" resultType="String">
+SELECT ID
+  FROM UUSER
+ WHERE NAME = #{name}
+   AND PHONE = #{phone}
+</select>
+
+<select id="idChk" resultType="int">
+SELECT count(*) 
+  FROM UUSER
+ WHERE ID = #{id}
+</select>
+
+<insert id="signup"  parameterType="UserDTO">
+INSERT INTO UUSER
+(NAME,ID,PASSWORD,PHONE,BIRTH,GENDER,EMAIL)
+VALUE
+(#{name},#{id},#{password},#{phone},#{birth},#{gender},#{email})
+</insert>
+
+<update id="loginLog">
+UPDATE UUSER
+   SET DATELOG = SYSDATE
+ WHERE ID=#{id}
+</update>
+
+
+<select id="nickNameCheck" resultType="int">
+SELECT count(*) 
+  FROM UUSER
+ WHERE NICKNAME = #{nickName}
+</select>
+
+
+</mapper>

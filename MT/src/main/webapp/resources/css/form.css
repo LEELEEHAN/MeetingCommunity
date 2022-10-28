@@ -1,0 +1,168 @@
+@charset "UTF-8";
+
+.small-form {
+	width: 480px;
+	margin: 0 auto;
+}
+
+.normal-form {
+	width: 960px;
+	margin: 0 auto;
+}
+
+.large-form {
+	width: 1260px;
+	margin: 0 auto;
+}
+
+.input-form {
+	margin: 0.5rem 0;
+	position: relative;
+	overflow: visible;
+}
+
+.image-form.left {
+	padding: 0.5rem;
+	float: left;
+}
+
+.image-form .image-360 {
+	display: inline-block;
+	width: 360px;
+	height: 360px;
+}
+
+.input-form.wide .input-label,
+.input-form.wide .input-text,
+.input-form.wide .select-form {
+	display: block;
+	margin: 0.4rem 0;
+	width: 100%;
+}
+
+.input-form.inline {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: nowrap;
+}
+
+.input-form.inline .input-form {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: stretch;
+	margin-left: 1rem;
+	flex: 1 1 auto;
+}
+
+.input-form.inline .input-text,
+.input-form.inline .select-form {
+	flex: 1;
+}
+
+.input-form.inline .input-label,
+.input-form.inline .input-text,
+.input-form.inline .select-form {
+	display: inline-block;
+	align-self: baseline;
+}
+
+.input-text,
+.select-form {
+	padding: 0.4rem 0.8rem;
+	border: 1px solid gray;
+	outline-style: none;
+	border-radius: 4px;
+}
+
+.input-text:hover,
+.input-text:focus {
+	border: 1px solid #66BFBF;
+}
+
+.input-label-error {
+	color: #FF0063
+}
+
+.input-label-ok {
+	color: #66BFBF;
+}
+
+.btn {
+	padding: 0.4rem 0.8rem;
+	border: none;
+	background-color: transparent;
+}
+
+.btn:hover {
+	border: none;
+	background-color: transparent;
+	color: #66BFBF;
+	cursor: pointer;
+}
+
+.btn-outline {
+	border: 1px solid gray;
+	border-radius: 4px;
+}
+
+.btn-outline:hover,
+.btn-outline:focus {
+	outline-style: none;
+	border: 1px solid #66BFBF;
+	color: #66BFBF;
+}
+
+.btn-ok {
+	color: #66BFBF;
+	border-color: #66BFBF;
+	background-color: white;
+}
+
+.btn-ok:hover,
+.btn-ok:focus {
+	color: white;
+	border-color: #66BFBF;
+	background-color: #66BFBF;
+}
+
+.btn-cancel {
+	color: #FF0063;
+	border-color: #FF0063;
+	background-color: white;
+}
+
+.btn-cancel:hover,
+.btn-cancel:focus {
+	color: white;
+	border-color: #FF0063;
+	background-color: #FF0063;
+}
+
+.btn:active {
+	position: relative;
+	left: 1px; top: 1px;
+}
+
+.btn-icon {
+	padding: 0.2rem;
+	font-family: "Material Symbols Outlined";
+}
+
+.form-left {
+	text-align: left;
+	float: left;
+}
+
+.form-right {
+	text-align: right;
+	float: right;
+}
+
+.w-100 {
+	width: 100px;
+}
+
+.w-auto {
+	width: 100%;
+}

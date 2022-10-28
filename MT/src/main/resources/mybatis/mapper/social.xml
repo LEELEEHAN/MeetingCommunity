@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="socialMapper">
+<select id="getSocial" resultType="socialDto">
+SELECT *
+  FROM SOCIAL s
+  JOIN SOCIALMEMBER m
+    ON s.SOCIALNUM = m.SOCIALNUM
+ WHERE m.AUTH ='M'
+   AND s.SOCIALCLUB = 'S'
+ <if test='category != null'>
+ 	AND s.CATEGORY = #{category}
+ </if>
+</select>
+
+
+<select id="getSocialTitle" resultType="socialDto">
+SELECT *
+  FROM SOCIAL s
+  JOIN SOCIALMEMBER m
+    ON s.SOCIALNUM = m.SOCIALNUM
+ WHERE m.AUTH ='M'
+   AND s.SOCIALCLUB = 'S'
+ <if test='title != null'>
+ 	AND lower(s.title) LIKE ('%'||#{title}||'%')
+ </if>
+</select>
+
+
+<select id="getSocialMemberCountSocial" resultType="_int">
+SELECT COUNT(SOCIALNUM) AS REAL
+  FROM SOCIALMEMBER
+ WHERE SOCIALNUM = #{socialNum}
+ GROUP BY SOCIALNUM 
+</select>
+
+
+<select id="getSocialMemberCount" resultType="socialDynamicDto">
+SELECT COUNT(SOCIALNUM) AS REAL
+,SOCIALNUM
+  FROM SOCIALMEMBER
+ GROUP BY SOCIALNUM 
+</select>
+
+		
+<select id="getCategory" resultType="category">
+SELECT *
+FROM CATEGORY
+</select>	
+
+
+<select id="getReal" resultType="socialDto">
+SELECT COUNT(SOCIALNUM),SOCIALNUM
+  FROM SOCIALMEMBER
+ GROUP BY SOCIALNUM 
+</select>
+
+
+<select id="getDetail" resultType="socialDto">
+SELECT *
+  FROM SOCIAL s
+  JOIN SOCIALMEMBER m
+    ON s.SOCIALNUM = m.SOCIALNUM
+ WHERE m.AUTH ='M'
+   AND s.SOCIALNUM = #{socialNum}
+</select>
+
+
+<select id="getMemberList" resultType="socialMemberDto">
+SELECT NICKNAME, AUTH
+  FROM SOCIALMEMBER
+ WHERE SOCIALNUM = #{socialNum}
+</select>
+
+
+<select id="getNum" resultType="_int">
+SELECT SOCIAL_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="createSocial" parameterType="Map">
+INSERT INTO SOCIAL (SOCIALNUM,CATEGORY,TITLE,CONTENTS,MAXIMUM,SOCIALCLUB)
+VALUES(#{socialNum},#{category},#{title},#{contents},#{maximum},'S')
+</insert>
+
+
+<insert id="createSocialMaster" parameterType="socialVo">
+INSERT INTO SOCIALMEMBER
+VALUES(#{socialNum},#{id},#{nickName},'M')
+</insert>
+
+<delete id ="deleteSocial">
+DELETE SOCIAL
+WHERE SOCIALNUM = #{socialNum}
+</delete>
+
+<update id="modifySocial" parameterType="socialVo">
+UPDATE SOCIAL 
+   SET CATEGORY =#{category}
+      ,TITLE = #{title}
+      ,CONTENTS = #{contents}
+      ,MAXIMUM = #{maximum}
+ WHERE SOCIALNUM = #{socialNum}
+</update>
+
+
+<update id="entrustMaster" parameterType="socialMemberDto">
+UPDATE SOCIALMEMBER
+   SET AUTH ='M'
+ WHERE SOCIALNUM = #{socialNum}
+   AND NICKNAME = #{nickName}
+</update>
+
+<update id="entrustUser" parameterType="socialMemberDto">
+UPDATE SOCIALMEMBER
+   SET AUTH ='U'
+ WHERE SOCIALNUM = #{socialNum}
+   AND AUTH ='M'
+</update>
+
+<delete id="outcast" parameterType="socialMemberDto">
+DELETE SOCIALMEMBER
+ WHERE SOCIALNUM = #{socialNum}
+   AND NICKNAME = #{nickName}
+</delete>
+
+<insert id="join" parameterType="socialMemberDto">
+INSERT INTO SOCIALMEMBER (SOCIALNUM,NICKNAME,ID,AUTH) 
+VALUES(#{socialNum},#{nickName},#{id},'U')
+</insert>
+</mapper>

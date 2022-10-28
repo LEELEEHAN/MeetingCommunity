@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+.paging {
+	margin: 0.5rem 0;
+	display: block;
+}
+
+.paging ul.page,
+.paging ol.page {
+	list-style-type: none;
+	margin-block-start: 0;
+	margin-block-end: 0;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	padding-inline-start: 0;
+}
+
+.page {
+	display: flex;
+}
+
+.page.left {
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.page.center {
+	justify-content: center;
+	align-items: center;
+}
+
+.page.right {
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.page .page-item {
+	display: inline-block;
+	border-left: 1px solid #FF0063;
+	border-right: 1px solid #FF0063;
+}
+
+.page .page-item:first-child {
+	border-left: none;
+}
+
+.page .page-item:last-child {
+	border-right: none;
+}
+
+.page .page-item .page-link {
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	text-decoration: none;
+	font-size: 1rem;
+	color: #FF0063;
+}
+
+.page .page-item .page-link:hover,
+.page .page-item .page-link.active {
+	background-color: #FF0063;
+	color: white;
+}
+
+.page .page-item .page-link:visited {
+	color: #66BFBF;
+}
+
+
+.page .page-item .page-link.disabled {
+	color: #EAF6F6;
+	cursor: default;
+}
+
+.page .page-item .page-link.disabled:hover {
+	color: #EAF6F6;
+	background-color: white;
+}
+

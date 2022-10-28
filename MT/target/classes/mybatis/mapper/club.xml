@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="clubMapper">
+<select id="getClub" resultType="clubDto">
+SELECT *
+  FROM SOCIAL s
+  JOIN SOCIALMEMBER m
+    ON s.socialNum = m.socialNum
+ WHERE m.AUTH ='M'
+   AND s.SOCIALCLUB = 'C'
+ <if test='category != null'>
+ 	AND s.CATEGORY = #{category}
+ </if>
+</select>
+
+
+<select id="getClubTitle" resultType="clubDto">
+SELECT *
+  FROM SOCIAL s
+  JOIN SOCIALMEMBER m
+    ON s.socialNum = m.socialNum
+ WHERE m.AUTH ='M'
+   AND s.SOCIALCLUB = 'C'
+ <if test='title != null'>
+ 	AND lower(s.title) LIKE ('%'||#{title}||'%')
+ </if>
+</select>
+
+
+<select id="getClubMemberCountClub" resultType="_int">
+SELECT COUNT(SOCIALNUM) AS REAL
+  FROM SOCIALMEMBER
+ WHERE SOCIALNUM = #{socialNum}
+ GROUP BY SOCIALNUM 
+</select>
+
+
+<select id="getClubMemberCount" resultType="socialDynamicDto">
+SELECT COUNT(socialNum) AS REAL
+,socialNum
+  FROM SOCIALMEMBER
+ GROUP BY socialNum 
+</select>
+
+		
+<select id="getCategory" resultType="category">
+SELECT *
+FROM CATEGORY
+</select>	
+
+
+<select id="getReal" resultType="socialDto">
+SELECT COUNT(SOCIALNUM),SOCIALNUM
+  FROM SOCIALMEMBER
+ GROUP BY SOCIALNUM 
+</select>
+
+
+<select id="getDetail" resultType="clubDto">
+SELECT *
+  FROM SOCIAL s
+  JOIN SOCIALMEMBER m
+    ON s.socialNum = m.socialNum
+ WHERE m.AUTH ='M'
+   AND s.socialNum = #{socialNum}
+</select>
+
+
+<select id="getMemberList" resultType="clubMemberDto">
+SELECT NICKNAME, AUTH
+  FROM SOCIALMEMBER
+ WHERE socialNum = #{socialNum}
+</select>
+
+
+<select id="getNum" resultType="_int">
+SELECT SOCIAL_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="createClub" parameterType="Map">
+INSERT INTO SOCIAL (socialNum,CATEGORY,TITLE,CONTENTS,SOCIALCLUB)
+VALUES(#{socialNum},#{category},#{title},#{contents},'C')
+</insert>
+
+
+<insert id="createClubMaster" parameterType="clubVo">
+INSERT INTO SOCIALMEMBER
+VALUES(#{socialNum},#{id},#{nickName},'M')
+</insert>
+
+<delete id ="deleteClub">
+DELETE SOCIAL
+WHERE socialNum = #{socialNum}
+</delete>
+
+<update id="modifyClub" parameterType="clubVo">
+UPDATE SOCIAL 
+   SET CATEGORY =#{category}
+      ,TITLE = #{title}
+      ,CONTENTS = #{contents}
+      ,MAXIMUM = #{maximum}
+ WHERE socialNum = #{socialNum}
+</update>
+
+
+<update id="entrustMaster" parameterType="clubMemberDto">
+UPDATE SOCIALMEMBER
+   SET AUTH ='M'
+ WHERE socialNum = #{socialNum}
+   AND NICKNAME = #{nickName}
+</update>
+
+<update id="entrustUser" parameterType="clubMemberDto">
+UPDATE SOCIALMEMBER
+   SET AUTH ='U'
+ WHERE socialNum = #{socialNum}
+   AND AUTH ='M'
+</update>
+
+<delete id="outcast" parameterType="clubMemberDto">
+DELETE SOCIALMEMBER
+ WHERE socialNum = #{socialNum}
+   AND NICKNAME = #{nickName}
+</delete>
+
+<insert id="join" parameterType="clubMemberDto">
+INSERT INTO SOCIALMEMBER (socialNum,NICKNAME,ID,AUTH) 
+VALUES(#{socialNum},#{nickName},#{id},'U')
+</insert>
+
+<select id ="clubList" resultType="int">
+SELECT m.SOCIALNUM
+  FROM SOCIALMEMBER m
+ LEFT JOIN SOCIAL s
+    ON m.SOCIALNUM = s.SOCIALNUM
+ WHERE m.ID =#{id}  
+    AND SOCIALCLUB= 'C'
+</select>
+
+<select id ="joinChk" resultType="int">
+SELECT SOCIALNUM
+  FROM SOCIALMEMBER
+ WHERE ID =#{id}
+   AND socialNum = #{socialNum}
+</select>
+</mapper>

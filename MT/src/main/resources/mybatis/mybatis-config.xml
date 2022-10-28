@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.han.mt.social.model.SocialDTO" alias="socialDto" />
+		<typeAlias type="com.han.mt.social.model.FieldCategory" alias="category" />
+		<typeAlias type="com.han.mt.social.model.SocialDynamicDTO" alias="socialDynamicDto" />
+		<typeAlias type="com.han.mt.social.model.SocialVO" alias="socialVo" />
+		<typeAlias type="com.han.mt.social.model.SocialMemberDTO" alias="socialMemberDto" />
+		<typeAlias type="com.han.mt.user.model.UserDTO" alias="userDto" />
+		<typeAlias type="com.han.mt.club.model.ClubDTO" alias="clubDto" />
+		<typeAlias type="com.han.mt.club.model.ClubDynamicDTO" alias="clubDynamicDto" />
+		<typeAlias type="com.han.mt.club.model.ClubVO" alias="clubVo" />
+		<typeAlias type="com.han.mt.club.model.ClubMemberDTO" alias="clubMemberDto" />
+	</typeAliases>
+</configuration>
