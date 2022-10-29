@@ -1,5 +1,7 @@
 package com.han.mt.login.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,27 +31,41 @@ public class LoginController {
 	
 	@GetMapping(value="/login")
 	public String login (HttpSession session) {	
+		System.out.println("컨트롤러(login) : 로그인 메서드 실행");
 		return"user/login";		
 	}
 	
 	@PostMapping(value="/login")
 	public String login(Model model,LoginVO vo,
 			HttpSession session)  throws Exception{	
-		System.out.println(vo);
+		System.out.println("로그인 jsp에서 받은 vo값 :" + vo);
+
 		int result = service.getLogin(vo,session);
 		switch(result) {
+
+		case 1:
+			System.out.println("로그인 성공" );
+
+			return"home";
 		case 2:
-            model.addAttribute("msg","해당계정을 확인해주세요");
+			System.out.println("로그인 실패 비밀번호 틀림" );
+            model.addAttribute("msg","다시 로그인 시도를 해주세요");
+    		return"user/login";		
 		case 3:
-            model.addAttribute("msg","올바르지않은 패스워드입니다");
+			System.out.println("로그인 실패 해당 아이디없음" );
+            model.addAttribute("msg","계정을 확인해주세요");
+    		return"user/login";		
 		case 4:	
+			System.out.println("로그인 성공 닉네임 설정이동" );
 			return"user/userDetail";
 		}
 		return"home";
-		
+
 	}
 	@GetMapping(value="/login/logout")
 	public String logout(HttpSession session) {
+
+		System.out.println("로그아웃" );
 		session.removeAttribute("loginData");
 		return "redirect:/";
 	}
@@ -60,12 +76,15 @@ public class LoginController {
 	}
 	
 	@PostMapping(value="/login/findId")
-	public String findId(@ModelAttribute UserDTO DTO
+	public String findId(@ModelAttribute UserDTO dto
 			,Model model,HttpSession session) throws Exception {
-		boolean result = service.findId(session,DTO);
+		System.out.println("아이디찾기 jsp에서 받은 DTO값 :" + dto);
+		List result = service.findId(session,dto);
 		
+		model.addAttribute("List",result);
 		return "user/findId";
 	}
+	
 	@GetMapping(value="/sign")
 	public String Signup(HttpSession session) {
 		return "user/signup";
@@ -94,9 +113,9 @@ public class LoginController {
 	@PostMapping(value="/nickNameCheck")
 	@ResponseBody
 	public int nickNameCheck(@ModelAttribute UserDTO dto) throws Exception{
-		System.out.println(dto);
+		System.out.println("컨트롤러(nickNameCheck) : 받은 값 "+dto);
 		int result = service.nickNameCheck(dto);
-		System.out.println(result);
+		System.out.println("중복확인 값");
  
 		return result;
 	}

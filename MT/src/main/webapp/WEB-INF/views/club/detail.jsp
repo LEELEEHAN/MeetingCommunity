@@ -92,7 +92,8 @@
 			</button>
 		</form>
 	</div>
-	<c:if test="${not empty sessionScope.loginData.nickName}">			<div>
+	<c:if test="${not empty sessionScope.loginData.nickName}">
+	<c:if test="${empty chk}">
 		<div>
 			<form action="./join" method="post">
 				<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
@@ -101,6 +102,7 @@
 				<button type="submit">참가신청</button>
 			</form>
 		</div>
+	</c:if>
 	</c:if>
 	<!-- 모달 삭제 -->
 	<div class="modal fade" id="removeModal" tabindex="-1"

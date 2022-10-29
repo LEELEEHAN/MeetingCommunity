@@ -16,51 +16,57 @@ public class LogintService {
 
 	@Autowired
 	private LoginDAO dao;
-	
+	 
 	public int getLogin(LoginVO vo, HttpSession session) throws Exception {
 		int result = 1; 
-		List<UserDTO> data = dao.login(vo);
-		if(data.isEmpty()) {
-			boolean SearchId = dao.SearchId(vo.getId());
-			if(SearchId) {
+		System.out.println("서비스(getLogin) : 로그인 메서드 실행");
+		boolean result2 = dao.login(vo);
+		if(result2) {
+			UserDTO data = dao.getLogin(vo); 
+			dao.loginLog(data);
+			System.out.println("서비스(getLogin) : 로그인 로그 저장");
+			if(data.getNickName()==null) { 
+				result=4; // 닉네임설정을 안했다
+			}
+			System.out.println("서비스(getLogin) : 아이디를 찾아 세션에 정보 저장");
+			session.setAttribute("loginData", data);
+			session.setAttribute("loginId", data.getId());
+			
+		} else {
+			boolean searchId = dao.searchId(vo.getId());
+			System.out.println(searchId);
+			System.out.println("서비스(getLogin) : 로그인 실패 원인을 찾음");
+
+			if(searchId) {
 				result = 2; // 2를 리턴시키면 아이디가 존재한다
 			} else {
 				result = 3; // 3를 리턴시키면 아이디가 존재하지않는다
 			}
-		} else {
-			dao.loginLog(data.get(0));
-			if(data.get(0).getNickName()==null) {
-				result=4; // 닉네임설정을 안했다
-			}
-			session.setAttribute("loginData", data.get(0));
-			session.setAttribute("loginId", data.get(0).getId());
 		}
 		return result; 
 	}
 
-	public boolean findId(HttpSession session, UserDTO dTO) throws Exception {
-		String id = dao.findId(dTO);
-		
-		if(id==null) {
-			session.setAttribute("findIdResult", "실패");
-			return false;
+	public List<String> findId(HttpSession session, UserDTO dto) throws Exception {
+		List idList = dao.findId(dto);
+
+		if(idList.isEmpty()) {
+			System.out.println("아이디 조회실패 세션저장");
+			session.setAttribute("findIdResult", "해당계정이 없습니다");
 		} else {
-			session.setAttribute("findIdResult", "성공");
-			session.setAttribute("id", id);
-			return true;	
+			System.out.println("받은 값으로 조회결과"+idList);
 		}
-		
+		return idList;	
 		
 	}
 
-	public int idChk(UserDTO dto) throws Exception{
-		int result = dao.idChk(dto);
+	public boolean idChk(UserDTO dto) throws Exception{
+		boolean result = dao.nickNameCheck(dto);
 		return result;
 	}
-	public int nickNameCheck(UserDTO dto) throws Exception{
-		int result = dao.nickNameCheck(dto);
+	public boolean nickNameCheck(UserDTO dto) throws Exception{
+		boolean result = dao.nickNameCheck(dto);
 		return result;
-	}
+	} 
 
 	public boolean signup(UserDTO dto, HttpSession session) throws Exception{
 		boolean signup = dao.signup(dto);
@@ -68,7 +74,7 @@ public class LogintService {
 			LoginVO vo = new LoginVO();
 			vo.setId(dto.getId());
 			vo.setPassword(dto.getPassword());
-			List<UserDTO> data = dao.login(vo);
+			UserDTO data = dao.getLogin(vo);
 			session.setAttribute("loginData", data);
 		}
 		return signup;

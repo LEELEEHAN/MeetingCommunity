@@ -107,9 +107,11 @@ public class ClubService {
 	}
 	public boolean joinChk(String loginId, int id) {
 		ClubVO vo =new ClubVO();
-		
+		vo.setId(loginId);
+		vo.setSocialNum(id);
+		System.out.println(vo);
 		boolean result = dao.joinChk(vo);
-		return false;
+		return result;
 	}
 		
 	

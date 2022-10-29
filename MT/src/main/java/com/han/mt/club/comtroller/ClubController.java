@@ -58,8 +58,12 @@ public class ClubController {
 	
 //		model.addAttribute("clubList",service.cluList(loginId));
 		
-		boolean chk= service.joinChk(loginId,id);
 		
+		
+		boolean chk = service.joinChk(loginId,id);
+		if(chk) {
+			model.addAttribute("chk","true");
+		}
 		model.addAttribute("detail", service.getDetail(id));
 		model.addAttribute("real",service.getReal(id));
 		model.addAttribute("memberList",service.getMember(id));

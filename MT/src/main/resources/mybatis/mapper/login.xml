@@ -9,7 +9,7 @@ SELECT *
    AND PASSWORD = #{password}
 </select>
 <select id="searchId" resultType="userDto">
-SELECT *
+SELECT ID
   FROM UUSER
  WHERE ID = #{id}
 </select>

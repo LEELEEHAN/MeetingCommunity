@@ -18,27 +18,40 @@ public class LoginDAO {
 	private String mapper = "loginMapper.%s";
 
 
-	public List<UserDTO> login(LoginVO vo) throws Exception{
+	public boolean login(LoginVO vo) throws Exception{
 		String mapperId =String.format(mapper,"login");
-		List<UserDTO> data = session.selectList(mapperId,vo);	
+		List<UserDTO> data = session.selectList(mapperId,vo);
+		boolean resutl;
+		if(data.isEmpty()) {
+			resutl = false;
+		}else {
+			resutl =true;
+		}
+
+		return resutl;
+	}
+	
+	public UserDTO getLogin(LoginVO vo) throws Exception{
+		String mapperId =String.format(mapper,"login");
+		UserDTO data = session.selectOne(mapperId,vo);
 		return data;
 	}
 
 	
-	public boolean SearchId(String id) {
+	public boolean searchId(String id) {
 
-		String mapperId =String.format(mapper,"SearchId");
-		UserDTO data = session.selectOne(mapperId,id);
-		if(data==null) {
+		String mapperId =String.format(mapper,"searchId");
+		List<UserDTO> data = session.selectList(mapperId,id);
+		if(data.isEmpty()) {
 			return false;
 		}
 			
 		return true;
 	}
 
-	public String findId(UserDTO dto) throws Exception{
+	public List<String> findId(UserDTO dto) throws Exception{
 		String mapperId =String.format(mapper,"findId");
-		String data = session.selectOne(mapperId,dto);
+		List<String> data = session.selectList(mapperId,dto);
 		return data;
 
 	}
@@ -63,9 +76,13 @@ public class LoginDAO {
 		
 	}
 
-	public int nickNameCheck(UserDTO dto) throws Exception{
+	public boolean nickNameCheck(UserDTO dto) throws Exception{
 		String mapperId =String.format(mapper,"nickNameCheck");
-		int result = session.selectOne(mapperId,dto);
+		boolean result =false;
+		List<String> nick= session.selectList(mapperId,dto);
+		if(nick.isEmpty()) {
+			result = true;
+		}
 		return result;
 	}
 	

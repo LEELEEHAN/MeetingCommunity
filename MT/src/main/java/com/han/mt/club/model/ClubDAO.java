@@ -121,13 +121,21 @@ public class ClubDAO {
 		List<Integer> real = session.selectList(mapperId,id);
 		System.out.println(real);
 		return real;
-	}
+	} 
 	
-	public boolean joinChk(ClubVO vo) {
+	public boolean joinChk(ClubVO vo) { 
 		String mapperId =String.format(mapper,"joinChk");
-		int resutl =session.selectOne(mapperId,vo);
+		List<ClubVO> data = session.selectList(mapperId,vo);  
 		
-		return resutl == 1? true:false;
+		System.out.println(data); 
+		boolean re =true;
+		if(data == null) {
+			re = false;
+		}else {
+			re=true;
+		}
+			
+		return re;
 	}
 
 }
