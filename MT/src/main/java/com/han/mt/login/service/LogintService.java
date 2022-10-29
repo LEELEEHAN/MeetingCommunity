@@ -59,12 +59,16 @@ public class LogintService {
 		
 	}
 
-	public boolean idChk(UserDTO dto) throws Exception{
-		boolean result = dao.nickNameCheck(dto);
+	public boolean idChk(UserDTO dto
+			, HttpSession session) throws Exception{
+		boolean result = dao.idChk(dto);
+		session.setAttribute("idCheckResult", result);
 		return result;
 	}
-	public boolean nickNameCheck(UserDTO dto) throws Exception{
+	public boolean nickNameCheck(UserDTO dto
+			, HttpSession session) throws Exception{
 		boolean result = dao.nickNameCheck(dto);
+		session.setAttribute("nickCheckResult", result);
 		return result;
 	} 
 

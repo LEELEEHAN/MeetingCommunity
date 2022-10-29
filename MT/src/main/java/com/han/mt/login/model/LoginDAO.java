@@ -39,13 +39,11 @@ public class LoginDAO {
 
 	
 	public boolean searchId(String id) {
-
 		String mapperId =String.format(mapper,"searchId");
 		List<UserDTO> data = session.selectList(mapperId,id);
 		if(data.isEmpty()) {
 			return false;
-		}
-			
+		}			
 		return true;
 	}
 
@@ -53,12 +51,15 @@ public class LoginDAO {
 		String mapperId =String.format(mapper,"findId");
 		List<String> data = session.selectList(mapperId,dto);
 		return data;
-
 	}
 
-	public int idChk(UserDTO dto) throws Exception{
+	public boolean idChk(UserDTO dto) throws Exception{
 		String mapperId =String.format(mapper,"idChk");
-		int result = session.selectOne(mapperId,dto);
+		boolean result =false;
+		List<String> idChk= session.selectList(mapperId,dto);
+		if(idChk.isEmpty()) {
+			result = true;
+		}
 		return result;
 	}
 

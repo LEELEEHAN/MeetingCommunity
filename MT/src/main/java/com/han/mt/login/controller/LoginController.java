@@ -93,10 +93,11 @@ public class LoginController {
 	
 	@PostMapping(value="/idChk")
 	@ResponseBody
-	public int idChk(@ModelAttribute UserDTO dto) throws Exception{
-		System.out.println(dto);
-		int result = service.idChk(dto);
-		System.out.println(result);
+	public boolean idChk(@ModelAttribute UserDTO dto
+			,HttpSession session) throws Exception{
+		System.out.println("컨트롤러(idChk) : 받은 값 "+dto);
+		boolean result = service.idChk(dto,session);
+		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);
  
 		return result;
 	}
@@ -112,11 +113,12 @@ public class LoginController {
 
 	@PostMapping(value="/nickNameCheck")
 	@ResponseBody
-	public int nickNameCheck(@ModelAttribute UserDTO dto) throws Exception{
+	public boolean nickNameCheck(@ModelAttribute UserDTO dto,
+			HttpSession session) throws Exception{
 		System.out.println("컨트롤러(nickNameCheck) : 받은 값 "+dto);
-		int result = service.nickNameCheck(dto);
-		System.out.println("중복확인 값");
- 
+		boolean result = service.nickNameCheck(dto,session);
+		System.out.println("컨트롤러(nickNameCheck) : 중복확인 결과"+result);
+
 		return result;
 	}
 	@PostMapping(value="/userDetail")
