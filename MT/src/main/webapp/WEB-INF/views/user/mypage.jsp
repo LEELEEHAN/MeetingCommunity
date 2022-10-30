@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <html>
-<head> 
+<head>    
 
 <c:url var="bs5" value="/static/bs5" /> 
 <c:url var="jQuery" value="/static/js" />
