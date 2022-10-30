@@ -4,37 +4,37 @@
 <mapper namespace ="loginMapper">
 <select id="login" resultType="userDto">
 SELECT *
-  FROM UUSER
+  FROM USERTABLE
  WHERE ID = #{id}
    AND PASSWORD = #{password}
 </select>
 <select id="searchId" resultType="userDto">
 SELECT ID
-  FROM UUSER
+  FROM USERTABLE
  WHERE ID = #{id}
 </select>
 <select id="findId" resultType="String">
 SELECT ID
-  FROM UUSER
+  FROM USERTABLE
  WHERE NAME = #{name}
    AND PHONE = #{phone}
 </select>
 
 <select id="idChk" resultType="int">
 SELECT count(*) 
-  FROM UUSER
+  FROM USERTABLE
  WHERE ID = #{id}
 </select>
 
 <insert id="signup"  parameterType="UserDTO">
-INSERT INTO UUSER
+INSERT INTO USERTABLE
 (NAME,ID,PASSWORD,PHONE,BIRTH,GENDER,EMAIL)
-VALUE
+VALUES
 (#{name},#{id},#{password},#{phone},#{birth},#{gender},#{email})
 </insert>
 
 <update id="loginLog">
-UPDATE UUSER
+UPDATE USERTABLE
    SET DATELOG = SYSDATE
  WHERE ID=#{id}
 </update>
@@ -42,9 +42,22 @@ UPDATE UUSER
 
 <select id="nickNameCheck" resultType="int">
 SELECT count(*) 
-  FROM UUSER
+  FROM USERTABLE
  WHERE NICKNAME = #{nickName}
 </select>
+
+<update id="setNickName">
+UPDATE USERTABLE
+   SET NICKNAME = #{nickName}
+ WHERE ID=#{id}
+</update>
+
+<insert id="imageToDB">
+
+</insert>
+<update id="imageToProfile">
+
+</update>
 
 
 </mapper>

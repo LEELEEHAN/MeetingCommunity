@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.han.mt.login.model.LoginDAO;
 import com.han.mt.login.model.LoginVO;
@@ -82,6 +83,24 @@ public class LogintService {
 			session.setAttribute("loginData", data);
 		}
 		return signup;
+	}
+
+	public boolean setNickName(UserDTO dto
+			,@SessionAttribute("loginData") UserDTO user
+			,HttpSession session
+) throws Exception {
+		boolean result = dao.nickNameCheck(dto);
+		boolean setNickName;
+		if(result ==false) {			
+			setNickName = dao.setNickName(dto);
+			System.out.println("서비스(setNickName) 닉네임 설정결과 :" +setNickName);
+		user.setNickName(dto.getNickName());
+		session.setAttribute("loginData", user);
+
+		} else {
+			setNickName= true;
+		}
+		return setNickName;
 	}
 
 	

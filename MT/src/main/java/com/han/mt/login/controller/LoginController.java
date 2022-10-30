@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.han.mt.login.model.LoginVO;
 import com.han.mt.login.service.LogintService;
@@ -49,11 +50,11 @@ public class LoginController {
 			return"home";
 		case 2:
 			System.out.println("로그인 실패 비밀번호 틀림" );
-            model.addAttribute("msg","다시 로그인 시도를 해주세요");
+            model.addAttribute("loginMsg","다시 로그인 시도를 해주세요");
     		return"user/login";		
 		case 3:
 			System.out.println("로그인 실패 해당 아이디없음" );
-            model.addAttribute("msg","계정을 확인해주세요");
+            model.addAttribute("loginMsg","계정을 확인해주세요");
     		return"user/login";		
 		case 4:	
 			System.out.println("로그인 성공 닉네임 설정이동" );
@@ -105,10 +106,11 @@ public class LoginController {
 	public String Signup(HttpSession session,
 			@ModelAttribute UserDTO dto
 			)throws Exception{
-		System.out.println(dto);
+		System.out.println("회원 가입jsp에서 받은 값 : "+ dto);
 		boolean signup = service.signup(dto,session);
+		System.out.println("회원 가입 결과: "+signup);
 
-		return "user/signup";
+		return "user/userDetail";
 	} 
 
 	@PostMapping(value="/nickNameCheck")
@@ -123,12 +125,19 @@ public class LoginController {
 	}
 	@PostMapping(value="/userDetail")
 	public String userDetail(HttpSession session,
+			@SessionAttribute("loginData") UserDTO user,
 			@ModelAttribute UserDTO dto
 			)throws Exception{
-		System.out.println(dto);
-		boolean signup = service.signup(dto,session);
-
-		return "user/signup";
+		
+		dto.setId(user.getId());
+		
+		System.out.println("닉네임 설정창에서 받은 정보 :"+dto);
+		boolean signup = service.setNickName(dto,user,session);
+		if(signup) {
+			session.setAttribute("error","사용중인 닉네임입니다.");
+			return "redirect:/";
+		}
+		return "home";
 	} 
 	
 }

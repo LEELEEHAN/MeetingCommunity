@@ -49,7 +49,7 @@
 	</div>
 </header>
 <section>
-	<div>
+	<div class="" form="">
 		<p>${detail.contents}</p>
 	</div>
 	<c:if test="${not empty memberList}">
@@ -104,6 +104,22 @@
 		</div>
 	</c:if>
 	</c:if>
+	
+	<c:if test="${not empty chk}">
+		<div>
+			<form action="./board" method="post">
+			    <input type="hidden" name="${detail.socialNum}">
+				<button type="submit" name="자유">자유게시판</button>
+				<button type="submit" name="질문">질문게시판</button>
+				<button type="submit" name="정보">정보게피산</button>
+				<button type="submit" name="인증">인증게시판</button>
+			</form>
+		</div>
+	</c:if>
+	
+	
+	
+	
 	<!-- 모달 삭제 -->
 	<div class="modal fade" id="removeModal" tabindex="-1"
 			aria-hidden="true">

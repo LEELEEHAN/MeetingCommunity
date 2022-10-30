@@ -7,6 +7,8 @@ SELECT *
   FROM SOCIAL s
   JOIN SOCIALMEMBER m
     ON s.SOCIALNUM = m.SOCIALNUM
+  JOIN USERTABLE u
+    ON m.ID = u.ID
  WHERE m.AUTH ='M'
    AND s.SOCIALCLUB = 'S'
  <if test='category != null'>
@@ -62,14 +64,18 @@ SELECT *
   FROM SOCIAL s
   JOIN SOCIALMEMBER m
     ON s.SOCIALNUM = m.SOCIALNUM
+  JOIN USERTABLE u
+    ON m.ID = u.ID
  WHERE m.AUTH ='M'
    AND s.SOCIALNUM = #{socialNum}
 </select>
 
 
 <select id="getMemberList" resultType="socialMemberDto">
-SELECT NICKNAME, AUTH
-  FROM SOCIALMEMBER
+SELECT s.NICKNAME, m.AUTH
+  FROM SOCIALMEMBER m
+  JOIN USERTABLE s
+    ON m.ID = s.ID
  WHERE SOCIALNUM = #{socialNum}
 </select>
 
@@ -86,7 +92,7 @@ VALUES(#{socialNum},#{category},#{title},#{contents},#{maximum},'S')
 
 <insert id="createSocialMaster" parameterType="socialVo">
 INSERT INTO SOCIALMEMBER
-VALUES(#{socialNum},#{id},#{nickName},'M')
+VALUES(#{socialNum},#{id},'M')
 </insert>
 
 <delete id ="deleteSocial">
@@ -108,7 +114,7 @@ UPDATE SOCIAL
 UPDATE SOCIALMEMBER
    SET AUTH ='M'
  WHERE SOCIALNUM = #{socialNum}
-   AND NICKNAME = #{nickName}
+   AND ID = #{id}
 </update>
 
 <update id="entrustUser" parameterType="socialMemberDto">
@@ -121,11 +127,11 @@ UPDATE SOCIALMEMBER
 <delete id="outcast" parameterType="socialMemberDto">
 DELETE SOCIALMEMBER
  WHERE SOCIALNUM = #{socialNum}
-   AND NICKNAME = #{nickName}
+   AND ID = #{id}
 </delete>
 
 <insert id="join" parameterType="socialMemberDto">
-INSERT INTO SOCIALMEMBER (SOCIALNUM,NICKNAME,ID,AUTH) 
-VALUES(#{socialNum},#{nickName},#{id},'U')
+INSERT INTO SOCIALMEMBER (SOCIALNUM,ID,AUTH) 
+VALUES(#{socialNum},#{id},'U')
 </insert>
 </mapper>

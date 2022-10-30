@@ -71,7 +71,7 @@
 									<c:if test="${real.socialNum eq list.socialNum}">
 										${real.real}
 									</c:if>
-								</c:forEach>
+								</c:forEach> 
 								/${list.maximum}
 							  </th>
                               <td style="text-align: center;border:1px solid #dddddd" rowspan="3"> ${list.category}</td>

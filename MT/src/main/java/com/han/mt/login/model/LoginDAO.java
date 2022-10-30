@@ -66,25 +66,33 @@ public class LoginDAO {
 	public boolean signup(UserDTO dto) {
 		String mapperId =String.format(mapper,"signup");
 		int result = session.insert(mapperId,dto);
-		
 		return result == 1? true: false;
 	}
 
 	public void loginLog(UserDTO data) {
 		String mapperId =String.format(mapper,"loginLog");
-		session.update(mapperId,data);
-		
-		
+		session.update(mapperId,data);		
 	}
 
 	public boolean nickNameCheck(UserDTO dto) throws Exception{
 		String mapperId =String.format(mapper,"nickNameCheck");
-		boolean result =false;
-		List<String> nick= session.selectList(mapperId,dto);
+		boolean result;
+		List<UserDTO> nick= session.selectList(mapperId,dto);
 		if(nick.isEmpty()) {
 			result = true;
+		}else {
+			result = false;
 		}
+		System.out.println("DAO(nickNameCheck) 중복닉네임 조회결과 :" +result);
 		return result;
+	}
+
+	public boolean setNickName(UserDTO dto) {
+		String mapperId =String.format(mapper,"setNickName");
+		int result = session.update(mapperId,dto);
+		System.out.println("DAO(setNickName) 닉네임 설정결과 :" +result);
+
+		return result==1?true:false;
 	}
 	
 	
