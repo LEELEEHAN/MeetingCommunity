@@ -22,6 +22,8 @@ SELECT *
   FROM SOCIAL s
   JOIN SOCIALMEMBER m
     ON s.socialNum = m.socialNum
+  JOIN USERTABLE u
+    ON m.ID = u.ID
  WHERE m.AUTH ='M'
    AND s.SOCIALCLUB = 'C'
  <if test='title != null'>
@@ -60,7 +62,8 @@ SELECT COUNT(SOCIALNUM),SOCIALNUM
 
 
 <select id="getDetail" resultType="clubDto">
-SELECT *
+SELECT s.SOCIALNUM,s.CATEGORY
+       ,s.TITLE,s.CONTENTS,s.SOCIALIMAGE,s.MAXIMUM,u.ID,u.NICKNAME
   FROM SOCIAL s
   JOIN SOCIALMEMBER m
     ON s.socialNum = m.socialNum

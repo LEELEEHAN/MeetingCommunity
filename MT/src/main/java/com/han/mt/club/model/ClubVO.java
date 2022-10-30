@@ -63,7 +63,7 @@ public class ClubVO {
 	public String toString() {
 		return "ClubVO [id=" + id + ", category=" + category + ", socialNum=" + socialNum + ", title=" + title
 				+ ", contents=" + contents + ", content=" + content + ", socialImage=" + socialImage + ", nickName="
-				+ nickName + "]";
+				+ nickName + "]"+"\n";
 	}
 
 }

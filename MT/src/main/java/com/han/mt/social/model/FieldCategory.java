@@ -23,7 +23,7 @@ public class FieldCategory {
 
 	@Override
 	public String toString() {
-		return "FieldCategory [category=" + category + ", real=" + real + "]";
+		return "FieldCategory [category=" + category + ", real=" + real + "]"+"\n";
 	}
 
 }

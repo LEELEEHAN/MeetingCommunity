@@ -38,22 +38,24 @@
     </header>
     <section>
         <div class="socialSearchBar">
-        <form method="get">
-            <div class="col-xs-8">
-	            <input type="text" id="social-search" class="form-searchBar" name="search">
-	            <button type="submit" id="btnSearch" class="btn btn=primary">찾기</button>
-    		</div>        
-        </form>
-        <form action="./social/create" method="get">
-    		<div class="col-xs-2">
-				<input type="hidden" name="nickName" value="${sessionScope.nickName}">
-				<input type="hidden" name="id" value="${sessionScope.id}">
-	           	<button type="submit" id="create-button" class="createButton" 
-	           	onclick="location.href='./social/create'">  
-	        	 	만들기
-	        	 </button>           
-    		</div>     
-        </form>
+	        <form method="get">
+	            <div class="col-xs-8">
+		            <input type="text" id="social-search" class="form-searchBar" name="search">
+		            <button type="submit" id="btnSearch" class="btn btn=primary">찾기</button>
+	    		</div>        
+	        </form>
+			<c:if test="${not empty sessionScope.loginData}">
+		        <form action="./social/create" method="get">
+		    		<div class="col-xs-2">
+						<input type="hidden" name="nickName" value="${sessionScope.nickName}">
+						<input type="hidden" name="id" value="${sessionScope.id}">
+			           	<button type="submit" id="create-button" class="createButton" 
+			           	onclick="location.href='./social/create'">  
+			        	 	만들기
+			        	 </button>           
+		    		</div>     
+		        </form>
+	        </c:if>
         </div>
         <div>
             <table style="text-align: center;border:1px solid #dddddd">

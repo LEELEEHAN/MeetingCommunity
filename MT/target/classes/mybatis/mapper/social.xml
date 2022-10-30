@@ -22,6 +22,8 @@ SELECT *
   FROM SOCIAL s
   JOIN SOCIALMEMBER m
     ON s.SOCIALNUM = m.SOCIALNUM
+  JOIN USERTABLE u
+    ON m.ID = u.ID
  WHERE m.AUTH ='M'
    AND s.SOCIALCLUB = 'S'
  <if test='title != null'>
@@ -72,7 +74,7 @@ SELECT *
 
 
 <select id="getMemberList" resultType="socialMemberDto">
-SELECT s.NICKNAME, m.AUTH
+SELECT s.NICKNAME, m.AUTH, m.ID
   FROM SOCIALMEMBER m
   JOIN USERTABLE s
     ON m.ID = s.ID
@@ -134,4 +136,11 @@ DELETE SOCIALMEMBER
 INSERT INTO SOCIALMEMBER (SOCIALNUM,ID,AUTH) 
 VALUES(#{socialNum},#{id},'U')
 </insert>
+
+<select id ="joinChk" resultType="int">
+SELECT SOCIALNUM
+  FROM SOCIALMEMBER
+ WHERE ID =#{id}
+   AND socialNum = #{socialNum}
+</select>
 </mapper>

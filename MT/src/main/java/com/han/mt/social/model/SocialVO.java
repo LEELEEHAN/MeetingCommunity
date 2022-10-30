@@ -63,7 +63,7 @@ public class SocialVO {
 	public String toString() {
 		return "SocialVO [id=" + id + ", socialNum=" + socialNum + ", category=" + category + ", title=" + title
 				+ ", contents=" + contents + ", maximum=" + maximum + ", socialImage=" + socialImage + ", nickName="
-				+ nickName + "]";
+				+ nickName + "]"+"\n";
 	}
 	
 }

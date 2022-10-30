@@ -42,7 +42,7 @@ public class SocialMemberDTO {
 	@Override
 	public String toString() {
 		return "SocialMemberDTO [socialNum=" + socialNum + ", id=" + id + ", nickName=" + nickName + ", profile="
-				+ profile + ", auth=" + auth + "]";
+				+ profile + ", auth=" + auth + "]"+"\n";
 	}
 	
 	

@@ -39,9 +39,6 @@ public class SocialController {
 	public String getSocial(Model model,HttpSession session,
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false) String search) {
-
-		System.out.println(category);
-		System.out.println(search);
 		
 		
 		if(search == null) {
@@ -59,8 +56,14 @@ public class SocialController {
 	@GetMapping(value = "/detail")
 	public String socialDetail(Model model,HttpSession session,
 			@RequestParam(required = false) int id) {
-
 		
+		String loginId = (String) session.getAttribute("loginId");
+		System.out.println("컨트롤러(getdetail)"+"\n"+service.getDetail(id));
+
+		boolean chk = service.joinChk(loginId,id);
+		if(chk) {
+			model.addAttribute("chk","true");
+		}
 		model.addAttribute("detail", service.getDetail(id));
 		model.addAttribute("real",service.getReal(id));
 		model.addAttribute("memberList",service.getMember(id));
@@ -76,7 +79,7 @@ public class SocialController {
 			@ModelAttribute SocialVO vo) {
 
 		System.out.println(user);
-		System.out.println("겟 크리에이트 브이오"+vo);
+		System.out.println("겟 크리에이트 브이오"+"\n"+vo);
 		model.addAttribute("field",service.getCategory());
 		return "social/create";
 	}
@@ -91,8 +94,8 @@ public class SocialController {
 		vo.setNickName(user.getNickName());
 
 		
-		System.out.println("포스트 크리에이트 브이오"+vo);
-		System.out.println("포스트 크리에이트 유저"+user);
+		System.out.println("포스트 크리에이트 브이오"+"\n"+vo);
+		System.out.println("포스트 크리에이트 유저"+"\n"+user);
 
 		
 
@@ -163,7 +166,7 @@ public class SocialController {
 	}
 	@PostMapping(value="/entrust")
 	public String entrust(@ModelAttribute SocialVO vo) {
-		System.out.println(vo); 
+		System.out.println("컨트롤러(entrust) 받은 값"+vo); 
 		service.entrust(vo);
 
 		return "redirect:/social/detail?id=" + vo.getSocialNum();

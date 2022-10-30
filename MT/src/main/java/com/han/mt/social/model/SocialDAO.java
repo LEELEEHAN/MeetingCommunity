@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.han.mt.club.model.ClubVO;
 import com.han.mt.user.model.UserDTO;
 
 @Repository
@@ -110,6 +111,21 @@ public class SocialDAO {
 		String mapperId =String.format(mapper,"join");
 		session.insert(mapperId,vo);	
 
+	}
+	public boolean joinChk(ClubVO vo) { 
+		String mapperId =String.format(mapper,"joinChk");
+		List<ClubVO> data = session.selectList(mapperId,vo);
+		System.out.println("DAO(joinChk) 내가 가입했나 결과 받은 값: "+data);  
+		
+		boolean re;
+		if(data.isEmpty()) {
+			re = false;
+		}else {
+			re=true;
+		}
+		System.out.println("DAO(joinChk) 내가 가입했나 결과 받은 값: "+re); 
+			
+		return re;
 	}
 	
 }

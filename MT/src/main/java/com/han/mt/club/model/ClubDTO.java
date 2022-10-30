@@ -10,9 +10,16 @@ public class ClubDTO {
 	private int maximum;
 	private String socialImage;
 	private String nickName;
+	private String id;
 	
 	
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public int getMaximum() {
 		return maximum;
 	}
@@ -63,8 +70,8 @@ public class ClubDTO {
 	}
 	@Override
 	public String toString() {
-		return "ClubDTO [socialNum=" + socialNum + ", category=" + category + ", title=" + title + ", contents="
-				+ contents + ", content=" + content + ", socialImage=" + socialImage + ", nickName=" + nickName + "]";
+		return "ClubDTO [id=" + id +"socialNum=" + socialNum + ", category=" + category + ", title=" + title + ", contents="
+				+ contents + ", content=" + content + ", socialImage=" + socialImage + ", nickName=" + nickName + "]"+"\n";
 	}
 
 	

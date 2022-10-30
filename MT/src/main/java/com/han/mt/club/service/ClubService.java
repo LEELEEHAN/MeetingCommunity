@@ -25,48 +25,31 @@ public class ClubService {
 	
 	public List<ClubDTO> getClub(String category){
 		List<ClubDTO> Club = dao.getClub(category);
-		System.out.println("서비스(getClub) 받은 값:"+Club);
+		System.out.println("서비스(getClub) 받은 값:"+"\n"+Club);
 
 		return Club;
 	}
 	public List<ClubDTO> getClubTitle(String title){
 		List<ClubDTO> Club = dao.getClubTitle(title);
-		System.out.println("서비스(getClubTitle) 받은 값:"+Club);
+		System.out.println("서비스(getClubTitle) 받은 값:"+"\n"+Club);
 
 		return Club;
-	}
-	public List<FieldCategory> getCategory() {// 네비 카테고리 출력
-		List<FieldCategory> category = dao.getCategory();
-		System.out.println("서비스(getCategory) 받은 값:"+category);
-		return category;
-	}
-
-	public List<SocialDynamicDTO> getReal() {
-		List<SocialDynamicDTO> real = dao.getReal();	
-		System.out.println("서비스(getReal) 받은 값:"+real);	
-		return real;
-	}
-
-	public int getReal(int socialNum) {
-		int real = dao.getReal(socialNum);		
-		System.out.println("서비스(getReal) 받은 값:"+real);	
-		return real;
 	}
 
 	public ClubDTO getDetail(int socialNum) {
 		ClubDTO detail = dao.getDetail(socialNum);
-		System.out.println("서비스(getDetail) 받은 값:"+detail);	
+		System.out.println("서비스(getDetail) 받은 값:"+"\n"+detail);	
 		return detail;
 	}
 
 	public List<ClubMemberDTO> getMember(int socialNum) {
 		List<ClubMemberDTO> memberList = dao.getMemberList(socialNum);
-		System.out.println("서비스(getMember) 받은 값:"+memberList);	
+		System.out.println("서비스(getMember) 받은 값:"+"\n"+memberList);	
 		return memberList;
 	}
 	public int getSocialNum() {
 		int num = dao.getNum();
-		System.out.println("서비스(getSocialNum) 받은 값:"+num);	
+		System.out.println("서비스(getSocialNum) 받은 값:"+"\n"+num);	
 		return num;
 	}
 	public int createClub(ClubVO vo) {

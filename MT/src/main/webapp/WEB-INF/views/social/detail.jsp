@@ -36,7 +36,7 @@
 				<td colspan="2">master : ${detail.nickName}
 					<div>
 						<c:if test="${real >1}">
-							<c:if test="${sessionScope.nickName eq detail.nickName}">
+							<c:if test="${sessionScope.loginData.id eq detail.id}">
 								<button type="button" data-bs-toggle="modal" data-bs-target="#entrustModal">
 									권한넘기기
 								</button>
@@ -56,17 +56,17 @@
 		<c:forEach items="${memberList}" var="memberList">
 			<tr>
 				<td >${memberList.nickName}				
-					<c:if test="${sessionScope.nickName eq detail.nickName}">
+					<c:if test="${sessionScope.loginData.id eq detail.id}">
 						<c:if test="${memberList.nickName ne detail.nickName}">
 							<form action="./outcast" method="post">	
-								<input type="hidden" name="nickName" value="${memberList.nickName}">
+								<input type="hidden" name="id" value="${memberList.id}">
 								<input type="hidden" name="socialNum" value="${detail.socialNum}">
 								<input type="hidden" name="auth" value="outcast">
 								
 								<button type="submit">추방</button>
 							</form>
 							<form action="./entrust" method="post">
-								<input type="hidden" name="nickName" value="${memberList.nickName}">
+								<input type="hidden" name="id" value="${memberList.id}">
 								<input type="hidden" name="socialNum" value="${detail.socialNum}">
 								<input type="hidden" name="auth" value="entrust">
 								
@@ -92,16 +92,18 @@
 			</button>
 		</form>
 	</div>
-	<c:if test="${not empty sessionScope.loginData.nickName}">
+	<c:if test="${not empty sessionScope.loginData}">
 		<c:if test="${real < detail.maximum}">	
-			<div>
-				<form action="./join" method="post">
-					<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
-					<input type="hidden" name="id" value="${sessionScope.loginData.id}">
-					<input type="hidden" name="socialNum" value="${detail.socialNum}">
-					<button type="submit">참가신청</button>
-				</form>
-			</div>
+			<c:if test="${empty chk}">
+				<div>
+					<form action="./join" method="post">
+						<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
+						<input type="hidden" name="id" value="${sessionScope.loginData.id}">
+						<input type="hidden" name="socialNum" value="${detail.socialNum}">
+						<button type="submit">참가신청</button>
+					</form>
+				</div>
+			</c:if>
 		</c:if>
 	</c:if>
 	<!-- 모달 삭제 -->

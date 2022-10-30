@@ -67,13 +67,13 @@
 					return false;
 				}
 			
-				/* var idChkVal = $("#idChk").val();
+				 var idChkVal = $("#idChk").val();
 				if(idChkVal == "Y"){
 					alert("중복확인 버튼을 눌러주세요.");
 					return false;
 				}else if(idChkVal == "N"){
 					return true;
-				} */
+				} 
 			});
 		})
 		
@@ -81,12 +81,11 @@
 			$.ajax({
 				url : "./idChk",
 				type : "POST",
-				dataType : "json",
 				data : {
 					id : $("#id").val()
 					},
 				success : function(data){
-					alert("실행",data);
+					alert("실행",data.result);
 					if(data == 1){
 						$("#idChk").attr("value", "N");
 						alert("중복된 아이디입니다.");

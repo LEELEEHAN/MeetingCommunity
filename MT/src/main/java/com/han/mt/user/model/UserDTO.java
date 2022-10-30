@@ -108,7 +108,7 @@ public class UserDTO {
 		return "UserDTO [id=" + id + ", password=" + password + ", name=" + name + ", nickName=" + nickName + ", birth="
 				+ birth + ", phone=" + phone + ", email=" + email + ", gender=" + gender + ", hidden=" + hidden
 				+ ", deleted=" + deleted + ", deleteDate=" + deleteDate + ", dateLog=" + dateLog + ", mannerPoint="
-				+ mannerPoint + ", profile=" + profile + "]";
+				+ mannerPoint + ", profile=" + profile + "]"+"\n";
 	}
 	
 	

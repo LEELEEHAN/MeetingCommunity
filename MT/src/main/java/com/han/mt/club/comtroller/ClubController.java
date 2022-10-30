@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.han.mt.club.model.ClubDTO;
 import com.han.mt.club.model.ClubVO;
 import com.han.mt.club.service.ClubService;
+import com.han.mt.social.service.SocialService;
 import com.han.mt.user.model.UserDTO;
 
 
@@ -29,6 +30,8 @@ public class ClubController {
 
 	@Autowired
 	private ClubService service;
+	@Autowired
+	private SocialService socialService;
 	
 	@GetMapping(value = "")
 	public String getClub(Model model,HttpSession session,
@@ -45,8 +48,8 @@ public class ClubController {
 			model.addAttribute("list",service.getClubTitle(search));
 		}
 		
-		model.addAttribute("field",service.getCategory());
-		model.addAttribute("real",service.getReal());
+		model.addAttribute("field",socialService.getCategory());
+		model.addAttribute("real",socialService.getReal());
 		return "club/social";
 	}
 	
@@ -65,8 +68,8 @@ public class ClubController {
 			model.addAttribute("chk","true");
 		}
 		model.addAttribute("detail", service.getDetail(id));
-		model.addAttribute("real",service.getReal(id));
-		model.addAttribute("memberList",service.getMember(id));
+		model.addAttribute("real",socialService.getReal(id));
+		model.addAttribute("memberList",socialService.getMember(id));
 		return"club/detail";
 	}
 	
@@ -80,7 +83,7 @@ public class ClubController {
 
 		System.out.println(user);
 		System.out.println("겟 크리에이트 브이오"+vo);
-		model.addAttribute("field",service.getCategory());
+		model.addAttribute("field",socialService.getCategory());
 		return "club/create";
 	}
 	
@@ -146,7 +149,7 @@ public class ClubController {
 	public String modify(Model model
 			,@RequestParam int id) {
 		
-		model.addAttribute("field",service.getCategory());
+		model.addAttribute("field",socialService.getCategory());
 		model.addAttribute("detail",service.getDetail(id));
 		
 		return "social/modify";

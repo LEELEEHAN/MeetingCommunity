@@ -1,6 +1,8 @@
 package com.han.mt.login.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -94,13 +96,15 @@ public class LoginController {
 	
 	@PostMapping(value="/idChk")
 	@ResponseBody
-	public boolean idChk(@ModelAttribute UserDTO dto
+	public Map<String, Object> idChk(@ModelAttribute UserDTO dto
 			,HttpSession session) throws Exception{
 		System.out.println("컨트롤러(idChk) : 받은 값 "+dto);
 		boolean result = service.idChk(dto,session);
 		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);
- 
-		return result;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("result", result);
+		System.out.println(map);
+		return map;
 	}
 	@PostMapping(value="/sign")
 	public String Signup(HttpSession session,
