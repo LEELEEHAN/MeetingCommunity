@@ -18,16 +18,16 @@
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<li>
-							<a class="dropdown-item" href="./social">소셜</a>
+							<a class="dropdown-item" href="${mainUrl}/social">소셜</a>
 						</li>
 						<li>
-							<a class="dropdown-item" href="./club">클럽</a>
+							<a class="dropdown-item" href="${mainUrl}/club">클럽</a>
 						</li>
 						<li>
-							<a class="dropdown-item" href="../login">로그인</a>
+							<a class="dropdown-item" href="${mainUrl}/login">로그인</a>
 						</li>
 						<li>
-							<a class="dropdown-item" href="./mypage">마이페이지</a>
+							<a class="dropdown-item" href="${mainUrl}/mypage">마이페이지</a>
 						</li>
 					</ul>
 				</li>

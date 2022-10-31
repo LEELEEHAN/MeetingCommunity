@@ -8,6 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<%@ include file="../module/nav.jsp"%>
 <c:url var="bs5" value="/static/bs5" />
 <c:url var="jQuery" value="/static/js" />
 <link rel="stylesheet" type="text/css" href="${bs5}/css/bootstrap.min.css">

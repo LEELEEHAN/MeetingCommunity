@@ -29,7 +29,7 @@
 				}
 				if($("#id").val()==""){
 					alert("아이디를 입력해주세요.");
-					$("#userid").focus();
+					$("#id").focus();
 					return false;
 				}
 				if($("#password").val()==""){
@@ -68,33 +68,41 @@
 				}
 			
 				 var idChkVal = $("#idChk").val();
-				if(idChkVal == "Y"){
+				if(idChkVal == "N"){
 					alert("중복확인 버튼을 눌러주세요.");
 					return false;
-				}else if(idChkVal == "N"){
+				}else if(idChkVal == "Y"){
 					return true;
 				} 
+				
 			});
 		})
 		
 		function fn_idChk(){
-			$.ajax({
-				url : "./idChk",
-				type : "POST",
-				data : {
-					id : $("#id").val()
-					},
-				success : function(data){
-					alert("실행",data.result);
-					if(data == 1){
-						$("#idChk").attr("value", "N");
-						alert("중복된 아이디입니다.");
-					}else if(data == 0){
-						$("#idChk").attr("value", "Y");
-						alert("사용가능한 아이디입니다.");
-					}
+
+			if($("#id").val()==""){
+				alert("아이디를 입력해주세요.");
+				$("#id").focus();
+				return false;
 				}
-			})
+			if($("#id").val()!=""){
+				$.ajax({
+					url : "./idChk",
+					type : "POST",
+					data : {
+						id : $("#id").val()
+						},
+					success : function(data){
+						if(data != 1){
+							$("#idChk").attr("value", "N");
+							alert("중복된 아이디입니다.");
+						}else if(data == 1){
+							$("#idChk").attr("value", "Y");
+							alert("사용가능한 아이디입니다.");
+						}
+					}
+				})
+			}
 		}
 	</script>
 </head>

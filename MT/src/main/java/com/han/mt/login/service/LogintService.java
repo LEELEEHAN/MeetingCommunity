@@ -27,21 +27,21 @@ public class LogintService {
 			dao.loginLog(data);
 			System.out.println("서비스(getLogin) : 로그인 로그 저장");
 			if(data.getNickName()==null) { 
-				result=4; // 닉네임설정을 안했다
+				result=4; // �땳�꽕�엫�꽕�젙�쓣 �븞�뻽�떎
 			}
-			System.out.println("서비스(getLogin) : 아이디를 찾아 세션에 정보 저장");
+			System.out.println("서비스(getLogin) : 아이디를 찾아 세션에 정보저장");
 			session.setAttribute("loginData", data);
 			session.setAttribute("loginId", data.getId());
 			
 		} else {
 			boolean searchId = dao.searchId(vo.getId());
 			System.out.println(searchId);
-			System.out.println("서비스(getLogin) : 로그인 실패 원인을 찾음");
+			System.out.println("서비스(getLogin) : 로그인 실패 원인 찾음");
 
 			if(searchId) {
-				result = 2; // 2를 리턴시키면 아이디가 존재한다
+				result = 2; // 2, 아이디는 존재
 			} else {
-				result = 3; // 3를 리턴시키면 아이디가 존재하지않는다
+				result = 3;  // 3, 아이디가 존재하질 않음
 			}
 		}
 		return result; 
@@ -51,7 +51,7 @@ public class LogintService {
 		List idList = dao.findId(dto);
 
 		if(idList.isEmpty()) {
-			System.out.println("아이디 조회실패 세션저장");
+			System.out.println("아이디 조회 실패 세션저장");
 			session.setAttribute("findIdResult", "해당계정이 없습니다");
 		} else {
 			System.out.println("받은 값으로 조회결과"+idList);
@@ -60,17 +60,31 @@ public class LogintService {
 		
 	}
 
-	public boolean idChk(UserDTO dto
+	public int idChk(UserDTO dto
 			, HttpSession session) throws Exception{
+		int chek;
 		boolean result = dao.idChk(dto);
+		System.out.println("서비스(idChk) 아이디 중복 확인 결과:"+result);
 		session.setAttribute("idCheckResult", result);
-		return result;
+		if(result) {
+			chek =1;
+		} else {
+			chek=0;
+		}
+		return chek;
 	}
-	public boolean nickNameCheck(UserDTO dto
+	public int nickNameCheck(UserDTO dto
 			, HttpSession session) throws Exception{
+		int chek;
 		boolean result = dao.nickNameCheck(dto);
+		System.out.println("서비스(nickNameCheck) 닉네임 중복 확인 결과:"+result);
 		session.setAttribute("nickCheckResult", result);
-		return result;
+		if(result) {
+			chek =1;
+		} else {
+			chek=0;
+		}
+		return chek;
 	} 
 
 	public boolean signup(UserDTO dto, HttpSession session) throws Exception{

@@ -25,31 +25,31 @@ public class ClubService {
 	
 	public List<ClubDTO> getClub(String category){
 		List<ClubDTO> Club = dao.getClub(category);
-		System.out.println("ì„œë¹„ìŠ¤(getClub) ë°›ì€ ê°’:"+"\n"+Club);
+		System.out.println("¼­ºñ½º(getClub) ¹ŞÀº°ª:"+"\n"+Club);
 
 		return Club;
 	}
 	public List<ClubDTO> getClubTitle(String title){
 		List<ClubDTO> Club = dao.getClubTitle(title);
-		System.out.println("ì„œë¹„ìŠ¤(getClubTitle) ë°›ì€ ê°’:"+"\n"+Club);
+		System.out.println("¼­ºñ½º(getClubTitle) ¹ŞÀº°ª:"+"\n"+Club);
 
 		return Club;
 	}
 
 	public ClubDTO getDetail(int socialNum) {
 		ClubDTO detail = dao.getDetail(socialNum);
-		System.out.println("ì„œë¹„ìŠ¤(getDetail) ë°›ì€ ê°’:"+"\n"+detail);	
+		System.out.println("¼­ºñ½º(getDetail) ¹ŞÀº°ª:"+"\n"+detail);	
 		return detail;
 	}
 
 	public List<ClubMemberDTO> getMember(int socialNum) {
 		List<ClubMemberDTO> memberList = dao.getMemberList(socialNum);
-		System.out.println("ì„œë¹„ìŠ¤(getMember) ë°›ì€ ê°’:"+"\n"+memberList);	
+		System.out.println("¼­ºñ½º(getMember) ¹ŞÀº°ª:"+"\n"+memberList);	
 		return memberList;
 	}
 	public int getSocialNum() {
 		int num = dao.getNum();
-		System.out.println("ì„œë¹„ìŠ¤(getSocialNum) ë°›ì€ ê°’:"+"\n"+num);	
+		System.out.println("¼­ºñ½º(getSocialNum) ¹ŞÀº°ª:"+"\n"+num);	
 		return num;
 	}
 	public int createClub(ClubVO vo) {

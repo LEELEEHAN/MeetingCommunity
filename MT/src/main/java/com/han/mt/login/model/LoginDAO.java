@@ -56,10 +56,12 @@ public class LoginDAO {
 	public boolean idChk(UserDTO dto) throws Exception{
 		String mapperId =String.format(mapper,"idChk");
 		boolean result =false;
-		List<String> idChk= session.selectList(mapperId,dto);
-		if(idChk.isEmpty()) {
+		int idChk= session.selectOne(mapperId,dto);
+		System.out.println("DAO(idChk) ¾ÆÀÌµð Áßº¹Á¶·Ú ¸®½ºÆ®:"+idChk);
+		if(idChk<1){
 			result = true;
 		}
+		System.out.println("DAO(idChk) ¾ÆÀÌµð Áßº¹ È®ÀÎ °á°ú:"+result);
 		return result;
 	}
 
@@ -77,20 +79,20 @@ public class LoginDAO {
 	public boolean nickNameCheck(UserDTO dto) throws Exception{
 		String mapperId =String.format(mapper,"nickNameCheck");
 		boolean result;
-		List<UserDTO> nick= session.selectList(mapperId,dto);
-		if(nick.isEmpty()) {
+		int idChk= session.selectOne(mapperId,dto);
+		if(idChk<1){
 			result = true;
 		}else {
 			result = false;
 		}
-		System.out.println("DAO(nickNameCheck) ì¤‘ë³µë‹‰ë„¤ìž„ ì¡°íšŒê²°ê³¼ :" +result);
+		System.out.println("DAO(nickNameCheck) Áßº¹´Ð³×ÀÓ Á¶È¸°á°ú :" +result);
 		return result;
 	}
 
 	public boolean setNickName(UserDTO dto) {
 		String mapperId =String.format(mapper,"setNickName");
 		int result = session.update(mapperId,dto);
-		System.out.println("DAO(setNickName) ë‹‰ë„¤ìž„ ì„¤ì •ê²°ê³¼ :" +result);
+		System.out.println("DAO(setNickName) ´Ð³×ÀÓ ¼³Á¤°á°ú :" +result);
 
 		return result==1?true:false;
 	}

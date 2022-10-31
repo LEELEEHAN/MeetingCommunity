@@ -34,32 +34,32 @@ public class LoginController {
 	
 	@GetMapping(value="/login")
 	public String login (HttpSession session) {	
-		System.out.println("ì»¨íŠ¸ë¡¤ëŸ¬(login) : ë¡œê·¸ì¸ ë©”ì„œë“œ ì‹¤í–‰");
+		System.out.println("ÄÁÆ®·Ñ(login) : ·Î±×ÀÎ ¸Ş¼­µå µ¿ÀÛ");
 		return"user/login";		
 	}
 	
 	@PostMapping(value="/login")
 	public String login(Model model,LoginVO vo,
 			HttpSession session)  throws Exception{	
-		System.out.println("ë¡œê·¸ì¸ jspì—ì„œ ë°›ì€ voê°’ :" + vo);
+		System.out.println("·Î±×ÀÎ jsp¿¡¼­ ¹Ş¾Æ¿Â vo°ª :" + vo);
 
 		int result = service.getLogin(vo,session);
 		switch(result) {
 
 		case 1:
-			System.out.println("ë¡œê·¸ì¸ ì„±ê³µ" );
+			System.out.println("·Î±×ÀÎ ¼º°ø" );
 
 			return"home";
 		case 2:
-			System.out.println("ë¡œê·¸ì¸ ì‹¤íŒ¨ ë¹„ë°€ë²ˆí˜¸ í‹€ë¦¼" );
-            model.addAttribute("loginMsg","ë‹¤ì‹œ ë¡œê·¸ì¸ ì‹œë„ë¥¼ í•´ì£¼ì„¸ìš”");
+			System.out.println("·Î±×ÀÎ ½ÇÆĞ ºñ¹Ğ¹øÈ£ Æ²¸²" );
+            model.addAttribute("loginMsg","´Ù½Ã ·Î±×ÀÎ ½Ãµµ¸¦ ÇØÁÖ¼¼¿ä");
     		return"user/login";		
 		case 3:
-			System.out.println("ë¡œê·¸ì¸ ì‹¤íŒ¨ í•´ë‹¹ ì•„ì´ë””ì—†ìŒ" );
-            model.addAttribute("loginMsg","ê³„ì •ì„ í™•ì¸í•´ì£¼ì„¸ìš”");
+			System.out.println("·Î±×ÀÎ ½ÇÆĞ: ºñ¹Ğ¹øÈ£ Æ²¸²" );
+            model.addAttribute("loginMsg","°èÁ¤À» È®ÀÎÇØÁÖ¼¼¿ä");
     		return"user/login";		
 		case 4:	
-			System.out.println("ë¡œê·¸ì¸ ì„±ê³µ ë‹‰ë„¤ì„ ì„¤ì •ì´ë™" );
+			System.out.println("·Î±×ÀÎ ¼º°ø : ´Ğ³×ÀÓ ¼³Á¤À¸·Î" );
 			return"user/userDetail";
 		}
 		return"home";
@@ -68,7 +68,7 @@ public class LoginController {
 	@GetMapping(value="/login/logout")
 	public String logout(HttpSession session) {
 
-		System.out.println("ë¡œê·¸ì•„ì›ƒ" );
+		System.out.println("·Î±×¾Æ¿ô" );
 		session.removeAttribute("loginData");
 		return "redirect:/";
 	}
@@ -81,7 +81,7 @@ public class LoginController {
 	@PostMapping(value="/login/findId")
 	public String findId(@ModelAttribute UserDTO dto
 			,Model model,HttpSession session) throws Exception {
-		System.out.println("ì•„ì´ë””ì°¾ê¸° jspì—ì„œ ë°›ì€ DTOê°’ :" + dto);
+		System.out.println("¾ÆÀÌµğ Ã£±â jsp¿¡¼­ ¹ŞÀº DTO°ª :" + dto);
 		List result = service.findId(session,dto);
 		
 		model.addAttribute("List",result);
@@ -96,37 +96,33 @@ public class LoginController {
 	
 	@PostMapping(value="/idChk")
 	@ResponseBody
-	public Map<String, Object> idChk(@ModelAttribute UserDTO dto
+	public int idChk(@ModelAttribute UserDTO dto
 			,HttpSession session) throws Exception{
-		System.out.println("ì»¨íŠ¸ë¡¤ëŸ¬(idChk) : ë°›ì€ ê°’ "+dto);
-		boolean result = service.idChk(dto,session);
-		System.out.println("ì»¨íŠ¸ë¡¤ëŸ¬(idChk) : ì¤‘ë³µí™•ì¸ ê²°ê³¼"+result);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("result", result);
-		System.out.println(map);
-		return map;
+		System.out.println("ÄÁÆ®·Ñ·¯(idChk) : ¹ŞÀº°ª "+dto);
+		int result = service.idChk(dto,session);
+		System.out.println("ÄÁÆ®·Ñ·¯(idChk) : Áßº¹È®ÀÎ °á°ú"+result);
+		return result;
+	}
+	@PostMapping(value="/nickNameCheck")
+	@ResponseBody
+	public int nickNameCheck(@ModelAttribute UserDTO dto,
+			HttpSession session) throws Exception{
+		System.out.println("ÄÁÆ®·Ñ(nickNameCheck) : ¹ŞÀº °ª "+dto);
+		int result = service.nickNameCheck(dto,session);
+		System.out.println("ÄÁÆ®·Ñ(nickNameCheck) : Áßº¹È®ÀÎ °á°ú"+result);	
+		return result;
 	}
 	@PostMapping(value="/sign")
 	public String Signup(HttpSession session,
 			@ModelAttribute UserDTO dto
 			)throws Exception{
-		System.out.println("íšŒì› ê°€ì…jspì—ì„œ ë°›ì€ ê°’ : "+ dto);
+		System.out.println("È¸¿ø°¡ÀÔ JSP¿¡¼­ ¹ŞÀº °ª : "+ dto);
 		boolean signup = service.signup(dto,session);
-		System.out.println("íšŒì› ê°€ì… ê²°ê³¼: "+signup);
+		System.out.println("È¸¿ø °¡ÀÔ °á°ú: "+signup);
 
 		return "user/userDetail";
 	} 
 
-	@PostMapping(value="/nickNameCheck")
-	@ResponseBody
-	public boolean nickNameCheck(@ModelAttribute UserDTO dto,
-			HttpSession session) throws Exception{
-		System.out.println("ì»¨íŠ¸ë¡¤ëŸ¬(nickNameCheck) : ë°›ì€ ê°’ "+dto);
-		boolean result = service.nickNameCheck(dto,session);
-		System.out.println("ì»¨íŠ¸ë¡¤ëŸ¬(nickNameCheck) : ì¤‘ë³µí™•ì¸ ê²°ê³¼"+result);
-
-		return result;
-	}
 	@PostMapping(value="/userDetail")
 	public String userDetail(HttpSession session,
 			@SessionAttribute("loginData") UserDTO user,
@@ -135,10 +131,10 @@ public class LoginController {
 		
 		dto.setId(user.getId());
 		
-		System.out.println("ë‹‰ë„¤ì„ ì„¤ì •ì°½ì—ì„œ ë°›ì€ ì •ë³´ :"+dto);
+		System.out.println("´Ğ³×ÀÓ ¼³Á¤Ã¢¿¡¼­ ¹ŞÀº Á¤º¸ :"+dto);
 		boolean signup = service.setNickName(dto,user,session);
 		if(signup) {
-			session.setAttribute("error","ì‚¬ìš©ì¤‘ì¸ ë‹‰ë„¤ì„ì…ë‹ˆë‹¤.");
+			session.setAttribute("error","»ç¿ëÁßÀÎ ´Ğ³×ÀÓ.");
 			return "redirect:/";
 		}
 		return "home";
