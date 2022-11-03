@@ -101,18 +101,19 @@ public class LogintService {
 
 	public boolean setNickName(UserDTO dto
 			,@SessionAttribute("loginData") UserDTO user
-			,HttpSession session
-) throws Exception {
+			,HttpSession session) throws Exception {
+		
 		boolean result = dao.nickNameCheck(dto);
+		
 		boolean setNickName;
-		if(result ==false) {			
+		if(result ==true) {			
 			setNickName = dao.setNickName(dto);
 			System.out.println("서비스(setNickName) 닉네임 설정결과 :" +setNickName);
 		user.setNickName(dto.getNickName());
 		session.setAttribute("loginData", user);
 
 		} else {
-			setNickName= true;
+			setNickName= false;
 		}
 		return setNickName;
 	}

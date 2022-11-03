@@ -27,7 +27,7 @@ public class UserController {
 	@GetMapping(value="")
 	public String mypage(Model model,HttpSession session,
 			@SessionAttribute("loginData") UserDTO user) {
-		System.out.println("ë§ˆì´í˜ì´ì§€ ì ‘ì†, ë¡œê·¸ì¸ ë°ì´íƒ€ :"+user);
+		System.out.println("¸¶ÀÌÆäÀÌÁö Á¢¼Ó, ·Î±×ÀÎ µ¥ÀÌÅ¸ :"+user);
 		
 		String loginId = (String) session.getAttribute("loginId");
 		model.addAttribute("joinClub",service.joinClub(loginId));

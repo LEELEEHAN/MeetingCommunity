@@ -16,14 +16,14 @@ public class UserService {
 
 	public List<SocialDTO> joinClub(String loginId) {
 		List<SocialDTO> joinClub = dao.joinClub(loginId);
-		System.out.println("ì„œë¹„ìŠ¤(joinClub) ê°€ì ¸ì˜¨ í´ëŸ½ë¦¬ìŠ¤íŠ¸ :" +joinClub);
+		System.out.println("¼­ºñ½º(joinClub) Âü°¡ÇÑ Å¬·´¸®½ºÆ®:" +joinClub);
 		return joinClub;
 		
 	}
 
 	public List<SocialDTO> joinSocial(String loginId) {
 		List<SocialDTO> joinSocial = dao.joinSocial(loginId);
-		System.out.println("ì„œë¹„ìŠ¤(joinClub) ì°¸ê°€í•œ ì‡¼ì…œë¦¬ìŠ¤íŠ¸ :" +joinSocial);
+		System.out.println("¼­ºñ½º(joinClub) Âü°¡ÇÑ ¼î¼È¸®½ºÆ® :" +joinSocial);
 		return joinSocial;
 	}
 }

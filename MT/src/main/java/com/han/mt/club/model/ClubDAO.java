@@ -16,7 +16,7 @@ import com.han.mt.club.model.ClubVO;
 @Repository
 public class ClubDAO {
 
-	@Autowired // 어노테이션 밑줄친 객체에 의존하기 위해만든다
+	@Autowired // �뼱�끂�뀒�씠�뀡 諛묒쨪移� 媛앹껜�뿉 �쓽議댄븯湲� �쐞�빐留뚮뱺�떎
 	private SqlSession session;
 
 	private String mapper = "clubMapper.%s";
@@ -140,7 +140,7 @@ public class ClubDAO {
 	public boolean joinChk(ClubVO vo) { 
 		String mapperId =String.format(mapper,"joinChk");
 		List<ClubVO> data = session.selectList(mapperId,vo);
-		System.out.println("DAO(joinChk) 클럽 가입자 조회 리스트 :"+"\n"+data);  
+		System.out.println("DAO(joinChk)클럽 가입자 조회리스트 :"+"\n"+data);  
 		
 		boolean re;
 		if(data.isEmpty()) {
@@ -148,7 +148,7 @@ public class ClubDAO {
 		}else {
 			re=true;
 		}
-		System.out.println("DAO(joinChk) 내가 가입했나 결과 받은 값 :"+"\n"+re); 
+		System.out.println("DAO(joinChk) 내가 가입했는지 결과값 :"+"\n"+re); 
 			
 		return re;
 	}

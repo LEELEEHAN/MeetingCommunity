@@ -32,9 +32,9 @@
 	<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<beans:property name="driverClassName" value="oracle.jdbc.OracleDriver"></beans:property>
 
-		<beans:property name="url" value="jdbc:oracle:thin:@localhost:1521/XE"></beans:property>
-		<beans:property name="username" value="puser1"></beans:property>
-		<beans:property name="password" value="puser1"></beans:property>
+		<beans:property name="url" value="jdbc:oracle:thin:@localhost:15210/XE"></beans:property>
+		<beans:property name="username" value="puser10"></beans:property>
+		<beans:property name="password" value="puser10"></beans:property>
 	</beans:bean>
 	<beans:bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<beans:property name="dataSource" ref="dataSource"></beans:property>
@@ -48,13 +48,6 @@
 		<beans:constructor-arg index="0" ref="sqlSessionFactory"></beans:constructor-arg>
 	</beans:bean>
 	
-	<beans:bean id="echoHandler" class="com.han.mt.common.socket.EchoHandler" />
-		  <websocket:handlers>
-         <websocket:mapping handler="echoHandler" path="/echo"/>
-         <websocket:handshake-interceptors>
-            <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
-         </websocket:handshake-interceptors>
-   </websocket:handlers>
 	
 	
 	<!-- <beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

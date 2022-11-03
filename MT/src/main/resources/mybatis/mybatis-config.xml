@@ -7,6 +7,7 @@
 	</settings>
 	<typeAliases>
 		<typeAlias type="com.han.mt.social.model.SocialDTO" alias="socialDto" />
+		<typeAlias type="com.han.mt.social.model.SocialCommentDTO" alias="socialCommentDto" />
 		<typeAlias type="com.han.mt.social.model.FieldCategory" alias="category" />
 		<typeAlias type="com.han.mt.social.model.SocialDynamicDTO" alias="socialDynamicDto" />
 		<typeAlias type="com.han.mt.social.model.SocialVO" alias="socialVo" />

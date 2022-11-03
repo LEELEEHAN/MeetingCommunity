@@ -12,22 +12,23 @@ import com.han.mt.user.model.UserDTO;
 @Repository
 public class SocialDAO {
 	
-	@Autowired // 어노테이션 밑줄친 객체에 의존하기 위해만든다
+	@Autowired // �뼱�끂�뀒�씠�뀡 諛묒쨪移� 媛앹껜�뿉 �쓽議댄븯湲� �쐞�빐留뚮뱺�떎
 	private SqlSession session;
 
 	private String mapper = "socialMapper.%s";
 	private String userMapper = "userMapper.%s";
+	private String commentMapper = "commentMapper.%s";
 
 	public List<SocialDTO> getSocial(String category) {
 		String mapperId =String.format(mapper,"getSocial");
 		List<SocialDTO> social = session.selectList(mapperId,category);
-		System.out.println("카테고리값입니"+category);
+		System.out.println("DAO(getSocial) 카테고리 검색 :"+"\n"+category);
 		return social;
 	}
 	public List<SocialDTO> getSocialTitle(String title) {
 		String mapperId =String.format(mapper,"getSocialTitle");
 		List<SocialDTO> social = session.selectList(mapperId,title);
-		System.out.println("카테고리값입니"+title);
+		System.out.println("DAO(getSocial) 제목 검색 :"+"\n"+title);
 		return social;
 	}
 	
@@ -115,7 +116,7 @@ public class SocialDAO {
 	public boolean joinChk(ClubVO vo) { 
 		String mapperId =String.format(mapper,"joinChk");
 		List<ClubVO> data = session.selectList(mapperId,vo);
-		System.out.println("DAO(joinChk) 내가 가입했나 결과 받은 값: "+data);  
+		System.out.println("DAO(joinChk) 가입 했나 결과 받은값: "+data);  
 		
 		boolean re;
 		if(data.isEmpty()) {
@@ -123,9 +124,16 @@ public class SocialDAO {
 		}else {
 			re=true;
 		}
-		System.out.println("DAO(joinChk) 내가 가입했나 결과 받은 값: "+re); 
+		System.out.println("DAO(joinChk) 가입 했나 결과 받은값 "+re); 
 			
 		return re;
+	}
+	public List<SocialCommentDTO> getSocialComment(int id) {
+		String mapperId =String.format(commentMapper,"getSocialComment");
+		System.out.println("DAO(getSocialComment) 받은 socialNum: "+"\n"+id);  
+		List<SocialCommentDTO> data = session.selectList(mapperId,id);
+		System.out.println("DAO(getSocialComment) 조회 된 SocialComment :"+"\n"+data);  
+		return data;
 	}
 	
 }

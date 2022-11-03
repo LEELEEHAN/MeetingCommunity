@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.han.mt.club.model.ClubVO;
 import com.han.mt.social.controller.SocialController;
 import com.han.mt.social.model.FieldCategory;
+import com.han.mt.social.model.SocialCommentDTO;
 import com.han.mt.social.model.SocialDAO;
 import com.han.mt.social.model.SocialDTO;
 import com.han.mt.social.model.SocialDynamicDTO;
@@ -121,6 +122,12 @@ public class SocialService {
 		System.out.println(vo);
 		boolean result = dao.joinChk(vo);
 		return result;
+	}
+	public List<SocialCommentDTO> getComment(int id) {
+		System.out.println("서비스(getComment) 받은 SocialNum :"+"\n"+id);
+		List<SocialCommentDTO> list = dao.getSocialComment(id);
+		System.out.println("서비스(getComment) 조회 된 SocialComment :"+"\n"+list);
+		return list;
 	}
 		
 }

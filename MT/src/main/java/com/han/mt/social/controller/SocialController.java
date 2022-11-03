@@ -53,12 +53,14 @@ public class SocialController {
 	}
 	
 	
+	
+	
 	@GetMapping(value = "/detail")
 	public String socialDetail(Model model,HttpSession session,
 			@RequestParam(required = false) int id) {
 		
 		String loginId = (String) session.getAttribute("loginId");
-		System.out.println("컨트롤러(getdetail)"+"\n"+service.getDetail(id));
+		System.out.println("컨트롤(getdetail)"+"\n"+service.getDetail(id));
 
 		boolean chk = service.joinChk(loginId,id);
 		if(chk) {
@@ -67,24 +69,23 @@ public class SocialController {
 		model.addAttribute("detail", service.getDetail(id));
 		model.addAttribute("real",service.getReal(id));
 		model.addAttribute("memberList",service.getMember(id));
+		model.addAttribute("comment",service.getComment(id));
 		return"social/detail";
 	}
 	
 	
 	
 	
-	@GetMapping(value = "/create")//작성양식
+	@GetMapping(value = "/create")//�옉�꽦�뼇�떇
 	public String createSocial(Model model,
-			@SessionAttribute("loginData") UserDTO user,
-			@ModelAttribute SocialVO vo) {
+			@SessionAttribute("loginData") UserDTO user) {
 
-		System.out.println(user);
-		System.out.println("겟 크리에이트 브이오"+"\n"+vo);
+		System.out.println("컨트롤(create) 작성자 정보"+"\n"+user);
 		model.addAttribute("field",service.getCategory());
 		return "social/create";
 	}
 	
-	@PostMapping(value = "/create")//작성된 양식 저장
+	@PostMapping(value = "/create")//�옉�꽦�맂 �뼇�떇 ���옣
 	public String createSocial(HttpServletRequest request,HttpSession session,
 			@SessionAttribute("loginData") UserDTO user,
 			@ModelAttribute SocialVO vo) {
@@ -94,8 +95,8 @@ public class SocialController {
 		vo.setNickName(user.getNickName());
 
 		
-		System.out.println("포스트 크리에이트 브이오"+"\n"+vo);
-		System.out.println("포스트 크리에이트 유저"+"\n"+user);
+		System.out.println("컨트롤(create) 쇼셜로 할 내용"+"\n"+vo);
+		System.out.println("컨트롤(create) 작성자 정보"+"\n"+user);
 
 		
 
@@ -124,19 +125,19 @@ public class SocialController {
 
         if (social == null) {
             json.put("code", "notExists");
-            json.put("message", "이미 삭제 된 데이터 입니다.");
+            json.put("message", "�씠誘� �궘�젣 �맂 �뜲�씠�꽣 �엯�땲�떎.");
         } else {
             if (true) {
                 boolean result = service.deleteSoical(id);
                 if (result) {
-                    json.put("message", "삭제 완료");
+                    json.put("message", "�궘�젣 �셿猷�");
                 } else {
                     json.put("code", "fail");
-                    json.put("message", "삭제 중 문제발생");
+                    json.put("message", "�궘�젣 以� 臾몄젣諛쒖깮");
                 }
-            } else { // 관리자,글작성자 외
+            } else { // 愿�由ъ옄,湲��옉�꽦�옄 �쇅
                 json.put("code", "permissionError");
-                json.put("message", "삭제권한이 없습니다.");
+                json.put("message", "�궘�젣沅뚰븳�씠 �뾾�뒿�땲�떎.");
             }
         }
 
@@ -153,7 +154,7 @@ public class SocialController {
 		
 		return "social/modify";
 	}
-	@PostMapping(value = "/modify")//작성된 양식 저장
+	@PostMapping(value = "/modify")//�옉�꽦�맂 �뼇�떇 ���옣
 	public String modifySocial(HttpServletRequest request,
 			@ModelAttribute SocialVO vo) {
 		
@@ -161,23 +162,28 @@ public class SocialController {
 		System.out.println(vo);
 
 		service.modifySocial(vo);
+
 		
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
 	@PostMapping(value="/entrust")
 	public String entrust(@ModelAttribute SocialVO vo) {
-		System.out.println("컨트롤러(entrust) 받은 값"+vo); 
+		System.out.println("컨트롤(entrust) 받은 값"+vo); 
 		service.entrust(vo);
 
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
 	
 	@PostMapping(value="/outcast")
-	public String outcast(@ModelAttribute SocialVO vo) {
+	public String outcast(Model model,@ModelAttribute SocialVO vo) {
 		System.out.println(vo.getNickName()); 
-		service.outcast(vo);
+		System.out.println("컨트롤(outcast) 받은 값"+vo); 
 
-		return "redirect:/social/detail?id=" + vo.getSocialNum();
+		model.addAttribute("vo",vo);
+
+		System.out.println("컨트롤(outcast) 설정한 값"+model.getAttribute("vo")); 
+
+        return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
 	
 	
@@ -188,6 +194,8 @@ public class SocialController {
 
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
+	
+	
 	
 	
 	

@@ -131,29 +131,6 @@
      $('.toast').toast('show');
  };	
  
- function getSocial(id) {
-		
-		
-		$.ajax({
-			url: "./detail",
-			type: "post",
-			data: {
-				id: ${detail.socialNum}
-			},
-			dataType: "json",
-			success: function(data) {
-				if(data.code === "success") {
-					alert("삭제 완료");						
-						location.href = "./mt/social";
-				} else if(data.code === "permissionError") {
-					alert("권한이 오류");
-				} else if(data.code === "notExists") {
-					alert("이미 삭제되었습니다.")
-				}
-			}
-		});
-	}
-	
  </script>
 <!--  모달 게시판 디테일 -->
 	<div class="modal fade" id="removeModal" tabindex="-1"
