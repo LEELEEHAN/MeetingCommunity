@@ -129,5 +129,15 @@ public class SocialService {
 		System.out.println("서비스(getComment) 조회 된 SocialComment :"+"\n"+list);
 		return list;
 	}
+	public void onComment(SocialCommentDTO dto) {
+		System.out.println("서비스(onComment) 받은 dto :"+"\n"+dto);
+		dao.onComment(dto);
+		
+	}
+	public int getCommentNum() {
+		int num = dao.getCommentNum();
+		System.out.println("서비스(getCommentNum) 받은값:"+"\n"+num);	
+		return num;
+	}
 		
 }

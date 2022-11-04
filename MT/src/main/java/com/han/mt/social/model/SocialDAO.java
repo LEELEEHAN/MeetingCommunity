@@ -135,5 +135,29 @@ public class SocialDAO {
 		System.out.println("DAO(getSocialComment) 조회 된 SocialComment :"+"\n"+data);  
 		return data;
 	}
+	public boolean onComment(SocialCommentDTO dto) {
+		String mapperId =String.format(commentMapper,"onComment");
+		System.out.println("DAO(onComment) 받은 dto: "+"\n"+dto);  
+		int insert =session.insert(mapperId, dto);	
+		boolean result;
+		if (insert == 1) {
+			result =true;
+		}else { 
+			result= false;
+		};
+		System.out.println("DAO(onComment) 처리 결과 result: "+"\n"+result);  
+		return result;		
+		
+	}
+	public int getCommentNum() {
+		String mapperId =String.format(commentMapper,"getCommentNum");
+		int num = session.selectOne(mapperId);		
+		System.out.println("DAO(getCommentNum) 부여될 commentNum: "+"\n"+num);  
+		return num;
+	}
+	
+	
+	
+	
 	
 }

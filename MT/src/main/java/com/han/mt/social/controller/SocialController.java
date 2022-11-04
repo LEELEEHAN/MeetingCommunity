@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.han.mt.social.model.SocialCommentDTO;
 import com.han.mt.social.model.SocialDTO;
 import com.han.mt.social.model.SocialDynamicDTO;
 import com.han.mt.social.model.SocialMemberDTO;
@@ -196,6 +197,15 @@ public class SocialController {
 	}
 	
 	
+
+	@PostMapping(value="/onComment")
+	public String onComment(@ModelAttribute SocialCommentDTO dto)throws Exception {
+		System.out.println(dto); 
+		dto.setCommentNum(service.getCommentNum());
+		service.onComment(dto);
+
+		return "redirect:/social/detail?id=" + dto.getSocialNum();
+	}
 	
 	
 	

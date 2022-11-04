@@ -18,14 +18,14 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
-<title>우리들의 동아리 우동 - ${detail.title}</title>
+<title>소셜 - ${detail.title}</title>
 
 </head>
 <body>
 
     <div id="msgStack"></div>
 <header>
-	<div>
+	<div><!-- 소셜 정보 -->
 		<table>
 			<tr>
 				<td rowspan="2">썸네일${detail.socialImage}</td>
@@ -49,46 +49,48 @@
 	</div>
 </header>
 <section>
-	<div>
+	<div><!-- 컨텐츠 내용 -->
 		<p>${detail.contents}</p>
 	</div>
 	
-	<div>
-	<table>
+	<div><!-- 댓글 내용-->
 		<c:if test="${not empty comment}">
 			<c:forEach items="${comment}" var="comment">
-				<tr>
-					<th colspan ="2">${comment.writer}</th>
-					<td>${comment.writeDate}</td>
-				</tr>
-				<tr>	
-					<td colspan ="2">${comment.content}</td>
-					<td>버튼</td>
-				</tr>
+				<div class="d-flex justify-content-between">
+					<span><small><strong>${comment.writer}</strong></small></span>
+					<span><small>${comment.writeDate}</small></span>
+				</div>
+				<div class="d-flex justify-content-between">
+					<c:set var="newLine" value="<%= \"\n\" %>" />
+					<p class="card-text">${fn:replace(comment.content, newLine, '<br>')}</p>
+					<c:if test="${not empty sessionScope.loginData}">
+						<c:if test="${sessionScope.loginData.id eq comment.writer}">
+							<div class="text-end">
+								<button class="btn btn-sm btn-outline-dark" type="button" onclick="changeEdit(this);">수정</button>
+								<button class="btn btn-sm btn-outline-dark" type="button" onclick="">삭제</button>
+							</div>
+						</c:if>
+					</c:if>
+				</div>
 			</c:forEach>
 		</c:if>
 		
 		<c:choose>
 			<c:when test="${not empty sessionScope.loginData}">
-				<tr>
-					<td colspan ="2">
-						<input type="text">
-					</td>
-					<td>
-						<input type="hidden" name="id" value="${sessionScope.loginData.id}">
-							버튼
-					</td>
-				</tr>						
+				<div>
+					<input type="text" name="commentInput" id="commentInput">
+					<input type="hidden" name="loginId" value="${sessionScope.loginData.id}">
+					<button type="button" onclick="onComment();">버튼</button>
+				</div>
 			</c:when>
-			<c:otherwise>
-				<tr>
-					<td colspan ="3">
-						<input type="text" placeholder="로그인이 필요합니다">
-					</td>
-				</tr>			
+			
+			
+			<c:otherwise><!-- 로그인을 안했을시 -->
+				<div>
+					<input type="text" placeholder="로그인이 필요합니다">		
+				</div>
 			</c:otherwise>
 		</c:choose>
-	</table>
 	</div>
 	<div>
 		<form action="./delete" method="post">			
@@ -161,9 +163,9 @@
 					</div>
 					<div class="modal-body">
 						<c:if test="${not empty memberList}">
-								<tr>
-									<th colspan ="6"><a style="color: black;border:10px;font-size:20px "><strong>${detail.nickName}</strong></a></th>
-								</tr>
+								<div>
+									<th colspan ="6"><a style="color: black;border:10px;font-size:20px ">master : <strong>${detail.nickName}</strong></a></th>
+								</div>
 								<c:forEach items="${memberList}" var="memberList">
 									<tr style="text-align: center;border:1px solid #dddddd">
 										<td colspan ="5" width: 100%;>
@@ -338,6 +340,35 @@ function outcastSocial(id) {
 					}
 				}
 			});
+		}
+
+
+//에이잭스 펑션 : 댓글 등록
+function onComment() {
+	var user = $("input[name='loginId']").val();
+	var con = $("input[name='commentInput']").val();
+	if(con.trim() === "") {
+		alert("댓글 내용을 입력하세요.");
+		} else{
+			
+			$.ajax({
+				url: "./onComment",
+				type: "post",
+				data: {
+					socialNum: ${detail.socialNum},
+					content : con,
+					writer: user
+				},
+				success: function(data) {
+					if(data) {
+						location.href = "./detail?id=${detail.socialNum}";
+					} else if(social.code === "permissionError") {
+						alert("오류");
+
+					}
+				}
+			});
+		}	
 		}
 
 

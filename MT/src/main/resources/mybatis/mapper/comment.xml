@@ -8,4 +8,17 @@ SELECT *
   FROM SOCIALCOMMENT
  WHERE SOCIALNUM = #{socialNum}
 </select>
+
+
+<select id="getCommentNum" resultType="_int">
+SELECT COMMENTNUM_SEQ.NEXTVAL FROM DUAL
+</select>
+
+
+<insert id="onComment" parameterType="socialCommentDto">
+INSERT INTO SOCIALCOMMENT 
+VALUES (#{commentNum},#{socialNum},#{content},#{writer},SYSDATE)
+</insert>
+
+
 </mapper>
