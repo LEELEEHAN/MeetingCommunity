@@ -35,13 +35,29 @@
 			<tr>
 				<td colspan="2">master : ${detail.nickName}
 					<div>
-						<c:if test="${real >1}">
-							<c:if test="${sessionScope.loginData.id eq detail.id}">
-								<button type="button" data-bs-toggle="modal" data-bs-target="#entrustModal">
-									권한넘기기
+						<form action="./join" method="post">
+							<c:if test="${real >1}">
+								<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#memberlist">
+									멤버 리스트
 								</button>
+								<c:if test="${sessionScope.loginData.id eq detail.id}">
+									<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#entrustModal">
+										권한넘기기
+									</button>
+								</c:if>
+							</c:if>					
+							<c:if test="${not empty sessionScope.loginData}">
+								<c:if test="${real < detail.maximum}">	
+									<c:if test="${empty chk}">
+											<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
+											<input type="hidden" name="id" value="${sessionScope.loginData.id}">
+											<input type="hidden" name="socialNum" value="${detail.socialNum}">
+											<button class="btn btn-sm btn-outline-dark"type="submit">참가신청</button>
+										
+									</c:if>
+								</c:if>
 							</c:if>
-						</c:if>
+						</form>
 					</div>
 				</td>
 			</tr>
@@ -62,9 +78,9 @@
 				</div>
 				<div class="d-flex justify-content-between">
 					<c:set var="newLine" value="<%= \"\n\" %>" />
-					<p class="card-text">${fn:replace(comment.content, newLine, '<br>')}</p>
+						<p class="card-text">${fn:replace(comment.content, newLine, '<br>')}</p>
 					<c:if test="${not empty sessionScope.loginData}">
-						<c:if test="${sessionScope.loginData.id eq comment.writer}">
+						<c:if test="${sessionScope.loginData.id eq comment.writer or sessionScope.loginData.id eq detail.id}">
 							<div class="text-end">
 								<button class="btn btn-sm btn-outline-dark" type="button" onclick="changeEdit(this);">수정</button>
 								<button class="btn btn-sm btn-outline-dark" type="button" onclick="">삭제</button>
@@ -80,7 +96,7 @@
 				<div>
 					<input type="text" name="commentInput" id="commentInput">
 					<input type="hidden" name="loginId" value="${sessionScope.loginData.id}">
-					<button type="button" onclick="onComment();">버튼</button>
+					<button class="btn btn-sm btn-outline-dark" type="button" onclick="onComment();">버튼</button>
 				</div>
 			</c:when>
 			
@@ -93,38 +109,21 @@
 		</c:choose>
 	</div>
 	<div>
-		<form action="./delete" method="post">			
-			<input name="id" type="hidden" value="${detail.socialNum}">
-			<button class="btn btn-danger" type="button" data-bs-toggle="modal"
-			data-bs-target="#removeModal">삭제</button>
-			<button class="btn btn-primary" type="button" onclick="location.href='../social'">
+		<form action="./delete" method="post">	
+		
+			<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../social'">
 				목록
-			</button>
-			<button class="btn btn-primary" type="button" onclick="location.href='../social/modify?id=${detail.socialNum}'">
-				수정
-			</button>
-			
+			</button>		
+			<c:if test="${sessionScope.loginData.id eq detail.id}">	
+				<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../social/modify?id=${detail.socialNum}'">
+					수정
+				</button>	
+				<input name="id" type="hidden" value="${detail.socialNum}">
+				<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal"
+				data-bs-target="#removeModal">삭제</button>
+			</c:if>
 		</form>
 	</div>
-	<div>
-		<button type="button" data-bs-toggle="modal" data-bs-target="#memberlist">
-			멤버 리스트
-		</button>
-	</div>
-	<c:if test="${not empty sessionScope.loginData}">
-		<c:if test="${real < detail.maximum}">	
-			<c:if test="${empty chk}">
-				<div>
-					<form action="./join" method="post">
-						<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
-						<input type="hidden" name="id" value="${sessionScope.loginData.id}">
-						<input type="hidden" name="socialNum" value="${detail.socialNum}">
-						<button type="submit">참가신청</button>
-					</form>
-				</div>
-			</c:if>
-		</c:if>
-	</c:if>
 	
 	
 	<!--  모달 -->
@@ -167,23 +166,19 @@
 									<th colspan ="6"><a style="color: black;border:10px;font-size:20px ">master : <strong>${detail.nickName}</strong></a></th>
 								</div>
 								<c:forEach items="${memberList}" var="memberList">
-									<tr style="text-align: center;border:1px solid #dddddd">
-										<td colspan ="5" width: 100%;>
-											<c:if test="${memberList.nickName ne detail.nickName}">
-												${memberList.nickName}(${memberList.id})				
+									<div>
+										<c:if test="${memberList.nickName ne detail.nickName}">
+											${memberList.nickName}(${memberList.id})	
+										</c:if>
+										<c:if test="${sessionScope.loginData.id eq detail.id}">
+											<c:if test="${memberList.nickName ne detail.nickName}">												
+												<!-- 강퇴,추방 버튼 -->
+													<button type="hidden" class="btn btn-danger" name="outcast" value="${memberList.id}" onclick="outcastSocial('${memberList.id}')">추방</button>
+													<!--data-bs-toggle="modal" data-id="${memberList.id}" data-nickName="${memberList.nickName}" name="outcastButton" data-bs-target="#outcast"  -->
+												
 											</c:if>
-										</td>
-										<td>
-											<c:if test="${sessionScope.loginData.id eq detail.id}">
-												<c:if test="${memberList.nickName ne detail.nickName}">												
-													<!-- 강퇴,추방 버튼 -->
-														<button type="hidden" class="btn btn-danger" name="outcast" value="${memberList.id}" onclick="outcastSocial('${memberList.id}')">추방</button>
-														<!--data-bs-toggle="modal" data-id="${memberList.id}" data-nickName="${memberList.nickName}" name="outcastButton" data-bs-target="#outcast"  -->
-													
-												</c:if>
-											</c:if>
-										</td>
-									</tr><br>
+										</c:if>
+									</div>	
 								</c:forEach>
 						</c:if>
 					</div>
@@ -210,7 +205,9 @@
 					<div class="modal-body">
 						<c:forEach items="${memberList}" var="memberList">
 							<c:if test="${memberList.auth =='U'}">
+							<div>
 								<input type="radio" name="enter" value="${memberList.id}">${memberList.nickName}(${memberList.id})				
+							</div>
 							</c:if>
 						</c:forEach>
 					</div>
@@ -348,6 +345,7 @@ function onComment() {
 	var user = $("input[name='loginId']").val();
 	var con = $("input[name='commentInput']").val();
 	if(con.trim() === "") {
+		$("#commentInput").focus();
 		alert("댓글 내용을 입력하세요.");
 		} else{
 			
@@ -362,7 +360,7 @@ function onComment() {
 				success: function(data) {
 					if(data) {
 						location.href = "./detail?id=${detail.socialNum}";
-					} else if(social.code === "permissionError") {
+					} else {
 						alert("오류");
 
 					}
@@ -370,7 +368,22 @@ function onComment() {
 			});
 		}	
 		}
-
+function changeText(element) {
+	element.innerText = "수정";
+	var cid = element.parentElement.parentElement.children[0].value;
+	var value = element.parentElement.previousElementSibling.children[0].value;
+	element.parentElement.previousElementSibling.children[0].remove();
+	element.parentElement.previousElementSibling.innerText = value;
+	
+	
+	var btnDelete = document.createElement("button");
+	btnDelete.innerText = "삭제";
+	btnDelete.setAttribute("class", "btn btn-sm btn-outline-dark");
+	btnDelete.setAttribute("onclick", "commentDelete(this, " + cid + ");");
+	
+	element.parentElement.append(btnDelete);
+	element.setAttribute("onclick", "changeEdit(this);");
+}
 
 </script>
 </body>
