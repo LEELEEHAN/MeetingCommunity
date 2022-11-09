@@ -4,13 +4,12 @@ import java.sql.Date;
 
 public class UserDTO {
 
-	private String id;
+	private String email;
 	private String password;
 	private String name;
 	private String nickName;
 	private Date birth;
 	private String phone;
-	private String email;
 	private String gender;
 	private String hidden;
 	private String deleted;
@@ -18,12 +17,12 @@ public class UserDTO {
 	private Date dateLog;
 	private int mannerPoint;
 	private String profile;
-	
-	public String getId() {
-		return id;
+
+	public String getEmail() {
+		return email;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getPassword() {
 		return password;
@@ -54,12 +53,6 @@ public class UserDTO {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
 	}
 	public String getGender() {
 		return gender;
@@ -105,8 +98,8 @@ public class UserDTO {
 	}
 	@Override
 	public String toString() {
-		return "UserDTO [id=" + id + ", password=" + password + ", name=" + name + ", nickName=" + nickName + ", birth="
-				+ birth + ", phone=" + phone + ", email=" + email + ", gender=" + gender + ", hidden=" + hidden
+		return "UserDTO [email=" + email + "password=" + password + ", name=" + name + ", nickName=" + nickName + ", birth="
+				+ birth + ", phone=" + phone + ", gender=" + gender + ", hidden=" + hidden
 				+ ", deleted=" + deleted + ", deleteDate=" + deleteDate + ", dateLog=" + dateLog + ", mannerPoint="
 				+ mannerPoint + ", profile=" + profile + "]"+"\n";
 	}

@@ -40,7 +40,7 @@
 								<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#memberlist">
 									멤버 리스트
 								</button>
-								<c:if test="${sessionScope.loginData.id eq detail.id}">
+								<c:if test="${sessionScope.loginData.email eq detail.email}">
 									<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#entrustModal">
 										권한넘기기
 									</button>
@@ -50,7 +50,7 @@
 								<c:if test="${real < detail.maximum}">	
 									<c:if test="${empty chk}">
 											<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
-											<input type="hidden" name="id" value="${sessionScope.loginData.id}">
+											<input type="hidden" name="email" value="${sessionScope.loginData.email}">
 											<input type="hidden" name="socialNum" value="${detail.socialNum}">
 											<button class="btn btn-sm btn-outline-dark"type="submit">참가신청</button>
 										
@@ -80,7 +80,7 @@
 					<c:set var="newLine" value="<%= \"\n\" %>" />
 						<p class="card-text">${fn:replace(comment.content, newLine, '<br>')}</p>
 					<c:if test="${not empty sessionScope.loginData}">
-						<c:if test="${sessionScope.loginData.id eq comment.writer or sessionScope.loginData.id eq detail.id}">
+						<c:if test="${sessionScope.loginData.email eq comment.writer or sessionScope.loginData.email eq detail.email}">
 							<div class="text-end">
 								<button class="btn btn-sm btn-outline-dark" type="button" onclick="changeEdit(this);">수정</button>
 								<button class="btn btn-sm btn-outline-dark" type="button" onclick="">삭제</button>
@@ -95,7 +95,7 @@
 			<c:when test="${not empty sessionScope.loginData}">
 				<div>
 					<input type="text" name="commentInput" id="commentInput">
-					<input type="hidden" name="loginId" value="${sessionScope.loginData.id}">
+					<input type="hidden" name="loginId" value="${sessionScope.loginData.email}">
 					<button class="btn btn-sm btn-outline-dark" type="button" onclick="onComment();">버튼</button>
 				</div>
 			</c:when>
@@ -114,7 +114,7 @@
 			<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../social'">
 				목록
 			</button>		
-			<c:if test="${sessionScope.loginData.id eq detail.id}">	
+			<c:if test="${sessionScope.loginData.email eq detail.email}">	
 				<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../social/modify?id=${detail.socialNum}'">
 					수정
 				</button>	
@@ -170,10 +170,10 @@
 										<c:if test="${memberList.nickName ne detail.nickName}">
 											${memberList.nickName}(${memberList.id})	
 										</c:if>
-										<c:if test="${sessionScope.loginData.id eq detail.id}">
+										<c:if test="${sessionScope.loginData.email eq detail.email}">
 											<c:if test="${memberList.nickName ne detail.nickName}">												
 												<!-- 강퇴,추방 버튼 -->
-													<button type="hidden" class="btn btn-danger" name="outcast" value="${memberList.id}" onclick="outcastSocial('${memberList.id}')">추방</button>
+													<button type="hidden" class="btn btn-danger" name="outcast" value="${memberList.id}" onclick="outcastSocial('${memberList.email}')">추방</button>
 													<!--data-bs-toggle="modal" data-id="${memberList.id}" data-nickName="${memberList.nickName}" name="outcastButton" data-bs-target="#outcast"  -->
 												
 											</c:if>
@@ -206,7 +206,7 @@
 						<c:forEach items="${memberList}" var="memberList">
 							<c:if test="${memberList.auth =='U'}">
 							<div>
-								<input type="radio" name="enter" value="${memberList.id}">${memberList.nickName}(${memberList.id})				
+								<input type="radio" name="enter" value="${memberList.email}">${memberList.nickName}				
 							</div>
 							</c:if>
 						</c:forEach>
@@ -301,15 +301,15 @@ function entrustSocial(id) {
 				type: "post",
 				data: {
 					socialNum: ${detail.socialNum},
-					id: user
+					email: user
 				},
 				success: function(data) {
 					if(data) {
 						alert("위임 완료");						
-						location.href = ".?detail=${detail.socialNum}";
-					} else if(social.code === "permissionError") {
+						location.href = "./detail?id=${detail.socialNum}";
+					} else {
 						alert("권한이 오류");
-						location.href = ".?detail=${detail.socialNum}";
+						location.href = "./detail?id=${detail.socialNum}";
 
 					}
 				}
@@ -323,15 +323,15 @@ function outcastSocial(id) {
 				type: "post",
 				data: {
 					socialNum: ${detail.socialNum},
-					id: id
+					email: id
 				},
 				success: function(data) {
 					if(data) {
 						var outcastId = id;
 						$('#outcast').modal("show");
-					} else if(social.code === "permissionError") {
+						location.href = ".?detail=${detail.socialNum}";
+					} else {
 						alert("권한이 오류");
-						$('#outcast').modal("show");
 						location.href = ".?detail=${detail.socialNum}";
 
 					}

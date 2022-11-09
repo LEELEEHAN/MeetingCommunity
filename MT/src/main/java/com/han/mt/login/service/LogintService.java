@@ -31,10 +31,10 @@ public class LogintService {
 			}
 			System.out.println("서비스(getLogin) : 아이디를 찾아 세션에 정보저장");
 			session.setAttribute("loginData", data);
-			session.setAttribute("loginId", data.getId());
+			session.setAttribute("loginId", data.getEmail());
 			
 		} else {
-			boolean searchId = dao.searchId(vo.getId());
+			boolean searchId = dao.searchId(vo.getEmail());
 			System.out.println(searchId);
 			System.out.println("서비스(getLogin) : 로그인 실패 원인 찾음");
 
@@ -47,23 +47,25 @@ public class LogintService {
 		return result; 
 	}
 
-	public List<String> findId(HttpSession session, UserDTO dto) throws Exception {
-		List idList = dao.findId(dto);
+	public String findId(HttpSession session, UserDTO dto) throws Exception {
+		String idList = dao.findId(dto);
+		System.out.println("서비스(findId) 아이디 중복조뢰 리스트:"+idList);
 
-		if(idList.isEmpty()) {
+		if(idList==null) {
 			System.out.println("아이디 조회 실패 세션저장");
 			session.setAttribute("findIdResult", "해당계정이 없습니다");
 		} else {
 			System.out.println("받은 값으로 조회결과"+idList);
+			session.setAttribute("findId", idList);
 		}
 		return idList;	
 		
 	}
 
-	public int idChk(UserDTO dto
+	public int idChk(String email
 			, HttpSession session) throws Exception{
 		int chek;
-		boolean result = dao.idChk(dto);
+		boolean result = dao.idChk(email);
 		System.out.println("서비스(idChk) 아이디 중복 확인 결과:"+result);
 		session.setAttribute("idCheckResult", result);
 		if(result) {
@@ -73,6 +75,8 @@ public class LogintService {
 		}
 		return chek;
 	}
+	
+	
 	public int nickNameCheck(UserDTO dto
 			, HttpSession session) throws Exception{
 		int chek;
@@ -87,11 +91,13 @@ public class LogintService {
 		return chek;
 	} 
 
+	
+	
 	public boolean signup(UserDTO dto, HttpSession session) throws Exception{
 		boolean signup = dao.signup(dto);
 		if(signup) {
 			LoginVO vo = new LoginVO();
-			vo.setId(dto.getId());
+			vo.setEmail(dto.getEmail());
 			vo.setPassword(dto.getPassword());
 			UserDTO data = dao.getLogin(vo);
 			session.setAttribute("loginData", data);
@@ -99,8 +105,7 @@ public class LogintService {
 		return signup;
 	}
 
-	public boolean setNickName(UserDTO dto
-			,@SessionAttribute("loginData") UserDTO user
+	public boolean sign(UserDTO dto
 			,HttpSession session) throws Exception {
 		
 		boolean result = dao.nickNameCheck(dto);
@@ -109,13 +114,16 @@ public class LogintService {
 		if(result ==true) {			
 			setNickName = dao.setNickName(dto);
 			System.out.println("서비스(setNickName) 닉네임 설정결과 :" +setNickName);
-		user.setNickName(dto.getNickName());
-		session.setAttribute("loginData", user);
 
 		} else {
 			setNickName= false;
 		}
 		return setNickName;
+	}
+
+	public boolean emailRes(String id, HttpSession session) {
+		boolean result = dao.emailRes(id);
+		return result;
 	}
 
 	

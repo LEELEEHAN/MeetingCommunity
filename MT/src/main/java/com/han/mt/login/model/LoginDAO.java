@@ -47,16 +47,16 @@ public class LoginDAO {
 		return true;
 	}
 
-	public List<String> findId(UserDTO dto) throws Exception{
+	public String findId(UserDTO dto) throws Exception{
 		String mapperId =String.format(mapper,"findId");
-		List<String> data = session.selectList(mapperId,dto);
+		String data = session.selectOne(mapperId,dto);
 		return data;
 	}
 
-	public boolean idChk(UserDTO dto) throws Exception{
+	public boolean idChk(String email) throws Exception{
 		String mapperId =String.format(mapper,"idChk");
 		boolean result =false;
-		int idChk= session.selectOne(mapperId,dto);
+		int idChk= session.selectOne(mapperId,email);
 		System.out.println("DAO(idChk) 아이디 중복조뢰 리스트:"+idChk);
 		if(idChk<1){
 			result = true;
@@ -95,6 +95,12 @@ public class LoginDAO {
 		System.out.println("DAO(setNickName) 닉네임 설정결과 :" +result);
 
 		return result==1?true:false;
+	}
+
+	public boolean emailRes(String id) {
+		String mapperId =String.format(mapper,"emailRes");
+		int result = session.insert(mapperId,id);
+		return false;
 	}
 	
 	

@@ -22,83 +22,57 @@
 <script type="text/javascript">
 		$(function(){
 			$("#submit").on("click", function(){
-				if($("#name").val()==""){
-					alert("이름을 입력해주세요.");
-					$("#name").focus();
-					return false;
-				}
-				if($("#id").val()==""){
-					alert("아이디를 입력해주세요.");
-					$("#id").focus();
-					return false;
-				}
-				if($("#password").val()==""){
-					alert("비밀번호를 입력해주세요.");
-					$("#pw").focus();
-					return false;
-				}
-				if($("#password").val() != $("#pw_chk").val()){
-		            alert("비밀번호가 일치하지 않습니다.");
-		            $("#pw_chk").focus();
-		            return false;
-		          }
+				
 				if($("#email").val()==""){
-					alert("이메일을 입력해주세요.");
+					alert("아이디를 입력해주세요.");
 					$("#email").focus();
 					return false;
-				}
-				if($("#phone").val()==""){
-					alert("핸드폰번호를 입력해주세요.");
-					$("#phone").focus();
-					return false;
-				}
-				
-				if($("#birth").val()==""){
-					alert("생년월일을 입력해주세요.");
-					$("#bitrh").focus();
-					return false;
-				}
-				var bCheck = RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
-				if(!bCheck.test($('#birth').val())){
-					alert("생년월일은 \'yyyy-mm-dd\' 형식으로 입력해주세요");
-				}
-				if($("input[name=gender]:radio:checked").length < 1){
-					alert("성별을 선택해주세요.");
-					return false;
-				}
-			
+				}		
 				 var idChkVal = $("#idChk").val();
 				if(idChkVal == "N"){
-					alert("중복확인 버튼을 눌러주세요.");
+					alert("인증절차 먼저 눌러주세요.");
 					return false;
 				}else if(idChkVal == "Y"){
 					return true;
-				} 
+				}
 				
 			});
 		})
 		
 		function fn_idChk(){
 
-			if($("#id").val()==""){
+			if($("#email").val()==""){
 				alert("아이디를 입력해주세요.");
 				$("#id").focus();
 				return false;
 				}
-			if($("#id").val()!=""){
+			if($("#email").val()!=""){
 				$.ajax({
 					url : "./idChk",
 					type : "POST",
 					data : {
-						id : $("#id").val()
+						email : $("#email").val()
 						},
 					success : function(data){
 						if(data != 1){
 							$("#idChk").attr("value", "N");
-							alert("중복된 아이디입니다.");
+							alert("해당 계정은 존재하는 아이디입니다.");
 						}else if(data == 1){
-							$("#idChk").attr("value", "Y");
-							alert("사용가능한 아이디입니다.");
+							$.ajax({
+								url : "./emailRes",
+								type : "POST",
+								data : {
+									email : $("#email").val()
+									},
+								success : function(data){
+									$("#email").attr("readonly","true");
+									$("#idChk").attr("value", "Y");
+									$("#idChk").attr("disabled","disabled");
+									$("#submit").removeAttr("disabled");
+										alert("해당 메일로 인증번호가 전송되었습니다");
+									
+								}
+							})
 						}
 					}
 				})
@@ -110,39 +84,19 @@
 <main class="form-signin">
 	<div class="form-floating">
 <h1 class="h3 mb-3 fw-normal">회원가입</h1>
-		<form action="./sign" method="post" id="form">
-			이름 
-			<input class="form-control" type="text" name="name" id="name" />
-			<br>
-	
+		<form action="./sign" method="post" id="form">	
 			아이디 
-			<input class="form-control" type="text" name="id" id="id"/>
+			<input class="form-control" type="email" name="email" id="email"/>
 			<button class="idChk btn btn-warning" style="float:right" type="button" id="idChk" onclick="fn_idChk();" value="N">
-				중복확인
+				인증번호 전송
 			</button>
-			<br>
-			비밀번호 
-			<input class="form-control" type="password" name="password"  id="password"/>
-			<br>
-			비밀번호 확인 
-			<input class="form-control" type="password" name="pw_chk"  id="pw_chk"/>
-			<br>
-			이메일 
-			<input class="form-control" type="email" name="email"  id="email"/>
-			<br>
-			핸드폰번호 
-			<input class="form-control" type="text" name="phone"  id="phone"/>
-			<br>
-			생년월일 
-			<input class="form-control" type="date" name="birth"  id="birth"/>
-			<br>
-			<div class="gender1">
-				성별 
-				<input type="radio" name="gender" value="M"  id="gender"/>남 
-				<input type="radio" name="gender" value="F"  id="gender"/>여<br>
+			<br>	
+			<div id="emailCheck">
+				인증번호 
+				<input class="form-control" type="text" name="auth" id="auth"/>
+			
+				<button class="w-100 btn btn-lg btn-warning" id="submit" name="submit" disabled>가입하기</button>
 			</div>
-			<br>
-			<button class="w-100 btn btn-lg btn-warning" id="submit">가입하기</button>
 		</form>
 	</div>
 </main>

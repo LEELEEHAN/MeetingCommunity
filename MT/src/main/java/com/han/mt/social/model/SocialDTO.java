@@ -9,22 +9,8 @@ public class SocialDTO {
 	private int maximum;
 	private String socialImage;
 	private String nickName;
-	private String id;
+	private String email;
 	
-	
-	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getNickName() {
-		return nickName;
-	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
 	public int getSocialNum() {
 		return socialNum;
 	}
@@ -55,18 +41,31 @@ public class SocialDTO {
 	public void setMaximum(int maximum) {
 		this.maximum = maximum;
 	}
-	
 	public String getSocialImage() {
 		return socialImage;
 	}
 	public void setSocialImage(String socialImage) {
 		this.socialImage = socialImage;
 	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	
 	@Override
 	public String toString() {
 		return "SocialDTO [socialNum=" + socialNum + ", category=" + category + ", title=" + title + ", contents="
 				+ contents + ", maximum=" + maximum + ", socialImage=" + socialImage + ", nickName=" + nickName
-				+ ", id=" + id + "]"+"\n";
+				+ ", email=" + email + "]"+"\n";
 	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
 }

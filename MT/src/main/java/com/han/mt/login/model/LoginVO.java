@@ -2,15 +2,15 @@ package com.han.mt.login.model;
 
 public class LoginVO {
 
-	private String id;
+	private String email;
 	private String password;
 	
 	
-	public String getId() {
-		return id;
+	public String getEmail() {
+		return email;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getPassword() {
 		return password;
@@ -20,7 +20,7 @@ public class LoginVO {
 	}
 	@Override
 	public String toString() {
-		return "LoginVO [id=" + id + ", password=" + password + "]";
+		return "LoginVO [email=" + email + ", password=" + password + "]";
 	}
 	
 	

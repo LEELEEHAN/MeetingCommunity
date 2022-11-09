@@ -21,19 +21,17 @@
 <div>
 	<div>
 		<label>아이디</label><br>
-		<input type="text" name="id" placeholder="${sessionScope.loginData.id}"><br>
+		<input type="text" name="email" placeholder="${sessionScope.loginData.email}" readonly><br>
 		<label>이름</label><br>
-		<input type="text" name="name" placeholder="${sessionScope.loginData.name}"><br>
+		<input type="text" name="name" placeholder="${sessionScope.loginData.name}"readonly><br>
 		<label>별칭</label><br>
-		<input type="text" name="nickName" placeholder="${sessionScope.loginData.nickName}"><br>
+		<input type="text" name="nickName" placeholder="${sessionScope.loginData.nickName}"readonly><br>
 		<label>전화번호</label><br>
-		<input type="text" name="phone" placeholder="${sessionScope.loginData.phone}"><br>
-		<label>이메일</label><br>
-		<input type="text" name="email" placeholder="${sessionScope.loginData.email}"><br>
+		<input type="text" name="phone" placeholder="${sessionScope.loginData.phone}"readonly><br>
 		<label>성별</label><br>
-		<input type="text" name="gender" placeholder="${sessionScope.loginData.gender}"><br>
+		<input type="text" name="gender" placeholder="${sessionScope.loginData.gender}"readonly><br>
 		<label>매너점수</label><br>
-		<input type="text" name="mannerPoint" placeholder="${sessionScope.loginData.mannerPoint}"><br>
+		<input type="text" name="mannerPoint" placeholder="${sessionScope.loginData.mannerPoint}"readonly><br>
 	</div>
 	<div>
 		<button>

@@ -8,7 +8,7 @@ SELECT *
   JOIN SOCIALMEMBER m
     ON s.SOCIALNUM = m.SOCIALNUM
   JOIN USERTABLE u
-    ON m.ID = u.ID
+    ON m.ID = u.email
  WHERE m.AUTH ='M'
    AND s.SOCIALCLUB = 'S'
  <if test='category != null'>
@@ -23,7 +23,7 @@ SELECT *
   JOIN SOCIALMEMBER m
     ON s.SOCIALNUM = m.SOCIALNUM
   JOIN USERTABLE u
-    ON m.ID = u.ID
+    ON m.ID = u.email
  WHERE m.AUTH ='M'
    AND s.SOCIALCLUB = 'S'
  <if test='title != null'>
@@ -67,7 +67,7 @@ SELECT *
   JOIN SOCIALMEMBER m
     ON s.SOCIALNUM = m.SOCIALNUM
   JOIN USERTABLE u
-    ON m.ID = u.ID
+    ON m.ID = u.email
  WHERE m.AUTH ='M'
    AND s.SOCIALNUM = #{socialNum}
 </select>
@@ -77,7 +77,7 @@ SELECT *
 SELECT s.NICKNAME, m.AUTH, m.ID
   FROM SOCIALMEMBER m
   JOIN USERTABLE s
-    ON m.ID = s.ID
+    ON m.ID = s.email
  WHERE SOCIALNUM = #{socialNum}
 </select>
 

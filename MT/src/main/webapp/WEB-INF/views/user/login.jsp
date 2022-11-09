@@ -14,7 +14,7 @@
 	<div>
 		<c:if test="${empty sessionScope.loginData}">
 			<form action="./login" method ="post">
-				<input type="text" name="id">
+				<input type="text" name="email">
 				<br>
 				<input type="password" name="password">
 				<br>
@@ -25,7 +25,7 @@
 		</c:if>	
 		<c:if test="${not empty sessionScope.loginData}">
 			<div>
-				<p>${sessionScope.loginData.id}</p>
+				<p>${sessionScope.loginData.email}</p>
 				<p>${sessionScope.loginData.nickName}</p>
 				<button type="button" onclick="location.href='/mt/login/logout'">로그아웃</button>
 				<button type="button" onclick="location.href='/mt/mypage'">마이페이지</button>

@@ -5,16 +5,16 @@
 <select id="login" resultType="userDto">
 SELECT *
   FROM USERTABLE
- WHERE ID = #{id}
+ WHERE EMAIL = #{email}
    AND PASSWORD = #{password}
 </select>
 <select id="searchId" resultType="userDto">
-SELECT ID
+SELECT EMAIL
   FROM USERTABLE
- WHERE ID = #{id}
+ WHERE email = #{id}
 </select>
 <select id="findId" resultType="String">
-SELECT ID
+SELECT EMAIL
   FROM USERTABLE
  WHERE NAME = #{name}
    AND PHONE = #{phone}
@@ -23,20 +23,28 @@ SELECT ID
 <select id="idChk" resultType="int">
 SELECT count(*) 
   FROM USERTABLE
- WHERE ID = #{id}
+ WHERE EMAIL = #{email}
 </select>
 
 <insert id="signup"  parameterType="UserDTO">
 INSERT INTO USERTABLE
-(NAME,ID,PASSWORD,PHONE,BIRTH,GENDER,EMAIL)
+(NAME,PASSWORD,PHONE,BIRTH,GENDER,EMAIL,NICKNAME)
 VALUES
-(#{name},#{id},#{password},#{phone},#{birth},#{gender},#{email})
+(#{name},#{password},#{phone},#{birth},#{gender},#{email},#{nickName})
 </insert>
+
+<insert id="emailRes"  parameterType="UserDTO">
+INSERT INTO USERTABLE
+(email)
+VALUES
+(#{email})
+</insert>
+
 
 <update id="loginLog">
 UPDATE USERTABLE
    SET DATELOG = SYSDATE
- WHERE ID=#{id}
+ WHERE email=#{email}
 </update>
 
 
@@ -49,7 +57,7 @@ SELECT count(*)
 <update id="setNickName">
 UPDATE USERTABLE
    SET NICKNAME = #{nickName}
- WHERE ID=#{id}
+ WHERE email=#{email}
 </update>
 
 <insert id="imageToDB">
