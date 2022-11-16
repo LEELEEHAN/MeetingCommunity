@@ -17,7 +17,23 @@ public class UserDTO {
 	private Date dateLog;
 	private int mannerPoint;
 	private String profile;
+	private String kakao;
+	private String admin;
 
+	
+	
+	public String getAdmin() {
+		return admin;
+	}
+	public void setAdmin(String admin) {
+		this.admin = admin;
+	}
+	public String getKakao() {
+		return kakao;
+	}
+	public void setKakao(String kakao) {
+		this.kakao = kakao;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -100,7 +116,7 @@ public class UserDTO {
 	public String toString() {
 		return "UserDTO [email=" + email + "password=" + password + ", name=" + name + ", nickName=" + nickName + ", birth="
 				+ birth + ", phone=" + phone + ", gender=" + gender + ", hidden=" + hidden
-				+ ", deleted=" + deleted + ", deleteDate=" + deleteDate + ", dateLog=" + dateLog + ", mannerPoint="
+				+ ", deleted=" + deleted + ", admin=" + admin + ", dateLog=" + deleteDate + ", dateLog=" + dateLog + ", mannerPoint="
 				+ mannerPoint + ", profile=" + profile + "]"+"\n";
 	}
 	

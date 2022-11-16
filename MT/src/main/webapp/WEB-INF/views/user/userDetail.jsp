@@ -70,7 +70,24 @@ $(function(){
 			alert("성별을 선택해주세요.");
 			return false;
 		}
-	 
+		if($("#nickName").val()!=""){
+			$.ajax({
+				url : "./login/nickNameCheck",
+				type : "POST",
+				data : {
+					nickName : $("#nickName").val()
+					},
+				success : function(data){
+					if(data != 1){
+						$("#nickNameCheck").attr("value", "N");
+						alert("사용불가능한 닉네임입니다.");
+					}else if(data == 1){
+						$("#nickNameCheck").attr("value", "Y");
+						alert("사용가능한 닉네임입니다.");
+					}
+				}
+			})
+		}
 		
 	});
 })
@@ -84,7 +101,7 @@ function nickCheck(){
 		}
 	if($("#nickName").val()!=""){
 			$.ajax({
-				url : "./nickNameCheck",
+				url : "mt/login/nickNameCheck",
 				type : "POST",
 				data : {
 					nickName : $("#nickName").val()
@@ -103,7 +120,8 @@ function nickCheck(){
 	}
 		
 		
-		
+
+
 		
 		
 		
@@ -114,41 +132,65 @@ function nickCheck(){
 	<main class="form-signin">
 	<div class="form-floating">
 		<h1 class="h3 mb-3 fw-normal">회원가입</h1>
-		<form action="./userDetail" method="post" id="form">
+			<form action="/mt/login/userDetail" method="post" id="form">
 			이메일 
 			<input class="form-control" type="text" name="email" id="email" value="${sessionScope.email}" readonly/>
-			<br>	
-			이름 
-			<input class="form-control" type="text" name="name" id="name" />
-			<br>	
+			<br>
+			<c:choose>
+				<c:when test="${not empty kakao}">
+					<input type="hidden" name="password" id="password" value="kakao"/>	
+					<input type="hidden" name="kakao" id="kakao" value="kakao"/>		 
+					이름 
+					<input class="form-control" type="text" name="name" id="name"  value="${sessionScope.name}" readonly/>
+				</c:when>
+				<c:otherwise>
+					이름 
+					<input type="hidden" name="kakao" id="kakao" value="mo"/>		 
+					<input class="form-control" type="text" name="name" id="name"/>				
+				</c:otherwise>
+			</c:choose>						
+			<br>
 			닉네임 설정 
 			<input class="form-control" type="text" name="nickName" id="nickName"/>
+			
+			
 			<button class="nickNameCheck btn btn-warning" style="float:right" type="button" id="nickNameCheck" onclick="nickCheck();" value="N">
 				중복확인
 			</button>
+				
 			<br>
-			비밀번호 
-			<input class="form-control" type="password" name="password"  id="password"placeholder="password"/>
-			<br>
-			비밀번호 확인 
-			<input class="form-control" type="password" name="pw_chk"  id="pw_chk"placeholder="password check"/>
-			<br>
-			<br>
-			핸드폰번호 
-			<input class="form-control" type="text" name="phone"  id="phone"placeholder="phone number"/>
-			<br>
-			생년월일 
-			<input class="form-control" type="date" name="birth"  id="birth"placeholder="birth"/>
-			<br>
-			<div class="gender1">
-				성별 
-				<input type="radio" name="gender" value="M"  id="gender"/>남 
-				<input type="radio" name="gender" value="F"  id="gender"/>여<br>
-			</div>
+		
+			<c:if test="${empty kakao}">
+				휴대전화 
+				<input class="form-control" type="text" name="phone" id="phone"/>			
+				<br>
+				비밀번호 
+				<input class="form-control" type="password" name="password"  id="password"placeholder="password" />
+				<br>
+				비밀번호 확인 
+				<input class="form-control" type="password" name="pw_chk"  id="pw_chk"placeholder="password check"/>
+				<br>
+				
+				생년월일 
+				<input class="form-control" type="date" name="birth"  id="birth"placeholder="birth"/>
+				<br>
+				<div class="gender1">
+					성별 
+					<input type="radio" name="gender" value="M"  id="gender"/>남 
+					<input type="radio" name="gender" value="F"  id="gender"/>여<br>
+				</div>
+			</c:if>
 			<br>
 			<button class="w-100 btn btn-lg btn-warning" id="submit">가입하기</button>
 		</form>
 	</div>
+	
+	
+	<c:if test="${not empty kakaoLogin}">
+		<script type="text/javascript">
+			alert("${kakaoLogin}");
+		</script>
+	</c:if>
 </main>
 </form>
 </body>

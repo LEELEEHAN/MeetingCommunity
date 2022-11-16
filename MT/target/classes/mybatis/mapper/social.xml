@@ -68,6 +68,8 @@ SELECT *
     ON s.SOCIALNUM = m.SOCIALNUM
   JOIN USERTABLE u
     ON m.ID = u.email
+  JOIN SOCIALDETAIL d
+    ON s.SOCIALNUM = d.SOCIALNUM
  WHERE m.AUTH ='M'
    AND s.SOCIALNUM = #{socialNum}
 </select>
@@ -137,10 +139,18 @@ INSERT INTO SOCIALMEMBER (SOCIALNUM,ID,AUTH)
 VALUES(#{socialNum},#{id},'U')
 </insert>
 
+
 <select id ="joinChk" resultType="int">
 SELECT SOCIALNUM
   FROM SOCIALMEMBER
  WHERE ID =#{id}
    AND socialNum = #{socialNum}
 </select>
+
+
+<insert id="createSocialDetail" parameterType="socialDto">
+INSERT INTO SOCIALDETAIL 
+(SOCIALNUM,SOCIALDATE,LOCATION) 
+VALUES(#{socialNum},#{socialDate},#{location})
+</insert>
 </mapper>

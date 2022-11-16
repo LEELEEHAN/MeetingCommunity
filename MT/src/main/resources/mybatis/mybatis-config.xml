@@ -17,5 +17,6 @@
 		<typeAlias type="com.han.mt.club.model.ClubDynamicDTO" alias="clubDynamicDto" />
 		<typeAlias type="com.han.mt.club.model.ClubVO" alias="clubVo" />
 		<typeAlias type="com.han.mt.club.model.ClubMemberDTO" alias="clubMemberDto" />
+		<typeAlias type="com.han.mt.club.model.BoardDTO" alias="boardDto" />
 	</typeAliases>
 </configuration>

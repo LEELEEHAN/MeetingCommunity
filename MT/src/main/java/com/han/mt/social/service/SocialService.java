@@ -2,6 +2,8 @@ package com.han.mt.social.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import com.han.mt.social.model.SocialDTO;
 import com.han.mt.social.model.SocialDynamicDTO;
 import com.han.mt.social.model.SocialMemberDTO;
 import com.han.mt.social.model.SocialVO;
+import com.han.mt.user.model.UserDAO;
 import com.han.mt.user.model.UserDTO;
 
 @Service
@@ -27,6 +30,9 @@ public class SocialService {
 	@Autowired 
 	private SocialDAO dao;
 	
+
+	@Autowired
+	private UserDAO userDao;
 	
 	public List<SocialDTO> getSocial(String category){
 		List<SocialDTO> social = dao.getSocial(category);
@@ -77,17 +83,23 @@ public class SocialService {
 		System.out.println("서비스(getSocialNum) 받은값:"+"\n"+num);	
 		return num;
 	}
-	public int createSocial(SocialVO vo) {
+	public int createSocial(SocialVO vo, SocialDTO dto,HttpSession session) {
 
 		int re = dao.createSocial(vo);
 		if(re != 1) {return 9;}
+		if(re == 1) {
 		int sult = dao.createSocialMaster(vo);
+		dao.createSocialDetail(dto);
 		if(sult != 1) {return 8;}
-		return 1;
+		}
+		session.setAttribute("joinSocial",userDao.joinSocial(dto.getEmail()));
+		return re;
 
 	}
-	public boolean deleteSoical(int socialNum) {
+	public boolean deleteSoical(int socialNum,String email,HttpSession session)  {
 		boolean result =dao.deleteSoical(socialNum);
+		session.setAttribute("joinClub",userDao.joinClub(email));
+
 		return result;
 		
 	}
@@ -98,17 +110,20 @@ public class SocialService {
 		return re;
 	}
 	
-	public void entrust(SocialVO vo) {
+	public void entrust(SocialVO vo,HttpSession session) {
 		dao.entrustUser(vo);
 		dao.entrustMaster(vo);
+		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 	}
-	public void outcast(SocialVO vo) {
+	public void outcast(SocialVO vo,HttpSession session) {
 		dao.outcast(vo);
+		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 		
 	}
-	public void join(SocialVO vo) throws Exception {
+	public void join(SocialVO vo,HttpSession session) throws Exception {
 		int real = dao.getReal(vo.getSocialNum());		
 		SocialDTO detail = dao.getDetail(vo.getSocialNum());
+		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 		int max= detail.getMaximum();
 		if(real<max) {
 		dao.join(vo);}

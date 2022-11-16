@@ -8,6 +8,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>게시글 등록</title>
+	<%@ include file="../module/head.jsp" %>
+	<%@ include file="../module/nav.jsp" %>
 	<c:url var="ckeditor" value="/static/ckeditor" />
 	<script type="text/javascript" src="${ckeditor}/ckeditor.js"></script>
 </head>
@@ -43,8 +45,14 @@
 					<textarea class="form-control" name="contents" rows="8"
 						placeholder="내용을 입력하세요."></textarea>
 				</div>
+				
 				<div>
-					<input type="number" name="maximum" max="30" min="2" value="10">
+					<label>날짜 설정</label>			
+					<input class="form-control" type="date" name="socialDate"  id="socialDate">
+					<label>장소</label>			
+					<input class="form-control" name="location">					
+					<label>최대 인원수 설정</label>
+					<input class="form-control"  type="number" name="maximum" max="30" min="2" value="10">
 				</div>
 				<div class="mb-3 text-end">
 					<button class="btn btn-primary" type="button" onclick="formCheck(this.form);">
@@ -54,7 +62,7 @@
 			</form>
 		</div>
 		
-		<!-- <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+		<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -71,7 +79,7 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 	</section>
 	<footer></footer>
 	<c:url var="upload" value="/upload/image" />
@@ -80,10 +88,5 @@
 			filebrowserUploadUrl: "${upload}?type=image"
 		})
 	</script>
-	<c:if test="${not empty error}">
-		<script type="text/javascript">
-			alert("${error}");
-		</script>
-	</c:if>
 </body>
 </html>

@@ -25,7 +25,7 @@
 
     <div id="msgStack"></div>
 <header>
-	<div>
+	<div class="text-center">
 		<table>
 			<tr>
 				<td rowspan="2">썸네일${detail.socialImage}</td>
@@ -35,13 +35,26 @@
 			<tr>
 				<td colspan="2">master : ${detail.nickName}
 					<div>
-						<c:if test="${real >1}">
-							<c:if test="${sessionScope.loginData.id eq detail.id}">
-								<button type="button" data-bs-toggle="modal" data-bs-target="#entrustModal">
-									권한넘기기
+						<form action="./join" method="post">
+							<c:if test="${real >1}">
+								<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#memberlist">
+									멤버 리스트
 								</button>
+								<c:if test="${sessionScope.loginData.email eq detail.email}">
+									<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#entrustModal">
+										권한넘기기
+									</button>
+								</c:if>
+							</c:if>					
+							<c:if test="${not empty sessionScope.loginData}">
+								<c:if test="${empty chk}">
+									<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
+									<input type="hidden" name="id" value="${sessionScope.loginData.email}">
+									<input type="hidden" name="socialNum" value="${detail.socialNum}">
+									<button class="btn btn-sm btn-outline-dark"type="submit">참가신청</button>										
+								</c:if>
 							</c:if>
-						</c:if>
+						</form>
 					</div>
 				</td>
 			</tr>
@@ -49,73 +62,73 @@
 	</div>
 </header>
 <section>
-	<div class="" form="">
+	<div class="text-center" form="">
 		<p>${detail.contents}</p>
 	</div>
-	<c:if test="${not empty memberList}">
-		<c:forEach items="${memberList}" var="memberList">
-			<tr>
-				<td >${memberList.nickName}				
-					<c:if test="${sessionScope.loginData.id eq detail.id}">
-						<c:if test="${memberList.nickName ne detail.nickName}">
-							<form action="./outcast" method="post">	
-								<input type="hidden" name="id" value="${memberList.id}">
-								<input type="hidden" name="socialNum" value="${detail.socialNum}">
-								<input type="hidden" name="auth" value="outcast">
-								
-								<button type="submit">추방</button>
-							</form>
-							<form action="./entrust" method="post">
-								<input type="hidden" name="id" value="${memberList.id}">
-								<input type="hidden" name="socialNum" value="${detail.socialNum}">
-								<input type="hidden" name="auth" value="entrust">
-								
-								<button type="submit"><!-- // data-bs-toggle="modal" data-bs-target="#entrustModal"> -->
-									위임</button>
-							</form>
-						</c:if>
-					</c:if>
-				</td>
-			</tr>
-		</c:forEach>
-	</c:if>
-	<div>
-		<form action="./delete" method="post">			
-			<input name="id" type="hidden" value="${detail.socialNum}">
-			<button type="button" data-bs-toggle="modal"
-			data-bs-target="#removeModal">삭제</button>
-			<button class="btn btn-primary" type="button" onclick="location.href='../social'">
-				목록
-			</button>
-			<button class="btn btn-primary" type="button" onclick="location.href='../social/modify?id=${detail.socialNum}'">
-				수정
-			</button>
-		</form>
-	</div>
+	
+	
 	<c:if test="${not empty sessionScope.loginData}">
-		<c:if test="${empty chk}">
-			<div>
-				<form action="./join" method="post">
-					<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
-					<input type="hidden" name="id" value="${sessionScope.loginData.id}">
-					<input type="hidden" name="socialNum" value="${detail.socialNum}">
-					<button type="submit">참가신청</button>
-				</form>
-			</div>
-		</c:if>	
 		<c:if test="${not empty chk}">
 			<div>
-				<form action="./board" method="post">
 				    <input type="hidden" name="${detail.socialNum}">
 					<button type="submit" name="자유">자유게시판</button>
 					<button type="submit" name="질문">질문게시판</button>
 					<button type="submit" name="정보">정보게피산</button>
-					<button type="submit" name="인증">인증게시판</button>
-				</form>
+					<button name="category" id="info" onclick="boardOpen('I');">인증게시판</button>
 			</div>
 		</c:if>
 	</c:if>
+	<div class="text-center">
+		<form action="./delete" method="post">			
+			<input name="id" type="hidden" value="${detail.socialNum}">
+			<button type="button" data-bs-toggle="modal"
+			data-bs-target="#removeModal">삭제</button>
+			<button class="btn btn-primary" type="button" onclick="location.href='../club'">
+				목록
+			</button>
+			<button class="btn btn-primary" type="button" onclick="location.href='../club/modify?id=${detail.socialNum}'">
+				수정
+			</button>
+		</form>
+	</div>
 	
+	
+	<!-- 모달:게시판 -->
+		<div class="modal fade" id="infoBoradOpen" tabindex="-1"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 class="modal-title">추방완료</h6>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+					<table>
+						<tr>
+							<th>제목</th>
+							<th>글쓴이</th>
+							<th>날짜</th>
+						</tr>
+						<c:if test="${not empty board}">
+							<c:forEach items="${board}" var="board">					
+								<tr>
+									<td>${board.title}</td>
+									<td>${board.nickName}</td>
+									<td>${board.writerDate}</td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" >
+							확인
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	
 	
 	
@@ -137,26 +150,49 @@
 				</div>
 			</div>
 		</div>
-		
-		<div class="modal fade" id="entrustModal2" tabindex="-1"
+		<!-- 모달: 멤버 리스트 -->
+	<div class="modal fade" id="memberlist" tabindex="-1"
 			aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h6 class="modal-title">방장 위임하기</h6>
+						<h6 class="modal-title">쇼셜링 참가자</h6>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
+					<div class="modal-body">
+						<c:if test="${not empty memberList}">
+								<div>
+									<th colspan ="6"><a style="color: black;border:10px;font-size:20px ">master : <strong>${detail.nickName}</strong></a></th>
+								</div>
+								<c:forEach items="${memberList}" var="memberList">
+									<div>
+										<c:if test="${memberList.nickName ne detail.nickName}">
+											${memberList.nickName}	
+										</c:if>
+										<c:if test="${sessionScope.loginData.email eq detail.email}"> 
+											<c:if test="${memberList.nickName ne detail.nickName}">												
+												<!-- 강퇴,추방 버튼 -->
+													<button type="hidden" class="btn btn-danger" name="outcast" value="${memberList.id}" onclick="outcastSocial('${memberList.id}')">추방</button>
+													<!--data-bs-toggle="modal" data-id="${memberList.id}" data-nickName="${memberList.nickName}" name="outcastButton" data-bs-target="#outcast"  -->
+												
+											</c:if>
+										</c:if>
+									</div>	
+								</c:forEach>
+						</c:if>
+					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-sm btn-danger"
-							data-bs-dismiss="modal" onclick="entrustSocial(${detail.socialNum})">
-							확인
+						<button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" >
+							닫기
 						</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		
+		
+		<!-- 모달 :방장 위임-->
 		<div class="modal fade" id="entrustModal" tabindex="-1"
 			aria-hidden="true">
 			<div class="modal-dialog">
@@ -166,21 +202,67 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
-					<div class="modal-body" id="entrust">
+					<div class="modal-body">
 						<c:forEach items="${memberList}" var="memberList">
 							<c:if test="${memberList.auth =='U'}">
-								<tr>
-									<td>
-										<input type="radio" name="entrust" value="${memberList.nickName}">${memberList.nickName}
-						
-									</td>
-								</tr>
+							<div>
+								<input type="radio" name="enter" value="${memberList.id}">${memberList.nickName}				
+							</div>
 							</c:if>
 						</c:forEach>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-sm btn-danger"
-							data-bs-dismiss="modal" onclick="entrustSocial(${detail.socialNum},$("[name=entrus]").val();)">
+							data-bs-dismiss="modal" onclick="entrustSocial()">
+							확인
+						</button>
+						<button type="button" class="btn btn-sm btn-primary"
+							data-bs-dismiss="modal" >
+							취소
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		
+		<!-- 모달:강퇴 -->
+		<div class="modal fade" id="outcast" tabindex="-1"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 class="modal-title">삭제 확인</h6>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">를 추방하시겠습니까?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="deleteSocial(${detail.socialNum})">
+							확인
+						</button>
+						<button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" >
+							취소
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 모달:강퇴 확인 -->
+		<div class="modal fade" id="outcastResult" tabindex="-1"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 class="modal-title">추방완료</h6>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">추방하시겠습니까?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" >
 							확인
 						</button>
 					</div>
@@ -189,9 +271,8 @@
 		</div>
 </section>
 <script type="text/javascript">
-function deleteSocial(id) {
-	
-	
+//에이잭스 펑션 : 소셜링 삭제
+function deleteSocial(id) {	
 			$.ajax({
 				url: "./delete",
 				type: "post",
@@ -213,76 +294,66 @@ function deleteSocial(id) {
 		}
 		
 
-function entrustSocial(socialNum,nickName) {
-		var user = $("[name=entrus]").val();
+//에이잭스 펑션 : 방장 위임
+function entrustSocial(id) {
+	var user = $("input[name='enter']:checked").val();
 			$.ajax({
 				url: "./entrust",
 				type: "post",
 				data: {
 					socialNum: ${detail.socialNum},
-					nickName: nickName
+					id: user
 				},
-				dataType: "json",
-				success: function(detail) {
-					if(detail.code === "success") {
+				success: function(data) {
+					if(data) {
 						alert("위임 완료");						
-						location.href = "./mt/social?detail=${detail.socialNum}";
-					} else if(social.code === "permissionError") {
+						location.href = "./detail?id=${detail.socialNum}";
+					} else {
 						alert("권한이 오류");
-					} else if(social.code === "notExists") {
-						alert("이미 삭제되었습니다.")
+						location.href = "./detail?id=${detail.socialNum}";
+
 					}
 				}
 			});
 		}
-function entrustSocial2(socialNum,nickName) {
-	var user = $("[name=entrus]").val();
+
+//에이잭스 펑션 : 강퇴
+function outcastSocial(id) {
+			$.ajax({
+				url: "./outcast",
+				type: "post",
+				data: {
+					socialNum: ${detail.socialNum},
+					email: id
+				},
+				success: function(data) {
+					if(data) {
+						var outcastId = id;
+						$('#outcast').modal("show");
+						location.href = ".?detail=${detail.socialNum}";
+					} else {
+						alert("권한이 오류");
+						location.href = ".?detail=${detail.socialNum}";
+
+					}
+				}
+			});
+		}
+function boardOpen(category) {
 		$.ajax({
-			url: "./entrust",
+			url: "./getBoard",
 			type: "post",
 			data: {
 				socialNum: ${detail.socialNum},
-				nickName: 데이비드
+				category: category
 			},
-			dataType: "json",
-			success: function(detail) {
-				if(detail.code === "success") {
-					alert("위임 완료");						
-					location.href = "./mt/social?detail=${detail.socialNum}";
-				} else if(social.code === "permissionError") {
-					alert("권한이 오류");
-				} else if(social.code === "notExists") {
-					alert("이미 삭제되었습니다.")
-				}
+			success: function(category) {
+					$('#infoBoradOpen').modal("show");
+
 			}
 		});
 	}
-	
-$('#notifySendBtn').click(function(e){
-    let modal = $('.modal-content').has(e.target);
-    let type = '70';
-    let target = modal.find('.modal-body input').val();
-    let content = modal.find('.modal-body textarea').val();
-    let url = '${contextPath}/member/notify.do';
-    // 전송한 정보를 db에 저장	
-    $.ajax({
-        type: 'post',
-        url: '${contextPath}/member/saveNotify.do',
-        dataType: 'text',
-        data: {
-            target: target,
-            content: content,
-            type: type,
-            url: url
-        },
-        success: function(){    // db전송 성공시 실시간 알림 전송
-            // 소켓에 전달되는 메시지
-            // 위에 기술한 EchoHandler에서 ,(comma)를 이용하여 분리시킨다.
-            socket.send("관리자,"+target+","+content+","+url);	
-        }
-    });
-    modal.find('.modal-body textarea').val('');	// textarea 초기화
-});
+
 </script>
 </body>
 </html>

@@ -38,6 +38,13 @@ public class LoginDAO {
 	}
 
 	
+	public UserDTO getAdminLogin(LoginVO vo) throws Exception{
+		String mapperId =String.format(mapper,"getAdminLogin");
+		UserDTO data = session.selectOne(mapperId,vo);
+		return data;
+	}
+
+	
 	public boolean searchId(String id) {
 		String mapperId =String.format(mapper,"searchId");
 		List<UserDTO> data = session.selectList(mapperId,id);
@@ -67,6 +74,11 @@ public class LoginDAO {
 
 	public boolean signup(UserDTO dto) {
 		String mapperId =String.format(mapper,"signup");
+		int result = session.insert(mapperId,dto);
+		return result == 1? true: false;
+	}
+	public boolean kakaoSignup(UserDTO dto) {
+		String mapperId =String.format(mapper,"kakaoSignup");
 		int result = session.insert(mapperId,dto);
 		return result == 1? true: false;
 	}
@@ -101,6 +113,30 @@ public class LoginDAO {
 		String mapperId =String.format(mapper,"emailRes");
 		int result = session.insert(mapperId,id);
 		return false;
+	}
+
+	public boolean signupDetail(String email) {
+		String mapperId =String.format(mapper,"signupDetail");
+		int result = session.insert(mapperId,email);
+		System.out.println("DAO(signupDetail) 결과 :" +result);
+		
+		return result ==1? true : false;
+	}
+
+	public void dropId(String email) {
+		String mapperId =String.format(mapper,"signupDetail");
+		session.delete(mapperId,email);
+		
+		
+	}
+
+	public UserDTO kakaoLogin(String email) {
+		System.out.println("카카오 로그인 DAO 10"+email);
+		String mapperId =String.format(mapper,"kakaoLogin");
+		System.out.println("카카오 로그인 DAO 11"+mapperId);
+		UserDTO data = session.selectOne(mapperId,email);
+		System.out.println("카카오 로그인 DAO 13"+data);
+		return data;
 	}
 	
 	

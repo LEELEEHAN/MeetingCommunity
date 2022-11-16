@@ -8,6 +8,7 @@
 
 <html>
 <head>
+	<%@ include file="../module/nav.jsp" %>
 <c:url var="bs5" value="/static/bs5" />
 <c:url var="jQuery" value="/static/js" />
 <link rel="stylesheet" type="text/css" href="${bs5}/css/bootstrap.min.css">
@@ -78,6 +79,7 @@
 				})
 			}
 		}
+
 	</script>
 </head>
 <body class="body">
@@ -87,7 +89,7 @@
 		<form action="./sign" method="post" id="form">	
 			아이디 
 			<input class="form-control" type="email" name="email" id="email"/>
-			<button class="idChk btn btn-warning" style="float:right" type="button" id="idChk" onclick="fn_idChk();" value="N">
+			<button class="idChk btn btn-warning" style="right" type="button" id="idChk" onclick="fn_idChk();" value="N">
 				인증번호 전송
 			</button>
 			<br>	
@@ -100,5 +102,16 @@
 		</form>
 	</div>
 </main>
+	<c:if test="${not empty AuthMsg}">
+		<script type="text/javascript">
+			alert("${AuthMsg}");
+		</script>
+	</c:if>
+	
+	<c:if test="${not empty joinError}">
+		<script type="text/javascript">
+			alert("${joinError}");
+		</script>
+	</c:if>
 </body>
 </html>

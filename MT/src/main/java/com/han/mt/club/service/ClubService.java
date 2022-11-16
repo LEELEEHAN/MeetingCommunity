@@ -2,11 +2,14 @@ package com.han.mt.club.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.han.mt.club.model.BoardDTO;
 import com.han.mt.club.model.ClubDAO;
 import com.han.mt.club.model.ClubDTO;
 import com.han.mt.club.model.ClubDynamicDTO;
@@ -14,6 +17,7 @@ import com.han.mt.club.model.ClubMemberDTO;
 import com.han.mt.club.model.ClubVO;
 import com.han.mt.social.model.FieldCategory;
 import com.han.mt.social.model.SocialDynamicDTO;
+import com.han.mt.user.model.UserDAO;
 
 
 @Service
@@ -21,6 +25,9 @@ public class ClubService {
 	
 	@Autowired
 	private ClubDAO dao;
+
+	@Autowired
+	private UserDAO userDao;
 	
 	
 	public List<ClubDTO> getClub(String category){
@@ -52,17 +59,21 @@ public class ClubService {
 		System.out.println("서비스(getSocialNum) 받은값:"+"\n"+num);	
 		return num;
 	}
-	public int createClub(ClubVO vo) {
+	public int createClub(ClubDTO vo,HttpSession session) {
 
 		int re = dao.createClub(vo);
+		dao.createClubDetail(vo);
 		if(re != 1) {return 9;}
 		int sult = dao.createClubMaster(vo);
 		if(sult != 1) {return 8;}
+		session.setAttribute("joinClub",userDao.joinClub(vo.getEmail()));
 		return 1;
 
 	}
-	public boolean deleteSoical(int socialNum) {
+	public boolean deleteSoical(int socialNum,String email,HttpSession session) {
 		boolean result =dao.deleteSoical(socialNum);
+
+		session.setAttribute("joinClub",userDao.joinClub(email));
 		return result;
 		
 	}
@@ -73,17 +84,20 @@ public class ClubService {
 		return re;
 	}
 	
-	public void entrust(ClubVO vo) {
+	public void entrust(ClubVO vo,HttpSession session) {
 		dao.entrustUser(vo);
 		dao.entrustMaster(vo);
+		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 	}
-	public void outcast(ClubVO vo) {
+	public void outcast(ClubVO vo,HttpSession session) {
 		dao.outcast(vo);
+		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 		
 	}
-	public void join(ClubVO vo) throws Exception {
+	public void join(ClubVO vo,HttpSession session) throws Exception {
 		int real = dao.getReal(vo.getSocialNum());		
 		ClubDTO detail = dao.getDetail(vo.getSocialNum());
+		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 		
 		dao.join(vo);
 	}
@@ -102,7 +116,12 @@ public class ClubService {
 		boolean result = dao.joinChk(vo);
 		return result;
 	}
-		
+	public List<BoardDTO> getBoard(BoardDTO dto) {
+		System.out.println("서비스(getBorad) 주입값 dto :"+"\n"+dto); 
+		List<BoardDTO> list = dao.getBorad(dto);	
+		System.out.println("서비스(getBorad)보드 조회 :"+"\n"+list); 
+		return list;
+	}
 	
 
 }

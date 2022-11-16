@@ -8,7 +8,9 @@ SELECT *
   JOIN SOCIALMEMBER m
     ON s.socialNum = m.socialNum
   JOIN USERTABLE u
-    ON m.ID = u.ID
+    ON m.ID = u.EMAIL
+  JOIN CLUBDETAIL d
+    ON d.SOCIALNUM = s.SOCIALNUM
  WHERE m.AUTH ='M'
    AND s.SOCIALCLUB = 'C'
  <if test='category != null'>
@@ -23,7 +25,7 @@ SELECT *
   JOIN SOCIALMEMBER m
     ON s.socialNum = m.socialNum
   JOIN USERTABLE u
-    ON m.ID = u.ID
+    ON m.ID = u.EMAIL
  WHERE m.AUTH ='M'
    AND s.SOCIALCLUB = 'C'
  <if test='title != null'>
@@ -63,12 +65,12 @@ SELECT COUNT(SOCIALNUM),SOCIALNUM
 
 <select id="getDetail" resultType="clubDto">
 SELECT s.SOCIALNUM,s.CATEGORY
-       ,s.TITLE,s.CONTENTS,s.SOCIALIMAGE,s.MAXIMUM,u.ID,u.NICKNAME
+       ,s.TITLE,s.CONTENTS,s.SOCIALIMAGE,s.MAXIMUM,u.EMAIL,u.NICKNAME
   FROM SOCIAL s
   JOIN SOCIALMEMBER m
     ON s.socialNum = m.socialNum
   JOIN USERTABLE u
-    ON m.ID = u.ID
+    ON m.ID =u.EMAIL
  WHERE m.AUTH ='M'
    AND s.socialNum = #{socialNum}
 </select>
@@ -78,7 +80,7 @@ SELECT s.SOCIALNUM,s.CATEGORY
 SELECT u.NICKNAME, m.AUTH
   FROM SOCIALMEMBER m
   JOIN USERTABLE u
-    ON m.ID = u.ID
+    ON m.ID = u.EMAIL
  WHERE socialNum = #{socialNum}
 </select>
 
@@ -93,9 +95,14 @@ VALUES(#{socialNum},#{category},#{title},#{contents},'C')
 </insert>
 
 
-<insert id="createClubMaster" parameterType="clubVo">
+<insert id="createClubMaster" parameterType="clubDto">
 INSERT INTO SOCIALMEMBER
-VALUES(#{socialNum},#{id},'M')
+VALUES(#{socialNum},#{email},'M')
+</insert>
+
+<insert id="createClubDetail" parameterType="clubDto">
+INSERT INTO CLUBDETAIL
+VALUES(#{socialNum},#{preview})
 </insert>
 
 <delete id ="deleteClub">
@@ -153,4 +160,18 @@ SELECT SOCIALNUM
  WHERE ID =#{id}
    AND socialNum = #{socialNum}
 </select>
+
+<select id="getBorad" resultType="boardDto">
+SELECT *
+  FROM CLUBBOARD b
+  JOIN SOCIAL s
+    ON s.SOCIALNUM = b.SOCIALNUM
+  JOIN USERTABLE u
+    ON u.EMAIL = b.WRITER
+ WHERE b.CATEGORY = #{category}
+   AND b.SOCIALNUM = #{socialNum}
+ 
+</select>
+
+
 </mapper>

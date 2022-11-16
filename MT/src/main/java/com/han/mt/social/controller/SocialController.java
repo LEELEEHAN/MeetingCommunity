@@ -26,14 +26,17 @@ import com.han.mt.social.model.SocialMemberDTO;
 import com.han.mt.social.model.SocialVO;
 import com.han.mt.social.service.SocialService;
 import com.han.mt.user.model.UserDTO;
+import com.han.mt.user.service.UserService;
 
 @Controller
 @RequestMapping(value = "/social")
 public class SocialController {
 	private static final Logger logger = LoggerFactory.getLogger(SocialController.class);
-	
+
 	@Autowired
 	private SocialService service;
+	@Autowired
+	private UserService userService;
 	
 	
 	@GetMapping(value = "")
@@ -48,6 +51,8 @@ public class SocialController {
 			model.addAttribute("list",service.getSocialTitle(search));
 		}
 		
+
+		
 		model.addAttribute("field",service.getCategory());
 		model.addAttribute("real",service.getReal());
 		return "social/social";
@@ -59,18 +64,22 @@ public class SocialController {
 	@GetMapping(value = "/detail")
 	public String socialDetail(Model model,HttpSession session,
 			@RequestParam(required = false) int id) {
-		
-		String loginId = (String) session.getAttribute("loginId");
+		if(session.getAttribute("loginId")!=null) {
+		String loginId = session.getAttribute("loginId").toString();
 		System.out.println("컨트롤(getdetail)"+"\n"+service.getDetail(id));
-
 		boolean chk = service.joinChk(loginId,id);
-		if(chk) {
-			model.addAttribute("chk","true");
+			if(chk) {
+				model.addAttribute("chk","true");
+			}
 		}
+		
+		
 		model.addAttribute("detail", service.getDetail(id));
 		model.addAttribute("real",service.getReal(id));
 		model.addAttribute("memberList",service.getMember(id));
 		model.addAttribute("comment",service.getComment(id));
+		
+		
 		return"social/detail";
 	}
 	
@@ -86,29 +95,29 @@ public class SocialController {
 		return "social/create";
 	}
 	
-	@PostMapping(value = "/create")//�옉�꽦�맂 �뼇�떇 ���옣
+	@PostMapping(value = "/create")
 	public String createSocial(HttpServletRequest request,HttpSession session,
 			@SessionAttribute("loginData") UserDTO user,
-			@ModelAttribute SocialVO vo) {
-		
+			@ModelAttribute SocialVO vo,
+			@ModelAttribute SocialDTO dto) {
+
 		vo.setSocialNum(service.getSocialNum());
-		vo.setId(user.getId());
+		dto.setSocialNum(vo.getSocialNum());
+		vo.setId(user.getEmail());
 		vo.setNickName(user.getNickName());
 
-		
+
 		System.out.println("컨트롤(create) 쇼셜로 할 내용"+"\n"+vo);
+		System.out.println("컨트롤(create) 쇼셜로 할 내용"+"\n"+dto);
 		System.out.println("컨트롤(create) 작성자 정보"+"\n"+user);
-
-		
-
-		
-		int result=service.createSocial(vo);
+	
+		int result=service.createSocial(vo,dto,session);
 		
 		switch(result) {
 		case 9:
 			return "error/error";
 		case 8:
-			service.deleteSoical(vo.getSocialNum());
+			service.deleteSoical(vo.getSocialNum(),user.getEmail(),session);
 			return "error/error";
 		}
 		
@@ -118,7 +127,8 @@ public class SocialController {
 	@PostMapping(value="/delete", produces = "application/json; charset=utf-8")
     @ResponseBody
 	public String delete(@RequestParam int id
-			,@SessionAttribute("loginData") UserDTO user
+			,@SessionAttribute("loginData") UserDTO user,
+			HttpSession session
 			) {
 		SocialDTO social = service.getDetail(id);
 		
@@ -129,7 +139,7 @@ public class SocialController {
             json.put("message", "�씠誘� �궘�젣 �맂 �뜲�씠�꽣 �엯�땲�떎.");
         } else {
             if (true) {
-                boolean result = service.deleteSoical(id);
+                boolean result = service.deleteSoical(id,user.getEmail(),session);
                 if (result) {
                     json.put("message", "�궘�젣 �셿猷�");
                 } else {
@@ -155,7 +165,7 @@ public class SocialController {
 		
 		return "social/modify";
 	}
-	@PostMapping(value = "/modify")//�옉�꽦�맂 �뼇�떇 ���옣
+	@PostMapping(value = "/modify")
 	public String modifySocial(HttpServletRequest request,
 			@ModelAttribute SocialVO vo) {
 		
@@ -168,9 +178,9 @@ public class SocialController {
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
 	@PostMapping(value="/entrust")
-	public String entrust(@ModelAttribute SocialVO vo) {
+	public String entrust(@ModelAttribute SocialVO vo,HttpSession session) {
 		System.out.println("컨트롤(entrust) 받은 값"+vo); 
-		service.entrust(vo);
+		service.entrust(vo ,session);
 
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
@@ -189,9 +199,9 @@ public class SocialController {
 	
 	
 	@PostMapping(value="/join")
-	public String join(@ModelAttribute SocialVO vo)throws Exception {
+	public String join(@ModelAttribute SocialVO vo,HttpSession session)throws Exception {
 		System.out.println(vo); 
-		service.join(vo);
+		service.join(vo,session);
 
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}

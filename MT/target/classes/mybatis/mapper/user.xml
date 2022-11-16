@@ -4,24 +4,26 @@
 <mapper namespace ="userMapper">
 <select id="searchId" resultType="userDto">
 SELECT *
-FROM USERTABLE
+FROM USERTABLES
 WHERE NICKNAME = #{NICKNAME}
 </select>
 <select id="joinClub" resultType="socialDto">
-SELECT m.SOCIALNUM, s.TITLE
+SELECT m.SOCIALNUM, s.TITLE, s.category, m.auth
   FROM SOCIALMEMBER m
   JOIN SOCIAL s
     ON m.SOCIALNUM=s.SOCIALNUM
  WHERE ID = #{id}
    AND s.SOCIALCLUB ='C'
+ORDER BY AUTH
 </select>
 <select id="joinSocial" resultType="socialDto">
-SELECT m.SOCIALNUM, s.TITLE
+SELECT m.SOCIALNUM, s.TITLE, s.category, m.auth
   FROM SOCIALMEMBER m
   JOIN SOCIAL s
     ON m.SOCIALNUM=s.SOCIALNUM
  WHERE ID = #{id}
    AND s.SOCIALCLUB ='S'
+ORDER BY AUTH
 </select>
 
 </mapper>

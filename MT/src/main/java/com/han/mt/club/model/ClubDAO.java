@@ -76,7 +76,7 @@ public class ClubDAO {
 		System.out.println("DAO(getNum) 받은 값: "+"\n"+num);	
 		return num;
 	}
-	public int createClub(ClubVO vo) {
+	public int createClub(ClubDTO vo) {
 		String mapperId =String.format(mapper,"createClub");
 		int result;
 		result = session.insert(mapperId,vo);
@@ -84,7 +84,7 @@ public class ClubDAO {
 		return result;
 		
 	}
-	public int createClubMaster(ClubVO user) {
+	public int createClubMaster(ClubDTO user) {
 		String mapperId =String.format(mapper,"createClubMaster");
 		int result;
 	    result = session.insert(mapperId,user);		
@@ -151,6 +151,18 @@ public class ClubDAO {
 		System.out.println("DAO(joinChk) 내가 가입했는지 결과값 :"+"\n"+re); 
 			
 		return re;
+	}
+	public List<BoardDTO> getBorad(BoardDTO dto) {
+		String mapperId =String.format(mapper,"getBorad");
+		List<BoardDTO> list = session.selectList(mapperId,dto);
+		System.out.println("DAO(getBorad)보드 조회 :"+"\n"+list);  	
+		return list;
+	}
+	public void createClubDetail(ClubDTO vo) {
+		System.out.println("DAO(createClubDetail)" +vo);
+		String mapperId =String.format(mapper,"createClubDetail");
+		session.insert(mapperId,vo);	
+		
 	}
 
 }

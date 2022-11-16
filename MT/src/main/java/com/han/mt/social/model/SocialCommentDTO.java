@@ -6,6 +6,7 @@ public class SocialCommentDTO {
 
 	private int commentNum;
 	private int socialNum;
+	private String nickName;
 	private String writer;
 	private String content;
 	private Date writeDate;
@@ -30,11 +31,18 @@ public class SocialCommentDTO {
 	public void setSocialNum(int socialNum) {
 		this.socialNum = socialNum;
 	}
+
 	public String getWriter() {
 		return writer;
 	}
 	public void setWriter(String writer) {
 		this.writer = writer;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 	public Date getWriteDate() {
 		return writeDate;
@@ -45,8 +53,8 @@ public class SocialCommentDTO {
 	
 	@Override
 	public String toString() {
-		return "SocialCommentDTO [commentNum=" + commentNum + ", socialNum=" + socialNum + ", writer=" + writer
-				+ ", content=" + content + ", writeDate=" + writeDate + "]"+"\n";
+		return "SocialCommentDTO [commentNum=" + commentNum + ", socialNum=" + socialNum + ", nickName=" + nickName
+				+ ", writer=" + writer + ", content=" + content + ", writeDate=" + writeDate + "]"+"\n";
 	}
 	
 	

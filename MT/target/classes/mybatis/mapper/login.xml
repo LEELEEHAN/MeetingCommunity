@@ -4,10 +4,21 @@
 <mapper namespace ="loginMapper">
 <select id="login" resultType="userDto">
 SELECT *
-  FROM USERTABLE
- WHERE EMAIL = #{email}
-   AND PASSWORD = #{password}
+  FROM USERTABLE u
+LEFT JOIN USERDETAIL d
+    ON u.EMAIL = d.ID
+ WHERE u.EMAIL = #{email}
+   AND u.PASSWORD = #{password}
 </select>
+<select id="getAdminLogin" resultType="userDto">
+SELECT *
+  FROM USERTABLE u
+LEFT JOIN ADMIN d
+    ON u.EMAIL = d.ID
+ WHERE u.EMAIL = #{email}
+   AND u.PASSWORD = #{password}
+</select>
+
 <select id="searchId" resultType="userDto">
 SELECT EMAIL
   FROM USERTABLE
@@ -33,6 +44,22 @@ VALUES
 (#{name},#{password},#{phone},#{birth},#{gender},#{email},#{nickName})
 </insert>
 
+<insert id="kakaoSignup"  parameterType="UserDTO">
+INSERT INTO USERTABLE
+(NAME,PASSWORD,PHONE,EMAIL,NICKNAME)
+VALUES
+(#{name},#{password},#{phone},#{email},#{nickName})
+</insert>
+
+
+<insert id="signupDetail"  parameterType="UserDTO">
+INSERT INTO USERDETAIL
+(ID)
+VALUES
+(#{email})
+</insert>
+
+
 <insert id="emailRes"  parameterType="UserDTO">
 INSERT INTO USERTABLE
 (email)
@@ -42,9 +69,9 @@ VALUES
 
 
 <update id="loginLog">
-UPDATE USERTABLE
+UPDATE USERDETAIL
    SET DATELOG = SYSDATE
- WHERE email=#{email}
+ WHERE id=#{email}
 </update>
 
 
@@ -60,12 +87,26 @@ UPDATE USERTABLE
  WHERE email=#{email}
 </update>
 
+<delete id="dropId">
+DELETE USERTABLE
+WHERE EMAIL =#{email}
+</delete>
+
+
+
+
 <insert id="imageToDB">
 
 </insert>
 <update id="imageToProfile">
 
 </update>
-
+<select id="kakaoLogin" resultType="userDto">
+SELECT *
+  FROM USERTABLE u
+ full JOIN USERDETAIL d
+    ON u.EMAIL = d.ID
+ WHERE u.EMAIL = #{email}
+</select>
 
 </mapper>

@@ -24,8 +24,8 @@
 <body>
     <div id="msgStack"></div>
     <header>
-   	 	<div class ="category-list">
-            <table>
+   	 	<div class ="category-list" style="text-align:center">
+            <table class="text-center text-center" >
                 <tr id="category" name="category">
                     <td onclick="location.href='./social'">전체보기</td>
                     <c:if test="${not empty field}">
@@ -38,7 +38,7 @@
        </div>
     </header>
     <section>
-        <div class="socialSearchBar">
+        <div class="socialSearchBar text-center">
 	        <form method="get">
 	            <div class="col-xs-8">
 		            <input type="text" id="social-search" class="form-searchBar" name="search">
@@ -58,7 +58,7 @@
 		        </form>
 	        </c:if>
         </div>
-        <div>
+        <div class="text-center">
             <table style="text-align: center;border:1px solid #dddddd">
 				<c:if test="${not empty list}">
 					<c:forEach items="${list}" var="list">

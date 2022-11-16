@@ -10,15 +10,16 @@ public class ClubDTO {
 	private int maximum;
 	private String socialImage;
 	private String nickName;
-	private String id;
+	private String email;
+	private String preview;
 	
 	
 	
-	public String getId() {
-		return id;
+	public String getEmail() {
+		return email;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public int getMaximum() {
 		return maximum;
@@ -68,10 +69,19 @@ public class ClubDTO {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
+	
+	
+	public String getPreview() {
+		return preview;
+	}
+	public void setPreview(String preview) {
+		this.preview = preview;
+	}
 	@Override
 	public String toString() {
-		return "ClubDTO [id=" + id +"socialNum=" + socialNum + ", category=" + category + ", title=" + title + ", contents="
-				+ contents + ", content=" + content + ", socialImage=" + socialImage + ", nickName=" + nickName + "]"+"\n";
+		return "ClubDTO [socialNum=" + socialNum + ", category=" + category + ", title=" + title + ", contents="
+				+ contents + ", content=" + content + ", maximum=" + maximum + ", socialImage=" + socialImage
+				+ ", nickName=" + nickName + ", email=" + email + ", preview=" + preview + "]"+"\n";
 	}
 
 	

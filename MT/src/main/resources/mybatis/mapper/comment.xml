@@ -4,8 +4,10 @@
 <mapper namespace ="commentMapper">
 
 <select id="getSocialComment" resultType="socialCommentDto">
-SELECT *
-  FROM SOCIALCOMMENT
+SELECT c.CONTENT,c.WRITEDATE,u.NICKNAME,c.WRITER,c.SOCIALNUM,c.COMMENTNUM
+  FROM SOCIALCOMMENT c
+  JOIN USERTABLE u
+    ON c.WRITER = u.EMAIL
  WHERE SOCIALNUM = #{socialNum}
 </select>
 

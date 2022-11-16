@@ -6,6 +6,7 @@
 <html>
 <head>    
 
+<%@ include file="../module/nav.jsp"%>
 <c:url var="bs5" value="/static/bs5" /> 
 <c:url var="jQuery" value="/static/js" />
 <link rel="stylesheet" type="text/css" href="${bs5}/css/bootstrap.min.css">
@@ -18,7 +19,7 @@
 	<title>우동-마이페이지</title>
 </head> 
 <body>
-<div>
+<div style="center">
 	<div>
 		<label>아이디</label><br>
 		<input type="text" name="email" placeholder="${sessionScope.loginData.email}" readonly><br>

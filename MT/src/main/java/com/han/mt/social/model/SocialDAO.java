@@ -155,6 +155,12 @@ public class SocialDAO {
 		System.out.println("DAO(getCommentNum) 부여될 commentNum: "+"\n"+num);  
 		return num;
 	}
+	public void createSocialDetail(SocialDTO dto) {
+		System.out.println("DAO(createSocialDetail) 받은 dto: "+"\n"+dto);  
+		String mapperId =String.format(mapper,"createSocialDetail");
+		session.insert(mapperId,dto);
+		
+	}
 	
 	
 	

@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.han.mt.club.model.BoardDTO;
 import com.han.mt.club.model.ClubDTO;
 import com.han.mt.club.model.ClubVO;
 import com.han.mt.club.service.ClubService;
 import com.han.mt.social.service.SocialService;
 import com.han.mt.user.model.UserDTO;
+import com.han.mt.user.service.UserService;
 
 
 @Controller
@@ -32,16 +34,14 @@ public class ClubController {
 	private ClubService service;
 	@Autowired
 	private SocialService socialService;
+	@Autowired
+	private UserService userService;
 	
 	@GetMapping(value = "")
 	public String getClub(Model model,HttpSession session,
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false) String search) {
 
-		System.out.println(category);
-		System.out.println(search);
-		
-		
 		if(search == null) {
 			model.addAttribute("list",service.getClub(category));
 		} else {
@@ -57,19 +57,23 @@ public class ClubController {
 	@GetMapping(value = "/detail")
 	public String socialDetail(Model model,HttpSession session,
 			@RequestParam(required = false) int id) {
-		String loginId = (String) session.getAttribute("loginId");
-	
-//		model.addAttribute("clubList",service.cluList(loginId));
 		
-		
-		
-		boolean chk = service.joinChk(loginId,id);
-		if(chk) {
-			model.addAttribute("chk","true");
+		if(session.getAttribute("loginId")!=null) {
+			String loginId = session.getAttribute("loginId").toString();	
+			boolean chk = service.joinChk(loginId,id);
+			if(chk) {
+				model.addAttribute("chk","true");
+			}
 		}
+		
+		BoardDTO dto = new BoardDTO();
+		dto.setSocialNum(id);
+		dto.setCategory("I");		
+		
 		model.addAttribute("detail", service.getDetail(id));
 		model.addAttribute("real",socialService.getReal(id));
 		model.addAttribute("memberList",socialService.getMember(id));
+		model.addAttribute("board",service.getBoard(dto));
 		return"club/detail";
 	}
 	
@@ -88,34 +92,35 @@ public class ClubController {
 	@PostMapping(value = "/create")//�옉�꽦�맂 �뼇�떇 ���옣
 	public String createSocial(HttpServletRequest request,HttpSession session,
 			@SessionAttribute("loginData") UserDTO user,
-			@ModelAttribute ClubVO vo) {
+			@ModelAttribute ClubDTO dto) {
 		
-		vo.setSocialNum(service.getSocialNum());
-		vo.setId(user.getId());
-		vo.setNickName(user.getNickName());
+		dto.setSocialNum(service.getSocialNum());
+		dto.setEmail(user.getEmail());
+		dto.setNickName(user.getNickName());
 
-		System.out.println("컨트롤(create) 클럽 작성 내용"+"\n"+vo);
+		System.out.println("컨트롤(create) 클럽 작성 내용"+"\n"+dto);
 
 		System.out.println("컨트롤(create) 작성자 정보"+"\n"+user);
 
 		
-		int result=service.createClub(vo);
+		int result=service.createClub(dto,session);
 		
 		switch(result) {
 		case 9:
 			return "error/error";
 		case 8:
-			service.deleteSoical(vo.getSocialNum());
+			service.deleteSoical(dto.getSocialNum(),user.getEmail(),session);
 			return "error/error";
 		}
 		
-		return "redirect:/club/detail?id=" + vo.getSocialNum();
+		return "redirect:/club/detail?id=" + dto.getSocialNum();
 	}
 
 	@PostMapping(value="/delete", produces = "application/json; charset=utf-8")
     @ResponseBody
 	public String delete(@RequestParam int id
 			,@SessionAttribute("loginData") UserDTO user
+			,HttpSession session
 			) {
 		ClubDTO social = service.getDetail(id);
 		
@@ -126,7 +131,7 @@ public class ClubController {
             json.put("message", "�씠誘� �궘�젣 �맂 �뜲�씠�꽣 �엯�땲�떎.");
         } else {
             if (true) {
-                boolean result = service.deleteSoical(id);
+                boolean result = service.deleteSoical(id,user.getEmail(),session);
                 if (result) {
                     json.put("message", "�궘�젣 �셿猷�");
                 } else {
@@ -142,6 +147,7 @@ public class ClubController {
         return json.toJSONString();
 		
 	}
+	
 	
 	@GetMapping(value="modify")
 	public String modify(Model model
@@ -164,28 +170,41 @@ public class ClubController {
 		return "redirect:/club/detail?id=" + vo.getSocialNum();
 	}
 	@PostMapping(value="/entrust")
-	public String entrust(@ModelAttribute ClubVO vo) {
+	public String entrust(@ModelAttribute ClubVO vo,HttpSession session) {
 		System.out.println(vo); 
-		service.entrust(vo);
+		service.entrust(vo,session);
 
 		return "redirect:/club/detail?id=" + vo.getSocialNum();
 	}
 	
 	@PostMapping(value="/outcast")
-	public String outcast(@ModelAttribute ClubVO vo) {
+	public String outcast(@ModelAttribute ClubVO vo,HttpSession session) {
 		System.out.println(vo.getNickName()); 
-		service.outcast(vo);
+		service.outcast(vo,session);
 
 		return "redirect:/club/detail?id=" + vo.getSocialNum();
 	}
 	
 	
 	@PostMapping(value="/join")
-	public String join(@ModelAttribute ClubVO vo)throws Exception {
+	public String join(@ModelAttribute ClubVO vo,HttpSession session)throws Exception {
 		System.out.println(vo); 
-		service.join(vo);
+		service.join(vo,session);
 		return "redirect:/club/detail?id=" + vo.getSocialNum();
 	}
 	
+	
+	
+	@PostMapping(value="/getBoard")
+    @ResponseBody
+	public String getBoard(@ModelAttribute BoardDTO dto,Model model){
+		System.out.println("컨트롤(getBorad) 주입값 dto :"+"\n"+dto); 
+		List<BoardDTO> board = service.getBoard(dto);
+		System.out.println("컨트롤(getBorad)보드 조회 :"+"\n"+board); 
+		model.addAttribute("boeard",board);
+		
+		
+		return "redirect:/";
+	}
 	
 }

@@ -23,12 +23,30 @@
 	우리들의 동아리
 </h1>
 
-
-<button type ="button" onclick="location.href='./social'">social</button>
-<button type ="button" onclick="location.href='./club'">클럽</button>
-<button type ="button" onclick="location.href='./login'">로그인</button>
-<button type ="button" onclick="location.href='./mypage'">마이페이지</button>
-
+<div>
+<c:if test="${not empty sessionScope.loginData}">
+	<h3>가입 클럽</h3>
+	<c:if test="${not empty joinClub}">
+		<c:forEach items="#{joinClub}" var="club">
+		<c:url var="clubUrl" value="./mt/club/detail">
+			<c:param name="id">${club.socialNum}</c:param>
+		</c:url>
+			<p onclick="location.href='${clubUrl}'">${club.title}</p>
+		</c:forEach>
+	</c:if>
+	
+	
+	<h3>참가한 쇼셜링</h3>
+	<c:if test="${not empty joinSocial}">				
+		<c:forEach items="#{joinSocial}" var="social">
+		<c:url var="SocialUrl" value="/mt/social/detail">
+			<c:param name="id">${social.socialNum}</c:param>
+		</c:url>
+			<p onclick="location.href='${SocialUrl}'">${social.title}</p>
+		</c:forEach>
+	</c:if>
+</c:if>
+</div>
 
 </body>
 </html>

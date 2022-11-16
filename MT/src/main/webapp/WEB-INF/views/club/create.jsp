@@ -8,6 +8,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>게시글 등록</title>
+	<%@ include file="../module/head.jsp" %>
+	<%@ include file="../module/nav.jsp" %>
 	<c:url var="ckeditor" value="/static/ckeditor" />
 	<script type="text/javascript" src="${ckeditor}/ckeditor.js"></script>
 </head>
@@ -30,7 +32,7 @@
 			<c:url var="boardAddUrl" value="/club/create" />
 			<form action="${boardAddUrl}" method="post">
 				<div class="mb-3">
-					<input class="form-control" type="text" name="title" placeholder="제목을 입력하세요.">
+					<input class="form-control" type="text" name="title" placeholder="클럽 이름을 정해봐요">
 				</div>
 				<div>	
 					<c:if test="${not empty field}">
@@ -38,6 +40,10 @@
 							<input type ="radio" name="category" value="${field.category}">${field.category}
 						</c:forEach>								
 					</c:if>
+				</div>
+				<div class="mb-3">
+					<input class="form-control" name="preview"
+						placeholder="짦은 글로 클럽을 소개해보세요.">
 				</div>
 				<div class="mb-3">
 					<textarea class="form-control" name="contents" rows="8"
@@ -51,7 +57,7 @@
 			</form>
 		</div>
 		
-		<!-- <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+		<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -68,7 +74,7 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 	</section>
 	<footer></footer>
 	<c:url var="upload" value="/upload/image" />

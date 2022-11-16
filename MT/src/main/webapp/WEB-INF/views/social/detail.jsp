@@ -25,8 +25,8 @@
 
     <div id="msgStack"></div>
 <header>
-	<div><!-- 소셜 정보 -->
-		<table>
+	<div class="text-center"><!-- 소셜 정보 -->
+		<table class="text-center">
 			<tr>
 				<td rowspan="2">썸네일${detail.socialImage}</td>
 				<td>${detail.title}</td>
@@ -50,7 +50,7 @@
 								<c:if test="${real < detail.maximum}">	
 									<c:if test="${empty chk}">
 											<input type="hidden" name="nickName" value="${sessionScope.loginData.nickName}">
-											<input type="hidden" name="email" value="${sessionScope.loginData.email}">
+											<input type="hidden" name="id" value="${sessionScope.loginData.email}">
 											<input type="hidden" name="socialNum" value="${detail.socialNum}">
 											<button class="btn btn-sm btn-outline-dark"type="submit">참가신청</button>
 										
@@ -65,15 +65,26 @@
 	</div>
 </header>
 <section>
-	<div><!-- 컨텐츠 내용 -->
+	<div class="text-center"><!-- 컨텐츠 내용 -->
 		<p>${detail.contents}</p>
+		
+		<div>
+			<div>
+				<label>일자</label>
+				<a>${detail.socialDate}</a>
+			</div>
+			<div>
+				<label style="color :red ; font-size : 15px">장소</label>
+				<a>${detail.location}</a>
+			</div>
+		</div>
 	</div>
 	
-	<div><!-- 댓글 내용-->
+	<div class="text-center"><!-- 댓글 내용-->
 		<c:if test="${not empty comment}">
 			<c:forEach items="${comment}" var="comment">
 				<div class="d-flex justify-content-between">
-					<span><small><strong>${comment.writer}</strong></small></span>
+					<span><small><strong>${comment.nickName}</strong></small></span>
 					<span><small>${comment.writeDate}</small></span>
 				</div>
 				<div class="d-flex justify-content-between">
@@ -108,7 +119,7 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
-	<div>
+	<div class="text-center">
 		<form action="./delete" method="post">	
 		
 			<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../social'">
@@ -168,12 +179,12 @@
 								<c:forEach items="${memberList}" var="memberList">
 									<div>
 										<c:if test="${memberList.nickName ne detail.nickName}">
-											${memberList.nickName}(${memberList.id})	
+											${memberList.nickName}	
 										</c:if>
-										<c:if test="${sessionScope.loginData.email eq detail.email}">
+										<c:if test="${sessionScope.loginData.email eq detail.email}"> 
 											<c:if test="${memberList.nickName ne detail.nickName}">												
 												<!-- 강퇴,추방 버튼 -->
-													<button type="hidden" class="btn btn-danger" name="outcast" value="${memberList.id}" onclick="outcastSocial('${memberList.email}')">추방</button>
+													<button type="hidden" class="btn btn-danger" name="outcast" value="${memberList.id}" onclick="outcastSocial('${memberList.id}')">추방</button>
 													<!--data-bs-toggle="modal" data-id="${memberList.id}" data-nickName="${memberList.nickName}" name="outcastButton" data-bs-target="#outcast"  -->
 												
 											</c:if>
@@ -206,7 +217,7 @@
 						<c:forEach items="${memberList}" var="memberList">
 							<c:if test="${memberList.auth =='U'}">
 							<div>
-								<input type="radio" name="enter" value="${memberList.email}">${memberList.nickName}				
+								<input type="radio" name="enter" value="${memberList.id}">${memberList.nickName}				
 							</div>
 							</c:if>
 						</c:forEach>
@@ -301,7 +312,7 @@ function entrustSocial(id) {
 				type: "post",
 				data: {
 					socialNum: ${detail.socialNum},
-					email: user
+					id: user
 				},
 				success: function(data) {
 					if(data) {
