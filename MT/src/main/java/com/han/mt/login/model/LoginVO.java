@@ -27,7 +27,7 @@ public class LoginVO {
 	}
 	@Override
 	public String toString() {
-		return "LoginVO [email=" + email + ", password=" + password + "]";
+		return "LoginVO [email=" + email + ", password=" + password + ", admin="+ admin+"]";
 	}
 	
 	

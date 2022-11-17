@@ -190,6 +190,9 @@ public class ClubController {
 	public String join(@ModelAttribute ClubVO vo,HttpSession session)throws Exception {
 		System.out.println(vo); 
 		service.join(vo,session);
+
+		session.removeAttribute("joinSocial");
+		session.setAttribute("joinSocial",userService.joinSocial(vo.getId()));
 		return "redirect:/club/detail?id=" + vo.getSocialNum();
 	}
 	

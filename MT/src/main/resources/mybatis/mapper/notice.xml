@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="noticeMapper">
+
+<insert id="write"  parameterType="noticeDto">
+INSERT INTO NOTICE
+(NOTICENUM,TITLE,CONTENT,CATEGORY,FILENAME)
+VALUES
+(#{noticeNum},#{title},#{content},#{category},#{fileName})
+</insert>
+
+<select id="getNum" resultType="_int">
+SELECT NOTICE_NUM_SEQ.NEXTVAL FROM DUAL
+</select>
+<select id="getList" resultType="noticeDto">
+SELECT *
+FROM NOTICE
+WHERE CATEGORY = #{category}
+</select>
+
+
+
+</mapper>

@@ -101,10 +101,12 @@ function nickCheck(){
 		}
 	if($("#nickName").val()!=""){
 			$.ajax({
-				url : "mt/login/nickNameCheck",
+				url : "./idChk",
 				type : "POST",
 				data : {
-					nickName : $("#nickName").val()
+					email : $("#nickName").val(),
+					type : "nickName"
+					
 					},
 				success : function(data){
 					if(data != 1){

@@ -88,10 +88,10 @@ public class LoginDAO {
 		session.update(mapperId,data);		
 	}
 
-	public boolean nickNameCheck(UserDTO dto) throws Exception{
+	public boolean nickNameCheck(String nickName) throws Exception{
 		String mapperId =String.format(mapper,"nickNameCheck");
 		boolean result;
-		int idChk= session.selectOne(mapperId,dto);
+		int idChk= session.selectOne(mapperId,nickName);
 		if(idChk<1){
 			result = true;
 		}else {

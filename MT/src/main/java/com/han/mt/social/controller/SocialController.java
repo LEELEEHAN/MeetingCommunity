@@ -181,7 +181,6 @@ public class SocialController {
 	public String entrust(@ModelAttribute SocialVO vo,HttpSession session) {
 		System.out.println("컨트롤(entrust) 받은 값"+vo); 
 		service.entrust(vo ,session);
-
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
 	
@@ -203,6 +202,8 @@ public class SocialController {
 		System.out.println(vo); 
 		service.join(vo,session);
 
+		session.removeAttribute("joinSocial");
+		session.setAttribute("joinSocial",userService.joinSocial(vo.getId()));
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
 	

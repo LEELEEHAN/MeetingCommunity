@@ -52,7 +52,8 @@
 					url : "./idChk",
 					type : "POST",
 					data : {
-						email : $("#email").val()
+						email : $("#email").val(),
+						type : "email"
 						},
 					success : function(data){
 						if(data != 1){
@@ -63,7 +64,8 @@
 								url : "./emailRes",
 								type : "POST",
 								data : {
-									email : $("#email").val()
+									email : $("#email").val(),
+									
 									},
 								success : function(data){
 									$("#email").attr("readonly","true");

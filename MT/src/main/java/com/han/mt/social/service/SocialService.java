@@ -92,13 +92,15 @@ public class SocialService {
 		dao.createSocialDetail(dto);
 		if(sult != 1) {return 8;}
 		}
-		session.setAttribute("joinSocial",userDao.joinSocial(dto.getEmail()));
+		session.removeAttribute("joinSocial");
+		session.setAttribute("joinSocial",userDao.joinSocial(vo.getId()));
 		return re;
 
 	}
 	public boolean deleteSoical(int socialNum,String email,HttpSession session)  {
 		boolean result =dao.deleteSoical(socialNum);
-		session.setAttribute("joinClub",userDao.joinClub(email));
+		session.removeAttribute("joinSocial");
+		session.setAttribute("joinSocial",userDao.joinSocial(email));
 
 		return result;
 		
@@ -113,17 +115,18 @@ public class SocialService {
 	public void entrust(SocialVO vo,HttpSession session) {
 		dao.entrustUser(vo);
 		dao.entrustMaster(vo);
-		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
+		session.removeAttribute("joinSocial");
+		session.setAttribute("joinSocial",userDao.joinSocial(vo.getId()));
 	}
 	public void outcast(SocialVO vo,HttpSession session) {
 		dao.outcast(vo);
-		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
+		session.removeAttribute("joinSocial");
+		session.setAttribute("joinSocial",userDao.joinSocial(vo.getId()));
 		
 	}
 	public void join(SocialVO vo,HttpSession session) throws Exception {
 		int real = dao.getReal(vo.getSocialNum());		
 		SocialDTO detail = dao.getDetail(vo.getSocialNum());
-		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 		int max= detail.getMaximum();
 		if(real<max) {
 		dao.join(vo);}

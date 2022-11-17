@@ -42,7 +42,7 @@ public class HomeController {
 		model.addAttribute("serverTime", formattedDate );
 		
 		
-		
+		//if(session.getAttribute("loginData"))
 		
 		return "home";
 	}

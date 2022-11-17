@@ -11,12 +11,10 @@
 	<%@ include file="../module/nav.jsp" %>
 </head>
 <body>
-	<c:if test="${category eq 'ALL' }">	
 		<div>
 			<form action="./board/search" method="get">
-				<div>			전체 게시판 검색
-				
-					<input type="hidden" name="category" value="ALL"> 
+				<div>			
+					전체 게시판 검색
 					<input type="text" name="keyword">
 					<button type="submit">전송</button>
 				</div>
@@ -29,48 +27,10 @@
 				<tr>
 					<td onclick="location.href='${boardsURL}info'">문의</td>
 					<td onclick="location.href='${boardsURL}event'">공지</td>
-					<td onclick="location.href='${boardsURL}notice'">정보</td>
-				
+					<td onclick="location.href='${boardsURL}notice'">정보</td>				
 				</tr>
 			</table>
 		</div>
-	</c:if>
-	<section>
-		<form action="./board/search" method="get">
-			<div>
-			게시판 내 검색
-				<input type="hidden" name="category" value="${category}"> 
-				<select name="type">
-					<option value="title">제목+내용</option>
-					<option value="id">아이디</option>
-					<option value="tag">태그</option>
-				</select>
-				<input type="text" name="keyword">
-				<button type="submit">전송</button>
-			</div>
-		</form>
-		<c:choose>
-				<c:when test="${category eq 'R'}">
-					<table>
-						<c:if test="${not empty Tdata}">
-							<tr>	
-								<td onclick="location.href='${boardsURL}R'">전체 리뷰게시판</td>
-								<c:forEach items="${Tdata}" var="Tdata">							
-									<c:url var="boardTranerUrl" value="/board">
-										<c:param name="category">${category}</c:param>
-										<c:param name="usersCode">${Tdata.userscode} </c:param>
-									</c:url>
-									<td onclick="location.href='${boardTranerUrl}'">${Tdata.name}</td>
-								</c:forEach>								
-							</tr>
-								
-						</c:if>
-					</table>
-				</c:when>
-				<c:otherwise>
-					&nbsp;
-				</c:otherwise>
-			</c:choose>
 	<section>
 			<article>
 		<table>
@@ -92,75 +52,37 @@
 			</thead>
 			<tbody>
 			
-			<c:forEach items="${datas}" var="Rdata">
+			<c:forEach items="${list}" var="Rdata">
 				<c:url var="boardListUrl" value="/board/detail">
 					<c:param name="category">${category}</c:param>
-					<c:param name="dataNum">${Rdata.dataNum}</c:param>
-				</c:url>
-				<c:url var="userBoard" value="/board/search">
-					<c:param name="category">ALL</c:param>
-					<c:param name="type">id</c:param>
-					<c:param name="keyword">${Rdata.writer}</c:param>
+					<c:param name="id">${Rdata.noticeNum}</c:param>
 				</c:url>
 				<tr>
-					<td>${Rdata.dataNum}</td>
+					<td>${Rdata.noticeNum}</td>
 					<td onclick="location.href='${boardListUrl}'">
 						${Rdata.title}
-						<c:if test="${Rdata.recommend >= 1}">
-							<i>[${Rdata.recommend}]<i></i>
-						</c:if>
 					</td>
-					<td onclick="location.href='${userBoard}'">${Rdata.writer}</td>
-					<td>${Rdata.conut}</td>
-					<td>${Rdata.writedate}</td>
+					<td>${Rdata.writeDate}</td>
 				</tr>
 			</c:forEach>
 				
 				<tr>
 					<td>
-						<c:choose>
-							<c:when test="${category ne 'N' or sessionScope.loginData.roles eq'A'}">
-								<form action="./board/add" method="get">
-									<div>
-										<c:url var="boardUrl" value="./board"/>
-										<c:if test="${not empty sessionScope.loginData.email}">	
-											<button class="btn btn-secondary" type="submit" onclick="location.href='${boardUrl}/add'"><input type="hidden" name="category" value="${category}">추가</button>
-										</c:if>
-									</div>
-								</form>
-							</c:when>
-						</c:choose>
+						<c:if test="${sessionScope.adminAcc eq 'admin'}">
+							<form action="/mt/notice/write" method="get">
+								<div>
+									<c:if test="${not empty sessionScope.loginData.email}">	
+										<button class="btn btn-secondary" type="submit"><input type="hidden" name="category" value="${category}">추가</button>
+									</c:if>
+								</div>
+							</form>
+						</c:if>
 					</td> 
 				</tr>
 			</article>
 			</tbody>
 		</table>
 	</section>
-		<aside>
-			<c:choose>
-				<c:when test="${category eq 'R'}">
-					<table>
-						<c:if test="${not empty Tdata}">
-							<tr>	
-								<td onclick="location.href='${boardsURL}R'">선택취소</td>
-								<c:forEach items="${Tdata}" var="Tdata">							
-									<c:url var="boardTranerUrl" value="/board">
-										<c:param name="category">${category}</c:param>
-										<c:param name="usersCode">${Tdata.userscode}</c:param>
-									</c:url>
-									<td onclick="location.href='${boardTranerUrl}'">${Tdata.name}</td>
-								</c:forEach>								
-							</tr>
-								
-						</c:if>
-					</table>
-				</c:when>
-				<c:otherwise>
-					&nbsp;
-				</c:otherwise>
-			</c:choose>
-		</aside>
-	</section>	
 	<nav>
 		<div>
 			<ul class="pagination justify-content-center">

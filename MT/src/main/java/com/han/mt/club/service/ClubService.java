@@ -66,6 +66,7 @@ public class ClubService {
 		if(re != 1) {return 9;}
 		int sult = dao.createClubMaster(vo);
 		if(sult != 1) {return 8;}
+		session.removeAttribute("joinClub");
 		session.setAttribute("joinClub",userDao.joinClub(vo.getEmail()));
 		return 1;
 
@@ -73,6 +74,7 @@ public class ClubService {
 	public boolean deleteSoical(int socialNum,String email,HttpSession session) {
 		boolean result =dao.deleteSoical(socialNum);
 
+		session.removeAttribute("joinClub");
 		session.setAttribute("joinClub",userDao.joinClub(email));
 		return result;
 		
@@ -87,16 +89,19 @@ public class ClubService {
 	public void entrust(ClubVO vo,HttpSession session) {
 		dao.entrustUser(vo);
 		dao.entrustMaster(vo);
+		session.removeAttribute("joinClub");
 		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 	}
 	public void outcast(ClubVO vo,HttpSession session) {
 		dao.outcast(vo);
+		session.removeAttribute("joinClub");
 		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 		
 	}
 	public void join(ClubVO vo,HttpSession session) throws Exception {
 		int real = dao.getReal(vo.getSocialNum());		
 		ClubDTO detail = dao.getDetail(vo.getSocialNum());
+		session.removeAttribute("joinClub");
 		session.setAttribute("joinClub",userDao.joinClub(vo.getId()));
 		
 		dao.join(vo);

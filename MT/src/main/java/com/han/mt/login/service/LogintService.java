@@ -35,67 +35,57 @@ public class LogintService {
 	public int getLogin(LoginVO vo, HttpSession session) throws Exception {
 		int result = 1; 
 		System.out.println("서비스(getLogin) : 로그인 메서드 실행");
-		boolean result2 = dao.login(vo);
-		if(result2) {
-			UserDTO data = dao.getLogin(vo); 
-			System.out.println("서비스(getLogin) : 로그인 메서드 실행"+data);
-			if(data.getAdmin().equals("ADMIN")) {
-				return 3;
-			}
-			dao.loginLog(data);
-			System.out.println("서비스(getLogin) : 로그인 로그 저장");
-			if(data.getNickName()==null) { 
-				result=4; //
-			}
-			System.out.println("서비스(getLogin) : 아이디를 찾아 세션에 정보저장");
-			session.setAttribute("loginData", data);
-			session.setAttribute("loginId", data.getEmail());				
-			session.setAttribute("joinSocial",userDao.joinSocial(data.getEmail()));
-			session.setAttribute("joinClub",userDao.joinClub(data.getEmail()));
+		UserDTO data;
+		System.out.println("서비스(getLogin) : 로그인 메서드 실행"+vo);
+
+		if(vo.getAdmin().equals("admin")) {
+			boolean result2 = dao.login(vo);
+			if(result2) {
+				data = dao.getAdminLogin(vo);
+				System.out.println("서비스(getLogin) : 로그인 메서드 실행"+data);
 				
-				
+				if(data.getAdmin().equals("USER")) {return 3;}
+				System.out.println("서비스(getAdminLogin) : 관리자 로그인 로그 저장");
+				session.setAttribute("loginData", data);
+				session.setAttribute("adminAcc", "admin");
+			} else {
+				boolean searchId = dao.searchId(vo.getEmail());
+				System.out.println(searchId);
+				System.out.println("서비스(getLogin) : 로그인 실패 원인 찾음");
+				if(searchId) {
+					result = 2; // 2, 아이디는 존재
+				} else {
+					result = 3;  // 3, 아이디가 존재하질 않음
+				}
+			}		
+		} else {			
+			boolean result2 = dao.login(vo);
+			if(result2) {
+				data = dao.getLogin(vo); 
+				if(data.getAdmin().equals("ADMIN")) {return 3;}
+				System.out.println("서비스(getLogin) : 로그인 메서드 실행"+data);
+				dao.loginLog(data);
+				System.out.println("서비스(getLogin) : 로그인 로그 저장");
+				System.out.println("서비스(getLogin) : 아이디를 찾아 세션에 정보저장");
+				session.setAttribute("loginData", data);
+				session.setAttribute("loginId", data.getEmail());				
+				session.setAttribute("joinSocial",userDao.joinSocial(data.getEmail()));
+				session.setAttribute("joinClub",userDao.joinClub(data.getEmail()));			
+			} else {
+				boolean searchId = dao.searchId(vo.getEmail());
+				System.out.println(searchId);
+				System.out.println("서비스(getLogin) : 로그인 실패 원인 찾음");			
+				if(searchId) {
+					result = 2; // 2, 아이디는 존재
+				} else {
+					result = 3;  // 3, 아이디가 존재하질 않음
+				}
+			}
 			
-		} else {
-			boolean searchId = dao.searchId(vo.getEmail());
-			System.out.println(searchId);
-			System.out.println("서비스(getLogin) : 로그인 실패 원인 찾음");
-
-			if(searchId) {
-				result = 2; // 2, 아이디는 존재
-			} else {
-				result = 3;  // 3, 아이디가 존재하질 않음
-			}
-		}
+		}		
 		return result; 
 	}
 
-
-	public int getAdminLogin(LoginVO vo, HttpSession session) throws Exception {
-		int result = 1; 
-		System.out.println("서비스(getAdminLogin) 관리자 로그인 메서드 실행");
-		boolean result2 = dao.login(vo);
-		if(result2) {
-			UserDTO data = dao.getAdminLogin(vo); 
-			dao.loginLog(data);
-			System.out.println("서비스(getAdminLogin) : 관리자 로그인 로그 저장");
-			if(data.getNickName()==null) { 
-				result=4; //
-			}
-		
-		session.setAttribute("loginData", data);
-		} else {
-			boolean searchId = dao.searchId(vo.getEmail());
-			System.out.println(searchId);
-			System.out.println("서비스(getLogin) : 로그인 실패 원인 찾음");
-
-			if(searchId) {
-				result = 2; // 2, 아이디는 존재
-			} else {
-				result = 3;  // 3, 아이디가 존재하질 않음
-			}
-		}
-		return result; 
-	}
 
 	public String findId(HttpSession session, UserDTO dto) throws Exception {
 		String idList = dao.findId(dto);
@@ -108,41 +98,37 @@ public class LogintService {
 			System.out.println("받은 값으로 조회결과"+idList);
 			session.setAttribute("findId", idList);
 		}
-		return idList;	
-		
+		return idList;			
 	}
 
-	public int idChk(String email
-			, HttpSession session) throws Exception{
+	
+	//아이디 체크, 닉네임 중복 체크
+	public int idChk(String email,HttpSession session,String type) throws Exception{
 		int chek;
-		boolean result = dao.idChk(email);
-		System.out.println("서비스(idChk) 아이디 중복 확인 결과:"+result);
-		session.setAttribute("idCheckResult", result);
-		if(result) {
-			chek =1;
+		if(type.equals("email")) {
+			boolean result = dao.idChk(email);
+			System.out.println("서비스(idChk) 아이디 중복 확인 결과:"+result);
+			session.setAttribute("idCheckResult", result);
+			if(result) {
+				chek =1;
+			} else {
+				chek=0;
+			}
 		} else {
-			chek=0;
+			boolean result = dao.nickNameCheck(email);
+			System.out.println("서비스(nickNameCheck) 닉네임 중복 확인 결과:"+result);
+			session.setAttribute("nickCheckResult", result);
+			if(result) {
+				chek =1;
+			} else {
+				chek=0;
+			}
 		}
 		return chek;
 	}
 	
-	
-	public int nickNameCheck(UserDTO dto
-			, HttpSession session) throws Exception{
-		int chek;
-		boolean result = dao.nickNameCheck(dto);
-		System.out.println("서비스(nickNameCheck) 닉네임 중복 확인 결과:"+result);
-		session.setAttribute("nickCheckResult", result);
-		if(result) {
-			chek =1;
-		} else {
-			chek=0;
-		}
-		return chek;
-	} 
-
 	   
-	
+	//받은 정보로 회원가입 디비에 저장
 	public boolean signup(UserDTO dto, HttpSession session) throws Exception{
 		boolean signup = dao.signup(dto);
 		
@@ -164,9 +150,10 @@ public class LogintService {
 		}
 		return signup;
 	}
+	
+	//카카오 로그인
 	public boolean kakaoSignup(UserDTO dto, HttpSession session) {
 		boolean signup = dao.kakaoSignup(dto);
-
 		if(signup) {
 			System.out.println("서비스(signupDetail) 받은 아이디:" +dto.getEmail().toString());
 			boolean signupDetail = dao.signupDetail(dto.getEmail());
@@ -185,12 +172,10 @@ public class LogintService {
 
 
 	
-	
-	public boolean sign(UserDTO dto
-			,HttpSession session) throws Exception {
+	//회원가입
+	public boolean sign(UserDTO dto,HttpSession session) throws Exception {
 		
-		boolean result = dao.nickNameCheck(dto);
-		
+		boolean result = dao.nickNameCheck(dto.getNickName());		
 		boolean setNickName;
 		if(result ==true) {			
 			setNickName = dao.setNickName(dto);
