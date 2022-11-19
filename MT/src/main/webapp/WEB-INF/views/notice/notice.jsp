@@ -10,10 +10,10 @@
 	<%@ include file="../module/head.jsp" %>
 	<%@ include file="../module/nav.jsp" %>
 </head>
-<body>
-		<div>
+<body class="text-center container">
+		<div class="mb-1">
 			<form action="./board/search" method="get">
-				<div>			
+				<div >			
 					전체 게시판 검색
 					<input type="text" name="keyword">
 					<button type="submit">전송</button>
@@ -21,18 +21,17 @@
 			</form>
 		
 		</div>
-		<div>
+		<div class="text-center">
 			<c:url value="/notice?category=" var="boardsURL" />
 			<table>
 				<tr>
-					<td onclick="location.href='${boardsURL}info'">문의</td>
-					<td onclick="location.href='${boardsURL}event'">공지</td>
-					<td onclick="location.href='${boardsURL}notice'">정보</td>				
+					<td onclick="location.href='${boardsURL}info'">정보</td>
+					<td onclick="location.href='${boardsURL}event'">이벤트</td>
+					<td onclick="location.href='${boardsURL}notice'">공지</td>				
 				</tr>
 			</table>
 		</div>
-	<section>
-			<article>
+	<section  class="text-center container">
 		<table>
 			<colgroup>
 				<col class="col-1">
@@ -53,12 +52,12 @@
 			<tbody>
 			
 			<c:forEach items="${list}" var="Rdata">
-				<c:url var="boardListUrl" value="/board/detail">
+				<c:url var="boardListUrl" value="/notice/detail">
 					<c:param name="category">${category}</c:param>
 					<c:param name="id">${Rdata.noticeNum}</c:param>
 				</c:url>
 				<tr>
-					<td>${Rdata.noticeNum}</td>
+					<td></td>
 					<td onclick="location.href='${boardListUrl}'">
 						${Rdata.title}
 					</td>

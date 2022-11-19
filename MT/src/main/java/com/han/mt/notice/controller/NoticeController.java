@@ -1,7 +1,10 @@
 package com.han.mt.notice.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +13,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.han.mt.club.model.ClubDTO;
 import com.han.mt.notice.model.NoticeBoardDTO;
 import com.han.mt.notice.service.NoticeService;
 import com.han.mt.user.model.UserDTO;
+import com.han.mt.util.Paging;
 
 @Controller
 @RequestMapping(value="/notice")
@@ -24,30 +30,70 @@ public class NoticeController {
 	private NoticeService service; 
 	
 
-	@GetMapping(value="") //·Î±×ÀÎ È­¸é ¶ç¿ì±â
+	@GetMapping(value="") //ë¡œê·¸ì¸ í™”ë©´ ë„ìš°ê¸°
 	public String notice (@RequestParam(defaultValue="info") String category,
-			Model model) {	
-		System.out.println("ÄÁÆ®·Ñ(login) : ·Î±×ÀÎ ¸Ş¼­µå µ¿ÀÛ");		
-		System.out.println("ÄÁÆ®·Ñ(login) : ·Î±×ÀÎ ¸Ş¼­µå µ¿ÀÛ"+category);		
+			Model model,@RequestParam(defaultValue = "1", required = false) int page) {	
 		service.getList(category);
+		List list = service.getList(category);
+		Paging paging = new Paging(list, page, 10);
 		model.addAttribute("category", category);
-		model.addAttribute("list", service.getList(category));
+		model.addAttribute("list",paging.getPageData());
+		model.addAttribute("pageData", paging);
 		return"notice/notice";		
 	}
 
-	@GetMapping(value="/write") //·Î±×ÀÎ È­¸é ¶ç¿ì±â
+	@GetMapping(value="/write") //ë¡œê·¸ì¸ í™”ë©´ ë„ìš°ê¸°
 	public String noticeWrite (Model model) {	
-		System.out.println("ÄÁÆ®·Ñ(login) : ·Î±×ÀÎ ¸Ş¼­µå µ¿ÀÛ");			
+		System.out.println("ì»¨íŠ¸ë¡¤(login) : ë¡œê·¸ì¸ ë©”ì„œë“œ ë™ì‘");			
 		return"notice/noticeWrite";		
 	}
 	
-	@PostMapping(value="/write") //·Î±×ÀÎ È­¸é ¶ç¿ì±â
+	@PostMapping(value="/wrgetDetailite") //ë¡œê·¸ì¸ í™”ë©´ ë„ìš°ê¸°
 	public String noticeWrite (@SessionAttribute("loginData") UserDTO user
 			,@ModelAttribute NoticeBoardDTO dto) {	
-		System.out.println("ÄÁÆ®·Ñ(noticeWrite) : ¹ŞÀº ³»¿ë" +dto);
+		System.out.println("ì»¨íŠ¸ë¡¤(noticeWrite) : ë°›ì€ ë‚´ìš©" +dto);
 		service.write(dto);
 		return"notice/notice";		
 	}
 	
+	@GetMapping(value="/detail") //ë¡œê·¸ì¸ í™”ë©´ ë„ìš°ê¸°
+	public String getDetail (Model model,@RequestParam int id) {	
+		
+		NoticeBoardDTO data = service.getDetail(id);
+		model.addAttribute("data",data);
+		System.out.println("ì»¨íŠ¸ë¡¤(login) : ë¡œê·¸ì¸ ë©”ì„œë“œ ë™ì‘");			
+		return"notice/detail";		
+	}
+	@PostMapping(value="/delete", produces = "application/json; charset=utf-8")
+    @ResponseBody
+	public String delete(@RequestParam int id
+			//,@SessionAttribute("loginData") UserDTO user
+			,HttpSession session
+			) {
+		NoticeBoardDTO data = service.getDetail(id);
+		
+		JSONObject json = new JSONObject();
+
+        if (data == null) {
+            json.put("code", "notExists");
+            json.put("message", "ï¿½ì” èª˜ï¿½ ï¿½ê¶˜ï¿½ì £ ï¿½ë§‚ ï¿½ëœ²ï¿½ì” ï¿½ê½£ ï¿½ì—¯ï¿½ë•²ï¿½ë–.");
+        } else {
+            if (true) {
+                boolean result = service.deleteNotice(id,session);
+                if (result) {
+                    json.put("message", "ï¿½ê¶˜ï¿½ì £ ï¿½ì…¿çŒ·ï¿½");
+                } else {
+                    json.put("code", "fail");
+                    json.put("message", "ï¿½ê¶˜ï¿½ì £ ä»¥ï¿½ è‡¾ëª„ì £è«›ì’–ê¹®");
+                }
+            } else { // æ„¿ï¿½ç”±ÑŠì˜„,æ¹²ï¿½ï¿½ì˜‰ï¿½ê½¦ï¿½ì˜„ ï¿½ì‡…
+                json.put("code", "permissionError");
+                json.put("message", "ï¿½ê¶˜ï¿½ì £æ²…ëš°ë¸³ï¿½ì”  ï¿½ë¾¾ï¿½ë’¿ï¿½ë•²ï¿½ë–.");
+            }
+        }
+
+        return json.toJSONString();
+		
+	}
 	
 }

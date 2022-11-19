@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//src/main/java/com/han/mt/club/comtroller/ClubController.java=UTF-8
 encoding//src/main/java/com/han/mt/club/model/ClubDAO.java=UTF-8
 encoding//src/main/java/com/han/mt/login/service/LogintService.java=UTF-8
+encoding//src/main/java/com/han/mt/notice/controller/NoticeController.java=UTF-8
 encoding//src/main/java/com/han/mt/social/controller/SocialController.java=UTF-8
 encoding//src/main/java/com/han/mt/social/model/SocialDAO.java=UTF-8
 encoding//src/main/java/com/han/mt/social/service/SocialService.java=UTF-8

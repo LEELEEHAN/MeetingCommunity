@@ -2,6 +2,8 @@
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,20 @@ public class NoticeService {
 		List<NoticeBoardDTO> list = dao.getList(category);
 		
 		return list;
+	}
+
+
+	public NoticeBoardDTO getDetail(int id) {
+		NoticeBoardDTO detail = dao.getDetail(id);
+		return detail;
+		
+		
+	}
+
+
+	public boolean deleteNotice(int id, HttpSession session) {
+		boolean result =dao.deleteNotice(id);
+		return result;
 	}
 
 }

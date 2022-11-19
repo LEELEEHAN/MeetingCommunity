@@ -19,6 +19,16 @@ FROM NOTICE
 WHERE CATEGORY = #{category}
 </select>
 
+<select id="getDetail" resultType="noticeDto">
+SELECT *
+FROM NOTICE
+WHERE NOTICENUM = #{id}
+</select>
+
+<delete id ="deleteNotice">
+DELETE NOTICE
+WHERE NOTICENUM = #{id}
+</delete>
 
 
 </mapper>
