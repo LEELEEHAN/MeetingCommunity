@@ -38,14 +38,14 @@
 <div class="text-center">
 		<form action="./delete" method="post">	
 		
-			<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../social'">
+			<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../notice?category=${data.category}'">
 				목록
 			</button>		
-			<c:if test="${sessionScope.loginData.email eq detail.email}">	
-				<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../notice/modify?id=${detail.socialNum}'">
+			<c:if test="${not empty sessionScope.adminAcc}">			
+				<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../notice/modify?id=${data.noticeNum}'">
 					수정
 				</button>	
-				<input name="id" type="hidden" value="${detail.socialNum}">
+				<input name="id" type="hidden" value="${detail.noticeNum}">
 				<button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal"
 				data-bs-target="#removeModal">삭제</button>
 			</c:if>
@@ -86,7 +86,7 @@ function deleteNotice() {
 				success: function(data) {
 					if(data.code === "success") {
 						alert("삭제 완료");						
-							location.href = "./mt/notice?category=${data.category}";
+							location.href = ".?category=${data.category}";
 					} else if(data.code === "permissionError") {
 						alert("권한이 오류");
 					} else if(data.code === "notExists") {

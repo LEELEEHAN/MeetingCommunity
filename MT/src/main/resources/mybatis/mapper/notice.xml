@@ -29,6 +29,13 @@ WHERE NOTICENUM = #{id}
 DELETE NOTICE
 WHERE NOTICENUM = #{id}
 </delete>
+<update id="modify">
+UPDATE NOTICE
+ SET CONTENT =#{content}
+    ,CATEGORY =#{category}
+    ,TITLE =#{title}
+WHERE NOTICENUM = #{noticeNum}
+</update>
 
 
 </mapper>

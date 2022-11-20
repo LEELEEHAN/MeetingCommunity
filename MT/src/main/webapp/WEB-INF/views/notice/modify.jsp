@@ -37,13 +37,12 @@
 	<header></header>
 	<section class="container">
 		<div class="mt-3">
-		
 			<c:url var="boardAddUrl" value="/notice/write" />
-			<form ${empty data? 'action="${boardAddUrl}"':'action="./modify"'} method="post">
+			<form action="${boardAddUrl}" method="post">
 				<div class="mb-3">
 					<select name="category">
-						<option value="info"${getCategory eq 'info' ? 'selected' : '' }>정보,공지</option>
-						<option value="event"${getCategory eq 'event' ? 'selected' : '' }>이벤트</option>
+						<option value="info"${getCategory eq data.category ? 'checked' : '' }>정보,공지</option>
+						<option value="event"${getCategory eq data.category ? 'checked' : '' }>이벤트</option>
 					</select>
 					<input class="form-control" type="text" name="title" value="${data.title}" placeholder="제목을 입력하세요.">
 				</div>				
@@ -52,11 +51,21 @@
 					<textarea class="form-control" name="content" rows="8" value="${data.content}" placeholder="내용을 입력하세요.">${data.content}</textarea>
 				</div>
 				<div class="mb-3 text-end">
-					<input type="hidden"  name="noticeNum" value="${id}">
-					<input type="hidden"  name="category" value="${category}">
-					<button class="btn btn-primary" type="button" onclick="formCheck(this.form);">
-					저장
-					</button>
+				<c:choose>
+					<c:when test="${empty data}">
+						<input type="hidden" name="category" value="${category}">
+						<button class="btn btn-primary" type="button" onclick="formCheck(this.form);">
+						저장
+						</button>
+					</c:when>
+					<c:otherwise>
+						
+						<input type="hidden" name="category" value="${category}">
+						<button class="btn btn-primary" type="button" onclick="formCheck(this.form);">
+						저장
+						</button>
+					</c:otherwise>
+				</c:choose>
 				</div>
 			</form>
 		</div>

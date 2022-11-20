@@ -158,25 +158,20 @@ public class SocialController {
 	
 	@GetMapping(value="modify")
 	public String modify(Model model
-			,@RequestParam int id) {
-		
+			,@RequestParam int id) {		
 		model.addAttribute("field",service.getCategory());
-		model.addAttribute("detail",service.getDetail(id));
-		
+		model.addAttribute("detail",service.getDetail(id));	
 		return "social/modify";
 	}
 	@PostMapping(value = "/modify")
 	public String modifySocial(HttpServletRequest request,
 			@ModelAttribute SocialVO vo) {
-		
-
 		System.out.println(vo);
-
-		service.modifySocial(vo);
-
-		
+		service.modifySocial(vo);		
 		return "redirect:/social/detail?id=" + vo.getSocialNum();
 	}
+	
+	
 	@PostMapping(value="/entrust")
 	public String entrust(@ModelAttribute SocialVO vo,HttpSession session) {
 		System.out.println("컨트롤(entrust) 받은 값"+vo); 

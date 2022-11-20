@@ -44,4 +44,17 @@ public class NoticeService {
 		return result;
 	}
 
+
+	public int getNoticeNum() {
+		int nul = dao.getNoticeNum();
+		return nul;
+	}
+
+
+	public boolean modify(NoticeBoardDTO dto) {
+		System.out.println("서비스(modify) 에서 받은 데이터"+"\n"+dto);
+		boolean result =dao.modify(dto);
+	return result;	
+	}
+
 }

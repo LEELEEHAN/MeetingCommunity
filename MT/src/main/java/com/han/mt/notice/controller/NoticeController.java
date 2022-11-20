@@ -43,17 +43,20 @@ public class NoticeController {
 	}
 
 	@GetMapping(value="/write") //로그인 화면 띄우기
-	public String noticeWrite (Model model) {	
-		System.out.println("컨트롤(login) : 로그인 메서드 동작");			
+	public String noticeWrite (Model model) {		
 		return"notice/noticeWrite";		
 	}
 	
-	@PostMapping(value="/wrgetDetailite") //로그인 화면 띄우기
+	@PostMapping(value="/write") //로그인 화면 띄우기
 	public String noticeWrite (@SessionAttribute("loginData") UserDTO user
 			,@ModelAttribute NoticeBoardDTO dto) {	
 		System.out.println("컨트롤(noticeWrite) : 받은 내용" +dto);
+
+		int num = service.getNoticeNum();
+		dto.setNoticeNum(num);
 		service.write(dto);
-		return"notice/notice";		
+		
+		return "redirect:/notice/detail?id=" + dto.getNoticeNum();
 	}
 	
 	@GetMapping(value="/detail") //로그인 화면 띄우기
@@ -64,10 +67,37 @@ public class NoticeController {
 		System.out.println("컨트롤(login) : 로그인 메서드 동작");			
 		return"notice/detail";		
 	}
+	
+	
+	@GetMapping(value = "/modify")
+	public String modify(Model model, @SessionAttribute("loginData") UserDTO user
+			,@RequestParam int id,
+			@RequestParam(required = false) String category) {
+		System.out.println("컨트롤(modify)작동 받은값 " +id);	
+
+		NoticeBoardDTO data = service.getDetail(id);
+		data.setNoticeNum(id);
+		System.out.println("컨트롤(modify) 불러온 데이터"+"\n"+data);
+		model.addAttribute("data", data);	
+		model.addAttribute("id", id);	
+		model.addAttribute("getCategory", data.getCategory());	
+		System.out.println("컨트롤(modify) 불러온 카테고리"+"\n"+ data.getCategory());
+		return "notice/noticeWrite";
+	}
+	
+	@PostMapping(value="/modify") //로그인 화면 띄우기
+	public String modify (@SessionAttribute("loginData") UserDTO user
+			,@ModelAttribute NoticeBoardDTO dto) {	
+		System.out.println("컨트롤(modify) 포스트로 받은 내용" +dto);
+		service.modify(dto);
+		
+		return "redirect:/notice/detail?id=" + dto.getNoticeNum();
+	}
+	
 	@PostMapping(value="/delete", produces = "application/json; charset=utf-8")
     @ResponseBody
 	public String delete(@RequestParam int id
-			//,@SessionAttribute("loginData") UserDTO user
+			,@SessionAttribute("loginData") UserDTO user
 			,HttpSession session
 			) {
 		NoticeBoardDTO data = service.getDetail(id);
@@ -76,19 +106,16 @@ public class NoticeController {
 
         if (data == null) {
             json.put("code", "notExists");
-            json.put("message", "�씠誘� �궘�젣 �맂 �뜲�씠�꽣 �엯�땲�떎.");
         } else {
             if (true) {
                 boolean result = service.deleteNotice(id,session);
                 if (result) {
-                    json.put("message", "�궘�젣 �셿猷�");
+                    json.put("code", "success");
                 } else {
                     json.put("code", "fail");
-                    json.put("message", "�궘�젣 以� 臾몄젣諛쒖깮");
                 }
             } else { // 愿�由ъ옄,湲��옉�꽦�옄 �쇅
                 json.put("code", "permissionError");
-                json.put("message", "�궘�젣沅뚰븳�씠 �뾾�뒿�땲�떎.");
             }
         }
 

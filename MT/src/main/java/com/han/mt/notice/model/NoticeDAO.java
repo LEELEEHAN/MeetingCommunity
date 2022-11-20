@@ -16,7 +16,6 @@ public class NoticeDAO {
 	public void write(NoticeBoardDTO dto) {
 		String getNumId =String.format(mapper,"getNum");
 		int num = session.selectOne(getNumId);
-		dto.setNoticeNum(num);
 		if(dto.getCategory().equals("info,")){
 			dto.setCategory("info");
 		} else {
@@ -44,6 +43,26 @@ public class NoticeDAO {
 		int result = session.delete(mapperId,id);
 		// TODO Auto-generated method stub
 		return result == 1? true:false;
+	}
+
+	public int getNoticeNum() {
+		String mapperId =String.format(mapper,"getNum");
+		int num = session.selectOne(mapperId);
+		return num;
+		
+	}
+
+	public boolean modify(NoticeBoardDTO dto) {
+		System.out.println("DAO(modify) 에서 받은 데이터"+"\n"+dto);
+		String mapperId =String.format(mapper,"modify");
+		if(dto.getCategory().equals("info,")){
+			dto.setCategory("info");
+		} else {
+			dto.setCategory("event");				
+		}
+		int result = session.update(mapperId,dto);
+		return result ==1?true:false;
+		
 	}
 
 }
