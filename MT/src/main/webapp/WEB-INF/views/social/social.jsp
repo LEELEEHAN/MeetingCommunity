@@ -89,6 +89,8 @@
                 </c:if>
             </table>
         </div>
+        
+ <%@ include file="../module/paging.jsp"%>
     </section>
 	<script>
     function searchFunction() {

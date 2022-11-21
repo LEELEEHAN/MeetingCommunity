@@ -14,6 +14,7 @@ SELECT *
  <if test='category != null'>
  	AND s.CATEGORY = #{category}
  </if>
+ ORDER BY s.SOCIALNUM DESC
 </select>
 
 
@@ -29,6 +30,7 @@ SELECT *
  <if test='title != null'>
  	AND lower(s.title) LIKE ('%'||#{title}||'%')
  </if>
+ ORDER BY s.SOCIALNUM DESC
 </select>
 
 

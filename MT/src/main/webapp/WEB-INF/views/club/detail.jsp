@@ -70,68 +70,28 @@
 	<c:if test="${not empty sessionScope.loginData}">
 		<c:if test="${not empty chk}">
 			<div>
-				    <input type="hidden" name="${detail.socialNum}">
-					<button type="submit" name="자유">자유게시판</button>
-					<button type="submit" name="질문">질문게시판</button>
-					<button type="submit" name="정보">정보게피산</button>
-					<button name="category" id="info" onclick="boardOpen('I');">인증게시판</button>
+			<form action="./board" method="get">
+			    <input type="hidden" name="socialNum" value="${detail.socialNum}">
+				<button class="btn btn-sm btn-outline-dark" name="category" id="free"value="free">자유게시판</button>
+				<button class="btn btn-sm btn-outline-dark" name="category" id="qna" value="qna">질문게시판</button>
+				<button class="btn btn-sm btn-outline-dark" name="category" id="info" value="info">정보게피산</button>
+			</form>
 			</div>
 		</c:if>
 	</c:if>
 	<div class="text-center">
 		<form action="./delete" method="post">			
 			<input name="id" type="hidden" value="${detail.socialNum}">
-			<button type="button" data-bs-toggle="modal"
+			<button type="button" data-bs-toggle="modal" class="btn btn-sm btn-outline-dark"
 			data-bs-target="#removeModal">삭제</button>
-			<button class="btn btn-primary" type="button" onclick="location.href='../club'">
+			<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../club'">
 				목록
 			</button>
-			<button class="btn btn-primary" type="button" onclick="location.href='../club/modify?id=${detail.socialNum}'">
+			<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='../club/modify?id=${detail.socialNum}'">
 				수정
 			</button>
 		</form>
 	</div>
-	
-	
-	<!-- 모달:게시판 -->
-		<div class="modal fade" id="infoBoradOpen" tabindex="-1"
-			aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h6 class="modal-title">추방완료</h6>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-					<table>
-						<tr>
-							<th>제목</th>
-							<th>글쓴이</th>
-							<th>날짜</th>
-						</tr>
-						<c:if test="${not empty board}">
-							<c:forEach items="${board}" var="board">					
-								<tr>
-									<td>${board.title}</td>
-									<td>${board.nickName}</td>
-									<td>${board.writerDate}</td>
-								</tr>
-							</c:forEach>
-						</c:if>
-					</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" >
-							확인
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	
-	
-	
 	<!-- 모달 삭제 -->
 	<div class="modal fade" id="removeModal" tabindex="-1"
 			aria-hidden="true">
@@ -339,7 +299,22 @@ function outcastSocial(id) {
 				}
 			});
 		}
-function boardOpen(category) {
+function InfoboardOpen(category) {
+	$.ajax({
+		url: "./getBoard",
+		type: "post",
+		data: {
+			socialNum: ${detail.socialNum},
+			category: category
+		},
+		success: function(category) {
+				$('#infoBoradOpen').modal("show");
+
+		}
+	});
+}
+
+function QNAboardOpen(category) {
 		$.ajax({
 			url: "./getBoard",
 			type: "post",
@@ -348,7 +323,22 @@ function boardOpen(category) {
 				category: category
 			},
 			success: function(category) {
-					$('#infoBoradOpen').modal("show");
+					$('#QnaBoradOpen').modal("show");
+
+			}
+		});
+	}
+
+function FREEboardOpen(category) {
+		$.ajax({
+			url: "./getBoard",
+			type: "post",
+			data: {
+				socialNum: ${detail.socialNum},
+				category: category
+			},
+			success: function(category) {
+					$('#freeBoradOpen').modal("show");
 
 			}
 		});

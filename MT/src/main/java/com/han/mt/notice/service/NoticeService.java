@@ -26,10 +26,20 @@ public class NoticeService {
 
 	public List<NoticeBoardDTO> getList(String category) {
 		List<NoticeBoardDTO> list = dao.getList(category);
+		System.out.println("서비스(getClub) 받은값:"+"\n"+category);
 		
 		return list;
 	}
 
+
+
+
+	public List<NoticeBoardDTO> getListTitle(String search) {
+		List<NoticeBoardDTO> list = dao.getListTitle(search);
+		System.out.println("서비스(getClub) 받은값:"+"\n"+search);
+		
+		return list;
+	}
 
 	public NoticeBoardDTO getDetail(int id) {
 		NoticeBoardDTO detail = dao.getDetail(id);

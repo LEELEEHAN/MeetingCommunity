@@ -24,6 +24,7 @@ import com.han.mt.club.service.ClubService;
 import com.han.mt.social.service.SocialService;
 import com.han.mt.user.model.UserDTO;
 import com.han.mt.user.service.UserService;
+import com.han.mt.util.Paging;
 
 
 @Controller
@@ -40,16 +41,25 @@ public class ClubController {
 	@GetMapping(value = "")
 	public String getClub(Model model,HttpSession session,
 			@RequestParam(required = false) String category,
-			@RequestParam(required = false) String search) {
-
+			@RequestParam(required = false) String search,
+			@RequestParam(defaultValue = "1", required = false) int page) {
+		List list;
 		if(search == null) {
-			model.addAttribute("list",service.getClub(category));
+			list =service.getClub(category);
+			if(category!=null) {
+			model.addAttribute("keyword",category);
+			}
 		} else {
-			model.addAttribute("list",service.getClubTitle(search));
+			list =service.getClubTitle(search);
+			model.addAttribute("search",search);	
 		}
-		
+
+		Paging paging = new Paging(list, page, 10);
 		model.addAttribute("field",socialService.getCategory());
 		model.addAttribute("real",socialService.getReal());
+		model.addAttribute("list",paging.getPageData());
+		model.addAttribute("pageData", paging);
+		model.addAttribute("type", "club");
 		return "club/social";
 	}
 	
@@ -73,7 +83,6 @@ public class ClubController {
 		model.addAttribute("detail", service.getDetail(id));
 		model.addAttribute("real",socialService.getReal(id));
 		model.addAttribute("memberList",socialService.getMember(id));
-		model.addAttribute("board",service.getBoard(dto));
 		return"club/detail";
 	}
 	
@@ -128,19 +137,16 @@ public class ClubController {
 
         if (social == null) {
             json.put("code", "notExists");
-            json.put("message", "�씠誘� �궘�젣 �맂 �뜲�씠�꽣 �엯�땲�떎.");
         } else {
             if (true) {
                 boolean result = service.deleteSoical(id,user.getEmail(),session);
                 if (result) {
-                    json.put("message", "�궘�젣 �셿猷�");
+                    json.put("code", "success");
                 } else {
                     json.put("code", "fail");
-                    json.put("message", "�궘�젣 以� 臾몄젣諛쒖깮");
                 }
-            } else { // 愿�由ъ옄,湲��옉�꽦�옄 �쇅
+            } else {
                 json.put("code", "permissionError");
-                json.put("message", "�궘�젣沅뚰븳�씠 �뾾�뒿�땲�떎.");
             }
         }
 
@@ -198,16 +204,49 @@ public class ClubController {
 	
 	
 	
-	@PostMapping(value="/getBoard")
-    @ResponseBody
-	public String getBoard(@ModelAttribute BoardDTO dto,Model model){
+//	@PostMapping(value="/getBoard")
+//    @ResponseBody
+//	public String getBoard(@ModelAttribute BoardDTO dto,Model model){
+//		System.out.println("컨트롤(getBorad) 주입값 dto :"+"\n"+dto); 
+//		List<BoardDTO> board = service.getBoard(dto);
+//		System.out.println("컨트롤(getBorad)보드 조회 :"+"\n"+board); 
+//		model.addAttribute("boeard",board);		
+//		return "redirect:/";
+//	}
+
+	@GetMapping(value="/board")
+	public String board(@ModelAttribute BoardDTO dto,Model model,HttpSession session,
+			@SessionAttribute("loginData") UserDTO user){
 		System.out.println("컨트롤(getBorad) 주입값 dto :"+"\n"+dto); 
-		List<BoardDTO> board = service.getBoard(dto);
+		List<BoardDTO> board = service.getBoard(dto,session);
 		System.out.println("컨트롤(getBorad)보드 조회 :"+"\n"+board); 
-		model.addAttribute("boeard",board);
+		model.addAttribute("board",board);		
+		model.addAttribute("socialNum",dto.getSocialNum());		
+		model.addAttribute("category",dto.getCategory());		
+		return "club/board";
+	}
+
+	@GetMapping(value="/board/write")
+	public String write(@ModelAttribute BoardDTO dto,Model model,
+			@SessionAttribute("loginData") UserDTO user){ 
+		model.addAttribute("category",dto.getCategory());
+		model.addAttribute("socialNum",dto.getSocialNum());	
 		
 		
-		return "redirect:/";
+		return "club/boardwrite";
+	}
+
+	@PostMapping(value="/board/write")
+	public String write(@ModelAttribute BoardDTO dto,Model model,HttpSession session,
+			@SessionAttribute("loginData") UserDTO user){ 
+		dto.setNickName(user.getNickName());
+		dto.setWriter(user.getEmail());
+		dto.setSocialNum(dto.getSocialNum());
+		dto.setBoardNum(service.getBoardNum());
+			service.boardAdd(dto);
+		
+		
+		return "club/boardwrite";
 	}
 	
 }

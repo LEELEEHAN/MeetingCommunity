@@ -173,6 +173,7 @@
 									</c:if>					
 								</div>
 								</c:forEach>
+								
 							</c:when>
 							<c:otherwise>
 							  <a>

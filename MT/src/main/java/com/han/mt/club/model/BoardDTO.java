@@ -1,6 +1,6 @@
 package com.han.mt.club.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class BoardDTO {
 
@@ -13,8 +13,8 @@ public class BoardDTO {
 	private String fileName;
 	private String contents;
 	private String category;
-	private Date writerDate;
-	private Date rewriterDate;
+	private Date writeDate;
+	private Date rewriteDate;
 	
 	
 	
@@ -72,23 +72,23 @@ public class BoardDTO {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public Date getWriterDate() {
-		return writerDate;
+	public Date getWriteDate() {
+		return writeDate;
 	}
-	public void setWriterDate(Date writerDate) {
-		this.writerDate = writerDate;
+	public void setWriteDate(Date writeDate) {
+		this.writeDate = writeDate;
 	}
-	public Date getRewriterDate() {
-		return rewriterDate;
+	public Date getRewriteDate() {
+		return rewriteDate;
 	}
-	public void setRewriterDate(Date rewriterDate) {
-		this.rewriterDate = rewriterDate;
+	public void setRewriteDate(Date rewriteDate) {
+		this.rewriteDate = rewriteDate;
 	}
 	@Override
 	public String toString() {
 		return "BoardDTO [socialNum=" + socialNum + ", boardNum=" + boardNum + ", viewed=" + viewed + ", title=" + title
 				+ ", writer=" + writer + ", nickName=" + nickName + ", fileName=" + fileName + ", contents=" + contents
-				+ ", category=" + category + ", writerDate=" + writerDate + ", rewriterDate=" + rewriterDate + "]"+"\n";
+				+ ", category=" + category + ", writeDate=" + writeDate + ", rewriteDate=" + rewriteDate + "]"+"\n";
 	}
 	
 	

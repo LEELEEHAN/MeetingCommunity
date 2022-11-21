@@ -17,6 +17,13 @@ SELECT NOTICE_NUM_SEQ.NEXTVAL FROM DUAL
 SELECT *
 FROM NOTICE
 WHERE CATEGORY = #{category}
+ORDER BY NOTICENUM DESC
+</select>
+<select id="getListTitle" resultType="noticeDto">
+SELECT *
+FROM NOTICE
+WHERE lower(title) LIKE ('%'||#{title}||'%')
+ORDER BY NOTICENUM DESC
 </select>
 
 <select id="getDetail" resultType="noticeDto">

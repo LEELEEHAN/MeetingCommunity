@@ -30,6 +30,12 @@ public class NoticeDAO {
 		List<NoticeBoardDTO> list = session.selectList(mapperId,category);		
 		return list;
 	}
+
+	public List<NoticeBoardDTO> getListTitle(String search) {
+		String mapperId =String.format(mapper,"getListTitle");	
+		List<NoticeBoardDTO> list = session.selectList(mapperId,search);		
+		return list;
+	}
 	public NoticeBoardDTO getDetail(int id) {
 		String mapperId =String.format(mapper,"getDetail");	
 		NoticeBoardDTO detail = session.selectOne(mapperId,id);

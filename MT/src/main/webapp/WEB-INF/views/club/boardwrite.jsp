@@ -38,24 +38,21 @@
 	<section class="container">
 		<div class="mt-3">
 		
-			<c:url var="boardAddUrl" value="/notice/write" />
+			<c:url var="boardAddUrl" value="/club/board/write" />
 			<form ${empty data? 'action="./write"':'action="./modify"'} method="post">
 				<div class="mb-3">
-					<select name="category">
-						<option value="info"${getCategory eq 'info' ? 'selected' : '' }>정보,공지</option>
-						<option value="event"${getCategory eq 'event' ? 'selected' : '' }>이벤트</option>
-					</select>
 					<input class="form-control" type="text" name="title" value="${data.title}" placeholder="제목을 입력하세요.">
 				</div>				
 				
 				<div class="mb-3">
-					<textarea class="form-control" name="content" rows="8" value="${data.content}" placeholder="내용을 입력하세요.">${data.content}</textarea>
+					<textarea class="form-control" name="contents" rows="8" value="${data.content}" placeholder="내용을 입력하세요.">${data.content}</textarea>
 				</div>
 				<div class="mb-3 text-end">
 					<c:if test="${not empty data}">
-						<input type="hidden"  name="noticeNum" value="${id}">
+						<input type="hidden"  name="boardNum" value="${id}">
 					</c:if>
 					<input type="hidden"  name="category" value="${category}">
+					<input type="hidden"  name="socialNum" value="${socialNum}">
 					<button class="btn btn-primary" type="button" onclick="formCheck(this.form);">
 					저장
 					</button>

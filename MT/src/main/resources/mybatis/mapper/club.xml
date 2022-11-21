@@ -16,6 +16,7 @@ SELECT *
  <if test='category != null'>
  	AND s.CATEGORY = #{category}
  </if>
+ ORDER BY s.SOCIALNUM DESC
 </select>
 
 
@@ -172,6 +173,16 @@ SELECT *
    AND b.SOCIALNUM = #{socialNum}
  
 </select>
+
+<select id="getBoardNum" resultType="_int">
+SELECT CLUBBOARD_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="boardAdd" parameterType="boardDto">
+INSERT INTO CLUBBOARD (SOCIALNUM,BOARDNUM,TITLE,CONTENTS,FILENAME,WRITER,CATEGORY,WRITEDATE,VIEWED)
+VALUES(#{socialNum},#{boardNum},#{title},#{contents},#{fileName},#{writer},#{category},SYSDATE,'0')
+</insert>
+
 
 
 </mapper>

@@ -32,9 +32,27 @@ public class NoticeController {
 
 	@GetMapping(value="") //로그인 화면 띄우기
 	public String notice (@RequestParam(defaultValue="info") String category,
+			@RequestParam(required = false) String search,
 			Model model,@RequestParam(defaultValue = "1", required = false) int page) {	
 		service.getList(category);
 		List list = service.getList(category);
+		if(search == null) {
+			list =service.getList(category);
+		} else {
+			list =service.getListTitle(search);
+			String field="";				
+			if(category.equals("info")) {
+				field= "정보";			
+				} else if(category.equals("notice")) {
+					field= "공지";				
+				} else if(category.equals("event")) {
+					field= "이벤트";				
+				}
+
+			model.addAttribute("search", field);	
+			model.addAttribute("key", search);			
+		}
+		
 		Paging paging = new Paging(list, page, 10);
 		model.addAttribute("category", category);
 		model.addAttribute("list",paging.getPageData());

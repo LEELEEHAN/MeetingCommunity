@@ -27,10 +27,10 @@
    	 	<div class ="category-list text-center">
             <table class="text-center">
                 <tr id="category" name="category">
-                    <td onclick="location.href='./social'">전체보기</td>
+                    <td onclick="location.href='./club'">전체보기</td>
                     <c:if test="${not empty field}">
                         <c:forEach items="${field}" var="field">
-                            <td value="${field.category}" onclick="location.href='./social?category='+'${field.category}'">${field.category}</td>
+                            <td value="${field.category}" onclick="location.href='./club?category='+'${field.category}'">${field.category}</td>
                         </c:forEach>
                     </c:if>
                 </tr>
@@ -62,7 +62,7 @@
             <table style="text-align: center;border:1px solid #dddddd">
 				<c:if test="${not empty list}">
 					<c:forEach items="${list}" var="list">
-						<c:url var="listUrl" value="/club/detail">
+						<c:url var="listUrl" value="${type}/detail">
 							<c:param name="id">${list.socialNum}</c:param>
 						</c:url>
                           <tr style="text-align: center;border:1px solid #dddddd"data-bs-toggle="modal"
@@ -88,6 +88,7 @@
                 </c:if>
             </table>
         </div>
+ <%@ include file="../module/paging.jsp"%>
     </section>  
 	<script>
     function searchFunction() {

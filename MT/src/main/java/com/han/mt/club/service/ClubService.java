@@ -18,6 +18,7 @@ import com.han.mt.club.model.ClubVO;
 import com.han.mt.social.model.FieldCategory;
 import com.han.mt.social.model.SocialDynamicDTO;
 import com.han.mt.user.model.UserDAO;
+import com.han.mt.user.model.UserDTO;
 
 
 @Service
@@ -121,11 +122,20 @@ public class ClubService {
 		boolean result = dao.joinChk(vo);
 		return result;
 	}
-	public List<BoardDTO> getBoard(BoardDTO dto) {
+	public List<BoardDTO> getBoard(BoardDTO dto,HttpSession session) {
 		System.out.println("서비스(getBorad) 주입값 dto :"+"\n"+dto); 
 		List<BoardDTO> list = dao.getBorad(dto);	
 		System.out.println("서비스(getBorad)보드 조회 :"+"\n"+list); 
+		session.setAttribute("socialNum",dto.getSocialNum());
 		return list;
+	}
+	public void boardAdd(BoardDTO dto) {
+		dao.boardAdd(dto);
+		
+	}
+	public int getBoardNum() {
+		int num = dao.getBoardNum();
+		return num;
 	}
 	
 

@@ -12,10 +12,10 @@
 </head>
 <body class="text-center container">
 		<div class="mb-1">
-			<form action="./board/search" method="get">
+	        <form method="get">
 				<div >			
 					전체 게시판 검색
-					<input type="text" name="keyword">
+					<input type="text" name="search">
 					<button type="submit">전송</button>
 				</div>
 			</form>
@@ -59,7 +59,10 @@
 				<tr>
 					<td></td>
 					<td onclick="location.href='${boardListUrl}'">
-						${Rdata.title}
+						<c:if test="${not empty search}">
+							<a style="font-siae:3px">[${search}]</a>${Rdata.title}
+						</c:if>
+							${Rdata.title}
 					</td>
 					<td>${Rdata.writeDate}</td>
 				</tr>
@@ -86,11 +89,15 @@
 		<div>
 			<ul class="pagination justify-content-center">
 				<c:if test="${pageData.hasPrevPage()}">
-					<c:url var="boardPagingUrl" value="/board">
-						<c:param name="category">${category}</c:param>
-						<c:if test="${not empty usersCode}">
-							<c:param name="usersCode">${usersCode}</c:param>
-						</c:if>							
+					<c:url var="boardPagingUrl" value="/notice">
+											<c:choose>
+												<c:when test="${empty search}">
+													<c:param name="category">${category}</c:param>
+												</c:when>
+												<c:otherwise>
+													<c:param name="search">${key}</c:param>										
+												</c:otherwise>									
+											</c:choose>	
 					</c:url>
 					<li class="page-item">
 						<a class="page-link" href="${boardPagingUrl}&page=1"><<</a>
@@ -100,15 +107,20 @@
 					</li>
 				</c:if>
 				<c:choose>
+					
 					<c:when test="${pageData.currentPageNumber eq 1}">
 						<c:forEach
 							items="${pageData.getPageNumberList(pageData.currentPageNumber - 3, pageData.currentPageNumber + 4)}"
 							var="num">
-							<c:url var="boardPagingUrl" value="/board">
-								<c:param name="category">${category}</c:param>
-								<c:if test="${not empty usersCode}">
-									<c:param name="usersCode">${usersCode}</c:param>
-								</c:if>						
+							<c:url var="boardPagingUrl" value="/notice">
+								<c:choose>
+									<c:when test="${empty search}">
+										<c:param name="category">${category}</c:param>
+									</c:when>
+									<c:otherwise>
+										<c:param name="search">${key}</c:param>										
+									</c:otherwise>									
+								</c:choose>
 							</c:url>
 		
 							<li
@@ -123,11 +135,15 @@
 						<c:forEach
 							items="${pageData.getPageNumberList(pageData.currentPageNumber - 3, pageData.currentPageNumber + 3)}"
 							var="num">
-							<c:url var="boardPagingUrl" value="/board">
-								<c:param name="category">${category}</c:param>
-								<c:if test="${not empty usersCode}">
-									<c:param name="usersCode">${usersCode}</c:param>
-								</c:if>						
+							<c:url var="boardPagingUrl" value="/notice">
+									<c:choose>
+										<c:when test="${empty search}">
+											<c:param name="category">${category}</c:param>
+										</c:when>
+										<c:otherwise>
+											<c:param name="search">${key}</c:param>										
+										</c:otherwise>									
+									</c:choose>				
 							</c:url>
 							<li
 								class="page-item ${pageData.currentPageNumber eq num ? 'active' : ''}">
@@ -140,11 +156,8 @@
 							<c:forEach
 								items="${pageData.getPageNumberList(pageData.currentPageNumber - 4, pageData.currentPageNumber + 2)}"
 								var="num">								
-								<c:url var="boardPagingUrl" value="/board">
+								<c:url var="boardPagingUrl" value="/notice">
 									<c:param name="category">${category}</c:param>
-									<c:if test="${not empty usersCode}">
-										<c:param name="usersCode">${usersCode}</c:param>
-									</c:if>	
 								</c:url>
 								<li
 									class="page-item ${pageData.currentPageNumber eq num ? 'active' : ''}">
@@ -157,11 +170,15 @@
 							<c:forEach
 								items="${pageData.getPageNumberList(pageData.currentPageNumber - 3, pageData.currentPageNumber + 2)}"
 								var="num">			
-								<c:url var="boardPagingUrl" value="/board">
-									<c:param name="category">${category}</c:param>
-									<c:if test="${not empty usersCode}">
-										<c:param name="usersCode">${usersCode}</c:param>
-									</c:if>	
+								<c:url var="boardPagingUrl" value="/notice">
+									<c:choose>
+										<c:when test="${empty search}">
+											<c:param name="category">${category}</c:param>
+										</c:when>
+										<c:otherwise>
+											<c:param name="search">${key}</c:param>										
+										</c:otherwise>									
+									</c:choose>
 								</c:url>
 								<li
 									class="page-item ${pageData.currentPageNumber eq num ? 'active' : ''}">
@@ -173,11 +190,15 @@
 							<c:forEach
 								items="${pageData.getPageNumberList(pageData.currentPageNumber - 2, pageData.currentPageNumber + 2)}"
 								var="num">
-								<c:url var="boardPagingUrl" value="/board">
-									<c:param name="category">${category}</c:param>
-									<c:if test="${not empty usersCode}">
-										<c:param name="usersCode">${usersCode}</c:param>
-									</c:if>						
+								<c:url var="boardPagingUrl" value="/notice">
+									<c:choose>
+										<c:when test="${empty search}">
+											<c:param name="category">${category}</c:param>
+										</c:when>
+										<c:otherwise>
+											<c:param name="search">${key}</c:param>										
+										</c:otherwise>									
+									</c:choose>			
 								</c:url>
 								<li
 									class="page-item ${pageData.currentPageNumber eq num ? 'active' : ''}">

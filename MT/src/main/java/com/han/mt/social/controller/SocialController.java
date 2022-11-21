@@ -27,6 +27,7 @@ import com.han.mt.social.model.SocialVO;
 import com.han.mt.social.service.SocialService;
 import com.han.mt.user.model.UserDTO;
 import com.han.mt.user.service.UserService;
+import com.han.mt.util.Paging;
 
 @Controller
 @RequestMapping(value = "/social")
@@ -42,19 +43,26 @@ public class SocialController {
 	@GetMapping(value = "")
 	public String getSocial(Model model,HttpSession session,
 			@RequestParam(required = false) String category,
-			@RequestParam(required = false) String search) {
-		
-		
+			@RequestParam(required = false) String search,
+			@RequestParam(defaultValue = "1", required = false) int page) {
+		List list;
 		if(search == null) {
-			model.addAttribute("list",service.getSocial(category));
+			list =service.getSocial(category);
+			if(category!=null) {
+			model.addAttribute("keyword",category);
+			}
 		} else {
-			model.addAttribute("list",service.getSocialTitle(search));
+			list =service.getSocialTitle(search);
+			model.addAttribute("search",search);
 		}
 		
 
-		
+		Paging paging = new Paging(list, page, 10);
 		model.addAttribute("field",service.getCategory());
 		model.addAttribute("real",service.getReal());
+		model.addAttribute("list",paging.getPageData());
+		model.addAttribute("pageData", paging);
+		model.addAttribute("type", "social");
 		return "social/social";
 	}
 	
