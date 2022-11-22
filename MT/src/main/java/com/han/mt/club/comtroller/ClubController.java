@@ -242,11 +242,75 @@ public class ClubController {
 		dto.setNickName(user.getNickName());
 		dto.setWriter(user.getEmail());
 		dto.setSocialNum(dto.getSocialNum());
-		dto.setBoardNum(service.getBoardNum());
+		dto.setBoardNum(service.getBoardNum());	
 			service.boardAdd(dto);
 		
+
+			return "redirect:/club/board/detail?category="+dto.getCategory()+"&id="+dto.getBoardNum();
+	}
+
+	@GetMapping(value="/board/detail")
+	public String boardDetail(Model model,
+			@SessionAttribute("loginData") UserDTO user,
+			@RequestParam int id,
+			@RequestParam String category){
+		BoardDTO list = service.getBoardDetail(id);
+		model.addAttribute("socialNum",list.getSocialNum());	
+		model.addAttribute("category",category);	
+		model.addAttribute("data",list);	
+		model.addAttribute("master",service.getDetail(list.getSocialNum()).getEmail());
+		System.out.println("컨트롤(boardDetail)보드 조회 :"+"\n"+list);
+		System.out.println(service.getDetail(list.getSocialNum()).getEmail());
 		
+		
+		return "club/boardDetail";
+	}
+
+	@GetMapping(value="/board/modify")
+	public String boardModify(Model model,
+			@RequestParam int id){
+		BoardDTO data= service.getBoardDetail(id);
+		model.addAttribute("data",data);	
+		System.out.println("컨트롤(boardDetail)보드 조회 :"+"\n"+data);	
 		return "club/boardwrite";
 	}
 	
+
+	@PostMapping(value="/board/modify")
+	public String boardModify (@SessionAttribute("loginData") UserDTO user,
+			@ModelAttribute BoardDTO dto){
+		System.out.println("컨트롤(boardModify)보드 조회 :"+"\n"+dto);	
+		service.boardModify(dto);
+
+		return "redirect:/club/board/detail?category="+dto.getCategory()+"&id="+dto.getBoardNum();	
+		}
+
+	@PostMapping(value="/board/delete", produces = "application/json; charset=utf-8")
+    @ResponseBody
+	public String deleteBoard(@RequestParam int id
+			,@SessionAttribute("loginData") UserDTO user
+			,HttpSession session
+			) {
+		ClubDTO social = service.getDetail(id);
+		
+		JSONObject json = new JSONObject();
+
+        if (social == null) {
+            json.put("code", "notExists");
+        } else {
+            if (true) {
+                boolean result = service.deleteSoical(id,user.getEmail(),session);
+                if (result) {
+                    json.put("code", "success");
+                } else {
+                    json.put("code", "fail");
+                }
+            } else {
+                json.put("code", "permissionError");
+            }
+        }
+
+        return json.toJSONString();
+		
+	}
 }

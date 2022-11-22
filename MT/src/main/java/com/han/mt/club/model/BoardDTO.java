@@ -9,7 +9,7 @@ public class BoardDTO {
 	private int viewed;
 	private String title;
 	private String writer;
-	private String nickName;
+	private String email;
 	private String fileName;
 	private String contents;
 	private String category;
@@ -17,6 +17,13 @@ public class BoardDTO {
 	private Date rewriteDate;
 	
 	
+	private String nickName;
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	
 	public String getCategory() {
 		return category;
@@ -87,8 +94,9 @@ public class BoardDTO {
 	@Override
 	public String toString() {
 		return "BoardDTO [socialNum=" + socialNum + ", boardNum=" + boardNum + ", viewed=" + viewed + ", title=" + title
-				+ ", writer=" + writer + ", nickName=" + nickName + ", fileName=" + fileName + ", contents=" + contents
-				+ ", category=" + category + ", writeDate=" + writeDate + ", rewriteDate=" + rewriteDate + "]"+"\n";
+				+ ", writer=" + writer + ", email=" + email + ", fileName=" + fileName + ", contents=" + contents
+				+ ", category=" + category + ", writeDate=" + writeDate + ", rewriteDate=" + rewriteDate + ", nickName="
+				+ nickName + "]";
 	}
 	
 	

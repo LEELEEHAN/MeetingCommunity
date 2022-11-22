@@ -171,7 +171,7 @@ SELECT *
     ON u.EMAIL = b.WRITER
  WHERE b.CATEGORY = #{category}
    AND b.SOCIALNUM = #{socialNum}
- 
+ ORDER BY b.BOARDNUM
 </select>
 
 <select id="getBoardNum" resultType="_int">
@@ -183,6 +183,18 @@ INSERT INTO CLUBBOARD (SOCIALNUM,BOARDNUM,TITLE,CONTENTS,FILENAME,WRITER,CATEGOR
 VALUES(#{socialNum},#{boardNum},#{title},#{contents},#{fileName},#{writer},#{category},SYSDATE,'0')
 </insert>
 
-
+<select id="getBoardDetail" resultType="boardDto">
+	SELECT *
+      FROM CLUBBOARD b
+	WHERE b.boardNum =#{boardNum}
+</select>
+<update id="boardModify">
+UPDATE CLUBBOARD
+   SET TITLE =#{title}
+      ,CONTENTS=#{contents}
+      ,FILENAME=#{fileName}
+      ,REWRITEDATE =SYSDATE
+ WHERE boardNum =#{boardNum}
+</update>
 
 </mapper>

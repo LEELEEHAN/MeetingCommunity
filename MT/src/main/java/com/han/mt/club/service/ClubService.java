@@ -137,6 +137,13 @@ public class ClubService {
 		int num = dao.getBoardNum();
 		return num;
 	}
+	public BoardDTO getBoardDetail(int id) {
+		BoardDTO data = dao.getBoardDetail(id);
+		return data;
+	}
+	public void boardModify(BoardDTO dto) {
+		dao.boardModify(dto);
+	}
 	
 
 }

@@ -40,18 +40,21 @@
 		
 			<c:url var="boardAddUrl" value="/club/board/write" />
 			<form ${empty data? 'action="./write"':'action="./modify"'} method="post">
+				<div>
+					<h3>글쓰기 - ${category == 'qna'? 'QnA' : category == 'info'? '정보' : '자유' }</h3>
+				</div>
 				<div class="mb-3">
 					<input class="form-control" type="text" name="title" value="${data.title}" placeholder="제목을 입력하세요.">
 				</div>				
 				
 				<div class="mb-3">
-					<textarea class="form-control" name="contents" rows="8" value="${data.content}" placeholder="내용을 입력하세요.">${data.content}</textarea>
+					<textarea class="form-control" name="contents" rows="8" placeholder="내용을 입력하세요.">${data.contents}</textarea>
 				</div>
 				<div class="mb-3 text-end">
 					<c:if test="${not empty data}">
-						<input type="hidden"  name="boardNum" value="${id}">
+						<input type="hidden"  name="boardNum" value="${data.boardNum}">
 					</c:if>
-					<input type="hidden"  name="category" value="${category}">
+					<input type="hidden"  name="category" value="${data.category}">
 					<input type="hidden"  name="socialNum" value="${socialNum}">
 					<button class="btn btn-primary" type="button" onclick="formCheck(this.form);">
 					저장

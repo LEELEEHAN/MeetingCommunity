@@ -176,5 +176,16 @@ public class ClubDAO {
 		session.insert(mapperId,dto);
 
 	}
+	public BoardDTO getBoardDetail(int id) {
+		String mapperId =String.format(mapper,"getBoardDetail");
+		BoardDTO detail = session.selectOne(mapperId,id);
+		System.out.println("DAO(getDetail) 받은 값: "+"\n"+detail);
+		return detail;
+	}
+	public void boardModify(BoardDTO dto) {
+		String mapperId =String.format(mapper,"boardModify");
+		session.update(mapperId,dto);
+		
+	}
 
 }
