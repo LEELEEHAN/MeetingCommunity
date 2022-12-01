@@ -138,6 +138,28 @@ public class LoginDAO {
 		System.out.println("카카오 로그인 DAO 13"+data);
 		return data;
 	}
-	
+
+
+	public int nickChk(UserDTO data) {
+		String mapperId =String.format(mapper,"nickChk");
+		int rrr = session.selectOne(mapperId,data);
+		System.out.println("DAO(nickChk) : rrr "+rrr);
+		return rrr;
+	}
+
+	public int nickSave(UserDTO data) {
+		String mapperId =String.format(mapper,"setNickName");
+		System.out.println("DAO(nickSave) : data "+data);
+		int result = session.update(mapperId,data);
+		System.out.println("DAO(nickSave) : result "+result);
+		return result;
+	}
+
+
+	public UserDTO getLogin(String email) throws Exception{
+		String mapperId =String.format(mapper,"searchUserEmail");
+		UserDTO data = session.selectOne(mapperId,email);
+		return data;
+	}
 	
 }

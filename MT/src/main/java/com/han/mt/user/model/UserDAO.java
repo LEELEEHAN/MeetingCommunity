@@ -27,4 +27,15 @@ public class UserDAO {
 		return data;
 	}
 
+	public void updateProfile(UserDTO dto) {
+		String mapperId =String.format(mapper,"updateProfile");
+		 session.update(mapperId,dto);
+	}
+
+	public boolean deleteUser(String email) {
+		String mapperId =String.format(mapper,"deleteUser");
+		 int re = session.update(mapperId,email);
+		return re ==1? true: false;
+	}
+
 }

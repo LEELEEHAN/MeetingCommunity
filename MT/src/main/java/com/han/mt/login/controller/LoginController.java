@@ -35,6 +35,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.han.mt.fileUpload.model.FileUploadDAO;
 import com.han.mt.login.model.KakaoVO;
 import com.han.mt.login.model.LoginVO;
 import com.han.mt.login.service.LogintService;
@@ -102,6 +103,7 @@ public class LoginController {
 		session.removeAttribute("joinSocial");
 		session.removeAttribute("joinClub");
 		session.removeAttribute("adminAcc");
+		session.removeAttribute("image");		
 		return "redirect:/";
 	}
 

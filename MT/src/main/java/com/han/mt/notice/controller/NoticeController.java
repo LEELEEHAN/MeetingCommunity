@@ -2,6 +2,7 @@ package com.han.mt.notice.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.han.mt.club.model.ClubDTO;
+import com.han.mt.fileUpload.model.FileUploadDTO;
+import com.han.mt.fileUpload.service.FileUploadService;
 import com.han.mt.notice.model.NoticeBoardDTO;
 import com.han.mt.notice.service.NoticeService;
 import com.han.mt.user.model.UserDTO;
@@ -28,7 +32,9 @@ public class NoticeController {
 
 	@Autowired
 	private NoticeService service; 
-	
+
+	@Autowired
+	private FileUploadService fileUploadService;
 
 	@GetMapping(value="") //로그인 화면 띄우기
 	public String notice (@RequestParam(defaultValue="info") String category,
@@ -66,13 +72,41 @@ public class NoticeController {
 	}
 	
 	@PostMapping(value="/write") //로그인 화면 띄우기
-	public String noticeWrite (@SessionAttribute("loginData") UserDTO user
-			,@ModelAttribute NoticeBoardDTO dto) {	
-		System.out.println("컨트롤(noticeWrite) : 받은 내용" +dto);
+	public String noticeWrite (HttpServletRequest request,HttpSession session,
+			@SessionAttribute("loginData") UserDTO user
+			,@ModelAttribute NoticeBoardDTO dto,
+			@RequestParam("fileUpload") MultipartFile[] files) throws Exception {
+		
 
 		int num = service.getNoticeNum();
 		dto.setNoticeNum(num);
+		System.out.println("컨트롤(noticeWrite) : 받은 내용" +dto);
+		System.out.println(files.length);
 		service.write(dto);
+		for(MultipartFile file: files) {
+			String location = request.getServletContext().getRealPath("/resources/board/upload/");
+			String url = "/static/board/upload";
+			String type = "notice";
+			FileUploadDTO fileData = new FileUploadDTO(num, location, url, type,user.getEmail());
+			
+			try {
+				int fileResult = fileUploadService.upload(file, fileData,type,session);
+				System.out.println("컨트롤(fileResult) :" +fileResult);
+				if(fileResult == -1) {
+					service.deleteNotice(num,session);
+					request.setAttribute("error", "파일업로드 초과.");
+					return"notice/noticeWrite";		
+				}
+			} catch(Exception e) {
+				service.deleteNotice(num,session);
+				request.setAttribute("error", "에러발생.");
+				return"notice/noticeWrite";		
+			}
+			
+		}
+		
+		
+		
 		
 		return "redirect:/notice/detail?id=" + dto.getNoticeNum();
 	}
@@ -82,7 +116,9 @@ public class NoticeController {
 		
 		NoticeBoardDTO data = service.getDetail(id);
 		model.addAttribute("data",data);
-		System.out.println("컨트롤(login) : 로그인 메서드 동작");			
+		model.addAttribute("download", fileUploadService.getDatas(id, "notice"));
+		System.out.println("컨트롤(detail) : "+"\n"+id+"번째 공지 다운로드 파일 리스트"+ fileUploadService.getDatas(id, "notice"));			
+		System.out.println("컨트롤(getDetail) : 공지 디테일 동작");			
 		return"notice/detail";		
 	}
 	

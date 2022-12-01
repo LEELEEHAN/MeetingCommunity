@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="fileUploadMapper">
+	<select id="getCountNotice" resultType="_int">
+		SELECT COUNT(*) FROM FILEDATA
+			 WHERE NOTICENUM = #{bId}
+	</select>
+	<select id="getCountSocial" resultType="_int">
+		SELECT COUNT(*) FROM FILEDATA
+			 WHERE SOCIALNUM = #{bId}
+	</select>
+	<select id="getCountBoard" resultType="_int">
+		SELECT COUNT(*) FROM FILEDATA
+			 WHERE BOARDNUM = #{bId}
+	</select>
+	<select id="getCountEmail" resultType="_int">
+		SELECT COUNT(*) FROM FILEDATA
+			 WHERE EMAIL = #{bId}
+	</select>
+	
+	<insert id="insertDataNotice" parameterType="fileUploadDto">
+		INSERT INTO FILEDATA
+		(FILENUM,NOTICENUM,FILENAME,LOCATION,URL,FILESIZE,CONTENTTYPE,UUIDNAME)
+		     VALUES(FILE_SEQ.NEXTVAL
+		          , #{noticeNum}
+		          , #{fileName}, #{location}, #{url}
+		          , #{fileSize}, #{contentType},#{uuidName})
+	</insert>
+	
+	<insert id="insertDataSocial" parameterType="fileUploadDto">
+		INSERT INTO FILEDATA
+		(FILENUM,SOCIALNUM,FILENAME,LOCATION,URL,FILESIZE,CONTENTTYPE,UUIDNAME)
+		     VALUES(FILE_SEQ.NEXTVAL
+		          , #{socialNum}, #{fileName}, #{location}
+		          , #{url}, #{fileSize}
+		          , #{contentType},#{uuidName})
+	</insert>
+	
+	<insert id="insertDataBoard" parameterType="fileUploadDto">
+		INSERT INTO FILEDATA
+		(FILENUM,BOARDNUM,FILENAME,LOCATION,URL,FILESIZE,CONTENTTYPE,UUIDNAME)
+		     VALUES(FILE_SEQ.NEXTVAL
+		          , #{boardNum},#{fileName},#{location}
+		          , #{url}, #{fileSize}, #{contentType},#{uuidName})
+	</insert>
+	
+	
+	<update id="updateDataEmail" parameterType="fileUploadDto">
+		UPDATE FILEDATA
+		SET FILENAME= #{fileName},LOCATION=#{location},URL=#{url},FILESIZE=#{fileSize},CONTENTTYPE=#{contentType}
+		,UUIDNAME=#{uuidName}		   
+		WHERE EMAIL=#{email}
+	</update>
+	
+<select id="selectDatasNotice" resultType="fileUploadDto">
+SELECT *
+  FROM FILEDATA
+ WHERE NOTICENUM = #{bId}
+</select>
+<select id="selectDatasSocial" resultType="fileUploadDto">
+SELECT *
+  FROM FILEDATA
+ WHERE SOCIALNUM = #{bId}
+</select>
+<select id="selectDatas" resultType="fileUploadDto">
+SELECT *
+  FROM FILEDATA
+ WHERE EMAIL = #{bId}
+</select>
+<select id="selectDatasBoard" resultType="fileUploadDto">
+SELECT *
+  FROM FILEDATA
+ WHERE BORADNUM = #{bId}
+</select>
+	
+<select id="setName" resultType="_int">
+SELECT FILENUM_SEQ.NEXTVAL FROM DUAL
+</select>
+	
+<insert id="setProfile" parameterType="String">
+INSERT INTO FILEDATA(FILENUM,EMAIL,FILENAME,LOCATION,URL)
+VALUES(FILE_SEQ.NEXTVAL,#{email}
+,'profile.png','C:\Users\HOROC\Desktop\jy\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\MT\resources\img\profile\'
+,'/static/img/profile')
+</insert>
+
+
+<select id="getProfile" resultType="fileUploadDto">
+SELECT *
+  FROM FILEDATA
+ WHERE EMAIL = #{email}
+</select>
+</mapper>

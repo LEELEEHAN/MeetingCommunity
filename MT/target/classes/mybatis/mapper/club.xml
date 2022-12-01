@@ -66,7 +66,7 @@ SELECT COUNT(SOCIALNUM),SOCIALNUM
 
 <select id="getDetail" resultType="clubDto">
 SELECT s.SOCIALNUM,s.CATEGORY
-       ,s.TITLE,s.CONTENTS,s.SOCIALIMAGE,s.MAXIMUM,u.EMAIL,u.NICKNAME
+       ,s.TITLE,s.CONTENTS,s.MAXIMUM,u.EMAIL,u.NICKNAME
   FROM SOCIAL s
   JOIN SOCIALMEMBER m
     ON s.socialNum = m.socialNum
@@ -179,8 +179,8 @@ SELECT CLUBBOARD_SEQ.NEXTVAL FROM DUAL
 </select>
 
 <insert id="boardAdd" parameterType="boardDto">
-INSERT INTO CLUBBOARD (SOCIALNUM,BOARDNUM,TITLE,CONTENTS,FILENAME,WRITER,CATEGORY,WRITEDATE,VIEWED)
-VALUES(#{socialNum},#{boardNum},#{title},#{contents},#{fileName},#{writer},#{category},SYSDATE,'0')
+INSERT INTO CLUBBOARD (SOCIALNUM,BOARDNUM,TITLE,CONTENTS,WRITER,CATEGORY,WRITEDATE,VIEWED)
+VALUES(#{socialNum},#{boardNum},#{title},#{contents},#{writer},#{category},SYSDATE,'0')
 </insert>
 
 <select id="getBoardDetail" resultType="boardDto">
@@ -196,5 +196,10 @@ UPDATE CLUBBOARD
       ,REWRITEDATE =SYSDATE
  WHERE boardNum =#{boardNum}
 </update>
+
+<delete id ="deleteBoard">
+DELETE CLUBBOARD
+WHERE BOARDNUM = #{num}
+</delete>
 
 </mapper>

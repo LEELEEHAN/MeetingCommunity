@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.han.mt.fileUpload.model.FileUploadDAO;
+import com.han.mt.fileUpload.model.FileUploadDTO;
 import com.han.mt.login.model.KakaoVO;
 import com.han.mt.login.model.LoginDAO;
 import com.han.mt.login.model.LoginVO;
@@ -31,6 +33,8 @@ public class LogintService {
 	private LoginDAO dao;
 	@Autowired
 	private UserDAO userDao;
+	@Autowired
+	private FileUploadDAO fileDao;
 	 
 	public int getLogin(LoginVO vo, HttpSession session) throws Exception {
 		int result = 1; 
@@ -38,15 +42,18 @@ public class LogintService {
 		UserDTO data;
 		System.out.println("서비스(getLogin) : 로그인 메서드 실행"+vo);
 
+		FileUploadDTO image = new FileUploadDTO();
 		if(vo.getAdmin().equals("admin")) {
 			boolean result2 = dao.login(vo);
 			if(result2) {
 				data = dao.getAdminLogin(vo);
 				System.out.println("서비스(getLogin) : 로그인 메서드 실행"+data);
 				
+				image = fileDao.getProfile(vo.getEmail());
 				if(data.getAdmin().equals("USER")) {return 3;}
 				System.out.println("서비스(getAdminLogin) : 관리자 로그인 로그 저장");
 				session.setAttribute("loginData", data);
+				session.setAttribute("image", image);
 				session.setAttribute("adminAcc", "admin");
 			} else {
 				boolean searchId = dao.searchId(vo.getEmail());
@@ -65,10 +72,12 @@ public class LogintService {
 				if(data.getAdmin().equals("ADMIN")) {return 3;}
 				System.out.println("서비스(getLogin) : 로그인 메서드 실행"+data);
 				dao.loginLog(data);
+				image = fileDao.getProfile(vo.getEmail());
 				System.out.println("서비스(getLogin) : 로그인 로그 저장");
 				System.out.println("서비스(getLogin) : 아이디를 찾아 세션에 정보저장");
 				session.setAttribute("loginData", data);
-				session.setAttribute("loginId", data.getEmail());				
+				session.setAttribute("loginId", data.getEmail());	
+				session.setAttribute("image", image);			
 				session.setAttribute("joinSocial",userDao.joinSocial(data.getEmail()));
 				session.setAttribute("joinClub",userDao.joinClub(data.getEmail()));			
 			} else {
@@ -103,10 +112,10 @@ public class LogintService {
 
 	
 	//아이디 체크, 닉네임 중복 체크
-	public int idChk(String email,HttpSession session,String type) throws Exception{
+	public int idChk(String nickName,HttpSession session,String type) throws Exception{
 		int chek;
 		if(type.equals("email")) {
-			boolean result = dao.idChk(email);
+			boolean result = dao.idChk(nickName);
 			System.out.println("서비스(idChk) 아이디 중복 확인 결과:"+result);
 			session.setAttribute("idCheckResult", result);
 			if(result) {
@@ -115,7 +124,7 @@ public class LogintService {
 				chek=0;
 			}
 		} else {
-			boolean result = dao.nickNameCheck(email);
+			boolean result = dao.nickNameCheck(nickName);
 			System.out.println("서비스(nickNameCheck) 닉네임 중복 확인 결과:"+result);
 			session.setAttribute("nickCheckResult", result);
 			if(result) {
@@ -137,6 +146,7 @@ public class LogintService {
 			boolean signupDetail = dao.signupDetail(dto.getEmail());
 			
 			if(signupDetail) {
+				fileDao.setProfile(dto.getEmail());
 				LoginVO vo = new LoginVO();
 				vo.setEmail(dto.getEmail());
 				vo.setPassword(dto.getPassword());
@@ -157,9 +167,10 @@ public class LogintService {
 		if(signup) {
 			System.out.println("서비스(signupDetail) 받은 아이디:" +dto.getEmail().toString());
 			boolean signupDetail = dao.signupDetail(dto.getEmail());
-			
+			FileUploadDTO image = new FileUploadDTO();
 			if(signupDetail) {
 				UserDTO data = dao.kakaoLogin(dto.getEmail());
+				image = fileDao.getProfile(dto.getEmail());
 				session.setAttribute("loginData", data);		
 			} else {
 				dao.dropId(dto.getEmail());
@@ -390,12 +401,45 @@ public class LogintService {
 		System.out.println("카카오 로그인 서비스 9"+string);
 		UserDTO data = dao.kakaoLogin(string);
 		System.out.println("카카오 로그인 서비스 14"+data);
+		FileUploadDTO image = new FileUploadDTO();
 
+		image = fileDao.getProfile(string);
 		session.setAttribute("loginData", data);
-		session.setAttribute("loginId", string);				
+		session.setAttribute("loginId", string);	
+		session.setAttribute("image", image);						
 		session.setAttribute("joinSocial",userDao.joinSocial(data.getEmail()));
 		session.setAttribute("joinClub",userDao.joinClub(data.getEmail()));
 		
+	}
+
+
+	public int nickSave(String nickName, HttpSession session, String email) throws Exception {
+
+		UserDTO data = new UserDTO();
+		data.setNickName(nickName);
+		data.setEmail(email);
+		System.out.println("서비스(nickSave) : data "+data);
+		int res= dao.nickSave(data);
+		System.out.println("서비스(nickSave) : res "+res);
+		
+		session.removeAttribute("loginData");
+		session.setAttribute("loginData", dao.getLogin(email));
+		
+		return res;
+	}
+
+
+	public int nickChk(String nickName, HttpSession session, String email) {
+
+		UserDTO data = new UserDTO();
+		data.setNickName(nickName);
+		data.setEmail(email);
+		System.out.println("서비스(nickChk) : data "+data);
+
+		int res= dao.nickChk(data);
+		System.out.println("서비스(nickChk) : res "+res);
+		
+		return res;
 	}
 	
 }

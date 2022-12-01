@@ -10,8 +10,7 @@
 	<title>게시글 등록</title>
 	<%@ include file="../module/head.jsp" %>
 	<%@ include file="../module/nav.jsp" %>
-	<c:url var="ckeditor" value="/static/ckeditor" />
-	<script type="text/javascript" src="${ckeditor}/ckeditor.js"></script>
+<script type="text/javascript" src="/mt/static/ckeditor/ckeditor.js"></script>
 </head>
 <script type="text/javascript">
 	function formCheck(form) {
@@ -24,13 +23,40 @@
 		}
 		form.submit();
 	}
+	function uploadCheck(element) {
+		var files = element.files;
+		
+		var modal = new bootstrap.Modal(document.getElementById("errorModal"), {
+			keyboard: false
+		});
+		var title = modal._element.querySelector(".modal-title");
+		var body = modal._element.querySelector(".modal-body");
+		
+		if(files.length > 3) {
+			title.innerText = "파일 업로드 오류";
+			body.innerText = "파일 업로드는 최대 3개로 제한되어 있습니다.";
+			modal.show();
+			element.value = "";
+			return;
+		}
+		
+		for(file of files) {
+			if(file.size / 1000 / 1000 > 5.0) {
+				title.innerText = "파일 업로드 오류";
+				body.innerText = "파일당 최대 5MB 까지만 업로드 할 수 있습니다. 5MB 초과 용량에 대해서는 관리자에게 문의하세요.";
+				modal.show();
+				element.value = "";
+				return;
+			}
+		}
+	}
 </script>
 <body class="body">
 	<header></header>
 	<section class="container">
 		<div class="mt-3">
 			<c:url var="boardAddUrl" value="/club/create" />
-			<form action="${boardAddUrl}" method="post">
+			<form action="${boardAddUrl}" method="post"enctype="multipart/form-data">
 				<div class="mb-3">
 					<input class="form-control" type="text" name="title" placeholder="클럽 이름을 정해봐요">
 				</div>
@@ -41,6 +67,10 @@
 						</c:forEach>								
 					</c:if>
 				</div>
+				<div class="mb-3">
+					<label>썸네일 설정</label>
+					<input class="form-control" type="file" onchange="uploadCheck(this);" name="fileUpload" multiple>
+				</div>	
 				<div class="mb-3">
 					<input class="form-control" name="preview"
 						placeholder="짦은 글로 클럽을 소개해보세요.">
@@ -79,7 +109,7 @@
 	<footer></footer>
 	<c:url var="upload" value="/upload/image" />
 	<script type="text/javascript">
-		CKEDITOR.replace("content", {
+		CKEDITOR.replace("contents", {
 			filebrowserUploadUrl: "${upload}?type=image"
 		})
 	</script>

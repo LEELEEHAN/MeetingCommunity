@@ -7,9 +7,8 @@
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<title>게시글 등록</title>
-	<c:url var="ckeditor" value="/static/ckeditor" />
-	<script type="text/javascript" src="${ckeditor}/ckeditor.js"></script>
+	<title>게시글 수정</title>
+<script type="text/javascript" src="/mt/static/ckeditor/ckeditor.js"></script>
 </head>
 <script type="text/javascript">
 	function formCheck(form) {
@@ -79,7 +78,7 @@
 	<footer></footer>
 	<c:url var="upload" value="/upload/image" />
 	<script type="text/javascript">
-		CKEDITOR.replace("content", {
+		CKEDITOR.replace("contents", {
 			filebrowserUploadUrl: "${upload}?type=image"
 		})
 	</script>

@@ -55,13 +55,16 @@ public class ClubService {
 		System.out.println("서비스(getMember) 받은값:"+"\n"+memberList);	
 		return memberList;
 	}
-	public int getSocialNum() {
-		int num = dao.getNum();
-		System.out.println("서비스(getSocialNum) 받은값:"+"\n"+num);	
+	
+	public int getNum() {
+		int num =dao.getNum();
 		return num;
 	}
-	public int createClub(ClubDTO vo,HttpSession session) {
-
+	
+	public int createClub(ClubDTO vo,HttpSession session,UserDTO user) {
+		vo.setEmail(user.getEmail());
+		vo.setNickName(user.getNickName());
+		
 		int re = dao.createClub(vo);
 		dao.createClubDetail(vo);
 		if(re != 1) {return 9;}
@@ -143,6 +146,10 @@ public class ClubService {
 	}
 	public void boardModify(BoardDTO dto) {
 		dao.boardModify(dto);
+	}
+	public void deleteBoard(int num) {
+		dao.deleteBoard(num);
+		
 	}
 	
 

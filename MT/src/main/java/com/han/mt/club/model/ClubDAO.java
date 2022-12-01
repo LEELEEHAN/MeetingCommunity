@@ -187,5 +187,13 @@ public class ClubDAO {
 		session.update(mapperId,dto);
 		
 	}
+	public boolean deleteBoard(int num) {
+		String mapperId =String.format(mapper,"deleteBoard");
+		System.out.println("DAO(deleteSoical) 받은 값: "+"\n"+num);
+		int result = session.delete(mapperId,num);
+		System.out.println("DAO(deleteSoical) 결과 값: "+"\n"+result);
+		return result == 1? true:false;
+		
+	}
 
 }

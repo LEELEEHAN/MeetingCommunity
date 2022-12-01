@@ -19,5 +19,6 @@
 		<typeAlias type="com.han.mt.club.model.ClubMemberDTO" alias="clubMemberDto" />
 		<typeAlias type="com.han.mt.club.model.BoardDTO" alias="boardDto" />
 		<typeAlias type="com.han.mt.notice.model.NoticeBoardDTO" alias="noticeDto" />
+		<typeAlias type="com.han.mt.fileUpload.model.FileUploadDTO" alias="fileUploadDto" />
 	</typeAliases>
 </configuration>

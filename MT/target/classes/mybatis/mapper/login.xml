@@ -9,6 +9,14 @@ LEFT JOIN USERDETAIL d
     ON u.EMAIL = d.ID
  WHERE u.EMAIL = #{email}
    AND u.PASSWORD = #{password}
+   AND d.DELETED = 'N'
+</select>
+<select id="searchUserEmail" resultType="userDto">
+SELECT *
+  FROM USERTABLE u
+LEFT JOIN USERDETAIL d
+    ON u.EMAIL = d.ID
+ WHERE u.EMAIL = #{email}
 </select>
 <select id="getAdminLogin" resultType="userDto">
 SELECT *
@@ -93,6 +101,13 @@ WHERE EMAIL =#{email}
 </delete>
 
 
+<select id="nickChk" resultType="int">
+SELECT count(*)
+  FROM USERTABLE
+ WHERE NICKNAME = #{nickName}
+   AND EMAIL = #{email}
+</select>
+
 
 
 <insert id="imageToDB">
@@ -104,9 +119,10 @@ WHERE EMAIL =#{email}
 <select id="kakaoLogin" resultType="userDto">
 SELECT *
   FROM USERTABLE u
- full JOIN USERDETAIL d
+ LEFT JOIN USERDETAIL d
     ON u.EMAIL = d.ID
  WHERE u.EMAIL = #{email}
+   AND d.DELETED = 'N'
 </select>
 
 </mapper>

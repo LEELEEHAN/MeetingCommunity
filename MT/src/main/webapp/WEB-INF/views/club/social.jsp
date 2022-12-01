@@ -8,18 +8,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<%@ include file="../module/nav.jsp"%>
-<c:url var="bs5" value="/static/bs5" />
-<c:url var="jQuery" value="/static/js" />
-<link rel="stylesheet" type="text/css" href="${bs5}/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-<script type="text/javascript" src="${bs5}/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${jQuery}/jquery-3.6.0.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 
+	<%@ include file="../module/head.jsp" %>
+	<%@ include file="../module/nav.jsp" %>
 </head>
 <body>
     <div id="msgStack"></div>

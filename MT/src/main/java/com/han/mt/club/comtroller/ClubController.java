@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.han.mt.club.model.BoardDTO;
 import com.han.mt.club.model.ClubDTO;
 import com.han.mt.club.model.ClubVO;
 import com.han.mt.club.service.ClubService;
+import com.han.mt.fileUpload.model.FileUploadDTO;
+import com.han.mt.fileUpload.service.FileUploadService;
 import com.han.mt.social.service.SocialService;
 import com.han.mt.user.model.UserDTO;
 import com.han.mt.user.service.UserService;
@@ -37,6 +40,8 @@ public class ClubController {
 	private SocialService socialService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private FileUploadService fileUploadService;
 	
 	@GetMapping(value = "")
 	public String getClub(Model model,HttpSession session,
@@ -54,6 +59,7 @@ public class ClubController {
 			model.addAttribute("search",search);	
 		}
 
+		System.out.println("컨트롤(getClub) 정보"+"\n"+list);
 		Paging paging = new Paging(list, page, 10);
 		model.addAttribute("field",socialService.getCategory());
 		model.addAttribute("real",socialService.getReal());
@@ -79,7 +85,8 @@ public class ClubController {
 		BoardDTO dto = new BoardDTO();
 		dto.setSocialNum(id);
 		dto.setCategory("I");		
-		
+
+		System.out.println("컨트롤(socialDetail) 정보"+"\n"+service.getDetail(id));
 		model.addAttribute("detail", service.getDetail(id));
 		model.addAttribute("real",socialService.getReal(id));
 		model.addAttribute("memberList",socialService.getMember(id));
@@ -101,21 +108,41 @@ public class ClubController {
 	@PostMapping(value = "/create")//�옉�꽦�맂 �뼇�떇 ���옣
 	public String createSocial(HttpServletRequest request,HttpSession session,
 			@SessionAttribute("loginData") UserDTO user,
-			@ModelAttribute ClubDTO dto) {
+			@ModelAttribute ClubDTO dto,
+			@RequestParam("fileUpload") MultipartFile[] files) throws Exception {
+
+		System.out.println(files);
+		int num =service.getNum();
+		dto.setSocialNum(num);
+		int result=service.createClub(dto,session,user);
+		String type = "social";
 		
-		dto.setSocialNum(service.getSocialNum());
-		dto.setEmail(user.getEmail());
-		dto.setNickName(user.getNickName());
-
-		System.out.println("컨트롤(create) 클럽 작성 내용"+"\n"+dto);
-
-		System.out.println("컨트롤(create) 작성자 정보"+"\n"+user);
-
 		
-		int result=service.createClub(dto,session);
+		
+		for(MultipartFile file: files) {
+			String location = request.getServletContext().getRealPath("/resources/board/upload");
+			String url = "/static/board/upload";
+			FileUploadDTO fileData = new FileUploadDTO(num, location, url, type,user.getEmail());
+			
+			try {
+				int fileResult = fileUploadService.upload(file, fileData,type,session);
+				System.out.println("컨트롤(fileResult) :" +fileResult);
+				if(fileResult == -1) {
+					service.deleteSoical(num,user.getEmail(),session);
+					request.setAttribute("error", "파일업로드 초과.");
+					return "social/create";
+				}
+			} catch(Exception e) {
+				service.deleteSoical(num,user.getEmail(),session);
+				request.setAttribute("error", "에러발생.");
+				return "social/create";
+			}
+			
+		}
 		
 		switch(result) {
 		case 9:
+			service.deleteSoical(dto.getSocialNum(),user.getEmail(),session);
 			return "error/error";
 		case 8:
 			service.deleteSoical(dto.getSocialNum(),user.getEmail(),session);
@@ -125,6 +152,8 @@ public class ClubController {
 		return "redirect:/club/detail?id=" + dto.getSocialNum();
 	}
 
+	
+	
 	@PostMapping(value="/delete", produces = "application/json; charset=utf-8")
     @ResponseBody
 	public String delete(@RequestParam int id
@@ -237,14 +266,40 @@ public class ClubController {
 	}
 
 	@PostMapping(value="/board/write")
-	public String write(@ModelAttribute BoardDTO dto,Model model,HttpSession session,
-			@SessionAttribute("loginData") UserDTO user){ 
+	public String write(HttpServletRequest request,
+			@ModelAttribute BoardDTO dto,Model model,HttpSession session,
+			@SessionAttribute("loginData") UserDTO user,
+			@RequestParam("fileUpload") MultipartFile[] files) throws Exception {
+		
+		int num =service.getBoardNum();
 		dto.setNickName(user.getNickName());
 		dto.setWriter(user.getEmail());
 		dto.setSocialNum(dto.getSocialNum());
-		dto.setBoardNum(service.getBoardNum());	
+		dto.setBoardNum(num);	
 			service.boardAdd(dto);
-		
+			
+
+			String type = "board";
+			for(MultipartFile file: files) {
+				String location = request.getServletContext().getRealPath("/resources/board/upload/");
+				String url = "/static/board/upload";
+				FileUploadDTO fileData = new FileUploadDTO(num, location, url, type,user.getEmail());
+				
+				try {
+					int fileResult = fileUploadService.upload(file, fileData,type,session);
+					System.out.println("컨트롤(fileResult) :" +fileResult);
+					if(fileResult == -1) {
+						service.deleteBoard(num);
+						request.setAttribute("error", "파일업로드 초과.");
+						return "club/boardwrite";
+					}
+				} catch(Exception e) {
+					service.deleteBoard(num);
+					request.setAttribute("error", "에러발생.");
+					return "club/boardwrite";
+				}
+				
+			}
 
 			return "redirect:/club/board/detail?category="+dto.getCategory()+"&id="+dto.getBoardNum();
 	}

@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.han.mt.fileUpload.model.FileUploadDTO;
+import com.han.mt.fileUpload.service.FileUploadService;
 import com.han.mt.social.model.SocialCommentDTO;
 import com.han.mt.social.model.SocialDTO;
 import com.han.mt.social.model.SocialDynamicDTO;
@@ -38,7 +41,9 @@ public class SocialController {
 	private SocialService service;
 	@Autowired
 	private UserService userService;
-	
+
+	@Autowired
+	private FileUploadService fileUploadService;
 	
 	@GetMapping(value = "")
 	public String getSocial(Model model,HttpSession session,
@@ -107,9 +112,10 @@ public class SocialController {
 	public String createSocial(HttpServletRequest request,HttpSession session,
 			@SessionAttribute("loginData") UserDTO user,
 			@ModelAttribute SocialVO vo,
-			@ModelAttribute SocialDTO dto) {
-
-		vo.setSocialNum(service.getSocialNum());
+			@ModelAttribute SocialDTO dto,
+			@RequestParam("fileUpload") MultipartFile[] files) throws Exception {
+		int num =service.getSocialNum();
+		vo.setSocialNum(num);
 		dto.setSocialNum(vo.getSocialNum());
 		vo.setId(user.getEmail());
 		vo.setNickName(user.getNickName());
@@ -120,13 +126,38 @@ public class SocialController {
 		System.out.println("컨트롤(create) 작성자 정보"+"\n"+user);
 	
 		int result=service.createSocial(vo,dto,session);
+
+		String type = "social";
+		for(MultipartFile file: files) {
+			String location = request.getServletContext().getRealPath("/resources/board/upload");
+			String url = "/static/board/upload";
+			FileUploadDTO fileData = new FileUploadDTO(num, location, url, type,user.getEmail());
+			
+			try {
+				int fileResult = fileUploadService.upload(file, fileData,type,session);
+				System.out.println("컨트롤(fileResult) :" +fileResult);
+				if(fileResult == -1) {
+					service.deleteSoical(num,user.getEmail(),session);
+					request.setAttribute("error", "파일업로드 초과.");
+					return "social/create";
+				}
+			} catch(Exception e) {
+				service.deleteSoical(num,user.getEmail(),session);
+				request.setAttribute("error", "에러발생.");
+				return "social/create";
+			}
+			
+		}
 		
 		switch(result) {
 		case 9:
-			return "error/error";
+			service.deleteSoical(dto.getSocialNum(),user.getEmail(),session);
+			request.setAttribute("error", "에러발생.");
+			return "social/create";
 		case 8:
-			service.deleteSoical(vo.getSocialNum(),user.getEmail(),session);
-			return "error/error";
+			service.deleteSoical(dto.getSocialNum(),user.getEmail(),session);
+			request.setAttribute("error", "에러발생.");
+			return "social/create";
 		}
 		
 		return "redirect:/social/detail?id=" + vo.getSocialNum();

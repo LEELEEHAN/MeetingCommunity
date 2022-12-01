@@ -34,6 +34,16 @@
 	<div>
 		<p>${data.content}</p>
 	</div>
+	<div class="row mb-1">
+				<ul class="col-4 ms-auto list-group">
+				<c:forEach items="${download}" var="file">
+					<c:url var="downUrl" value="${file.url}/${file.uuidName}" />
+					<li class="list-group-item text-truncate">
+						<a class="text-info text-decoration-none" href="${downUrl}" download="${file.fileName}">${file.fileName}</a>
+					</li>
+				</c:forEach>
+				</ul>
+			</div>
 </div>
 <div class="text-center">
 		<form action="./delete" method="post">	
@@ -57,13 +67,13 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h6 class="modal-title">삭제 확인</h6>
+						<h6 class="modal-title">탈퇴 확인</h6>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
-					<div class="modal-body">해당 데이터를 삭제하겠습니까?</div>
+					<div class="modal-body">탈퇴하시겠습니까?</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="deleteNotice()">
+						<button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="deleteNotice();">
 							확인
 						</button>
 						<button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" >

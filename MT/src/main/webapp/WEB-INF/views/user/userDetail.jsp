@@ -8,15 +8,9 @@
 
 <html>
 <head>
-<c:url var="bs5" value="/static/bs5" />
-<c:url var="jQuery" value="/static/js" />
-<link rel="stylesheet" type="text/css" href="${bs5}/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-<script type="text/javascript" src="${bs5}/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${jQuery}/jquery-3.6.0.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
+
+	<%@ include file="../module/head.jsp" %>
+	<%@ include file="../module/nav.jsp" %>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript">
@@ -101,7 +95,7 @@ function nickCheck(){
 		}
 	if($("#nickName").val()!=""){
 			$.ajax({
-				url : "./idChk",
+				url : "/mt/idChk",
 				type : "POST",
 				data : {
 					email : $("#nickName").val(),
@@ -154,8 +148,6 @@ function nickCheck(){
 			<br>
 			닉네임 설정 
 			<input class="form-control" type="text" name="nickName" id="nickName"/>
-			
-			
 			<button class="nickNameCheck btn btn-warning" style="float:right" type="button" id="nickNameCheck" onclick="nickCheck();" value="N">
 				중복확인
 			</button>

@@ -8,16 +8,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<%@ include file="../module/nav.jsp"%>
-<c:url var="bs5" value="/static/bs5" />
-<c:url var="jQuery" value="/static/js" />
-<link rel="stylesheet" type="text/css" href="${bs5}/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-<script type="text/javascript" src="${bs5}/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${jQuery}/jquery-3.6.0.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
+	<%@ include file="../module/head.jsp" %>
+	<%@ include file="../module/nav.jsp" %>
+<script type="text/javascript" src="/mt/static/ckeditor/ckeditor.js"></script>
 <title>공지사항 작성</title>
 
 </head>
@@ -32,6 +25,33 @@
 		}
 		form.submit();
 	}
+	function uploadCheck(element) {
+		var files = element.files;
+		
+		var modal = new bootstrap.Modal(document.getElementById("errorModal"), {
+			keyboard: false
+		});
+		var title = modal._element.querySelector(".modal-title");
+		var body = modal._element.querySelector(".modal-body");
+		
+		if(files.length > 3) {
+			title.innerText = "파일 업로드 오류";
+			body.innerText = "파일 업로드는 최대 3개로 제한되어 있습니다.";
+			modal.show();
+			element.value = "";
+			return;
+		}
+		
+		for(file of files) {
+			if(file.size / 1000 / 1000 > 5.0) {
+				title.innerText = "파일 업로드 오류";
+				body.innerText = "파일당 최대 5MB 까지만 업로드 할 수 있습니다. 5MB 초과 용량에 대해서는 관리자에게 문의하세요.";
+				modal.show();
+				element.value = "";
+				return;
+			}
+		}
+	}
 </script>
 <body>
 	<header></header>
@@ -39,7 +59,7 @@
 		<div class="mt-3">
 		
 			<c:url var="boardAddUrl" value="/notice/write" />
-			<form ${empty data? 'action="./write"':'action="./modify"'} method="post">
+			<form ${empty data? 'action="./write"':'action="./modify"'}  method="post"enctype="multipart/form-data">
 				<div class="mb-3">
 					<select name="category">
 						<option value="info"${getCategory eq 'info' ? 'selected' : '' }>정보,공지</option>
@@ -49,7 +69,10 @@
 				</div>				
 				
 				<div class="mb-3">
-					<textarea class="form-control" name="content" rows="8" value="${data.content}" placeholder="내용을 입력하세요.">${data.content}</textarea>
+					<textarea class="form-control" name="content" rows="8">${data.content}</textarea>
+				</div>
+				<div class="mb-3">
+					<input class="form-control" type="file" onchange="uploadCheck(this);" name="fileUpload" multiple>
 				</div>
 				<div class="mb-3 text-end">
 					<c:if test="${not empty data}">

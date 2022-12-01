@@ -8,12 +8,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>게시글 등록</title>
-	<c:url var="ckeditor" value="/static/ckeditor" />
-	<script type="text/javascript" src="${ckeditor}/ckeditor.js"></script>
+<script type="text/javascript" src="/mt/static/ckeditor/ckeditor.js"></script>
 </head>
 <script type="text/javascript">
 	function formCheck(form) {
-		if(form.title.value === undefined || form.title.value.trim() === "") {
+		if(form.title.value === undefined || form.title.value.trim() === ""||form.contents.value === undefined || form.contents.value.trim() === "") {
 			var modal = new bootstrap.Modal(document.getElementById("errorModal"), {
 				keyboard: false
 			});
@@ -57,7 +56,7 @@
 			</form>
 		</div>
 		
-		<!-- <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+		<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -65,8 +64,8 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						제목은 공란을 입력할 수 없습니다.<br>
-						반드시 제목을 입력하세요.
+						공란을 입력할 수 없습니다.<br>
+						반드시 내용을 입력하세요.
 						
 					</div>
 					<div class="modal-footer">
@@ -74,12 +73,12 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 	</section>
 	<footer></footer>
 	<c:url var="upload" value="/upload/image" />
 	<script type="text/javascript">
-		CKEDITOR.replace("content", {
+		CKEDITOR.replace("contents", {
 			filebrowserUploadUrl: "${upload}?type=image"
 		})
 	</script>

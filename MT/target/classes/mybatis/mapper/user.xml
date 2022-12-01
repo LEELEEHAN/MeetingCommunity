@@ -25,5 +25,18 @@ SELECT m.SOCIALNUM, s.TITLE, s.category, m.auth
    AND s.SOCIALCLUB ='S'
 ORDER BY AUTH
 </select>
+<update id="updateProfile">
+UPDATE USERTABLE
+   SET NAME =#{name}
+     , PHONE =#{phone}
+ WHERE EMAIL = #{email}
+
+</update>
+<update id="deleteUser">
+UPDATE USERDETAIL
+SET DELETED='Y'
+  , DELETEDATE = SYSDATE
+WHERE ID = #{email}
+</update>
 
 </mapper>
