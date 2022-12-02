@@ -115,9 +115,9 @@ public class LoginDAO {
 		return false;
 	}
 
-	public boolean signupDetail(String email) {
+	public boolean signupDetail(UserDTO data) {
 		String mapperId =String.format(mapper,"signupDetail");
-		int result = session.insert(mapperId,email);
+		int result = session.insert(mapperId,data);
 		System.out.println("DAO(signupDetail) °á°ú :" +result);
 		
 		return result ==1? true : false;
@@ -161,5 +161,18 @@ public class LoginDAO {
 		UserDTO data = session.selectOne(mapperId,email);
 		return data;
 	}
+
+	public boolean userCheck(UserDTO dto) {
+		String mapperId =String.format(mapper,"userCheck");
+		int count = session.selectOne(mapperId,dto);
+		boolean result;
+		if(count<1){
+			result = true;
+		}else {
+			result = false;
+		}
+		return result;
+	}
+
 	
 }

@@ -116,9 +116,24 @@ public class LoginController {
 	@ResponseBody
 	public String findId(@ModelAttribute UserDTO dto,Model model,HttpSession session) throws Exception {
 		System.out.println("아이디 찾기 jsp에서 받은 DTO값 :" + dto);
-		String result = service.findId(session,dto);		
-		model.addAttribute("List",result);
-		return result;		
+		
+		JSONObject json = new JSONObject();
+
+            if (true) {
+               String data = service.findId(dto);
+                if (data!=null) {
+                    json.put("code", "success");
+                    json.put("user", data);
+                } else {
+                    json.put("code", "fail");
+                }
+            } else {
+                json.put("code", "permissionError");
+            }
+        
+
+        return json.toJSONString();
+		
 	}
 	
 	
@@ -128,6 +143,20 @@ public class LoginController {
 		System.out.println("컨트롤러(idChk) : 받은값 "+email);
 		int result = service.idChk(email,session,type);
 		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);
+		
+		return result;
+	}
+
+
+	
+
+	@PostMapping(value="/userCheck")//유저ㅗ 중복체크
+	@ResponseBody
+	public int userCheck(@ModelAttribute UserDTO dto,@RequestParam String email,HttpSession session,@RequestParam String type) throws Exception{
+		
+		System.out.println("컨트롤러(userCheck) : 받은값 "+dto);
+		int result = service.userCheck(dto);
+		System.out.println("컨트롤러(userCheck) : 중복확인 결과"+result);
 		
 		return result;
 	}
@@ -283,5 +312,52 @@ public class LoginController {
 		model.addAttribute("joinError", "가입에 실패하였습니다. \n 다시 시도해주세요"); 
 		return "user/signup";	
 	} 
+	
+	//================================================================================================
+
+	@PostMapping(value="/emailPasswordRESET")//이메일 중복확인후 해당메일로 인증번호 전송
+	public String emailPasswordRESET(Model model,HttpSession session,@RequestParam String email)throws Exception{
+		System.out.println("아이디 인증 JSP에서 받은 값:"+ email);
+		session.setAttribute("id",email);
+		model.addAttribute("email",email);
+		model.addAttribute("id",email);
+		
+		return "forward:PasswordmailSend";
+	} 
+	//인증메일 전송
+	@PostMapping(value="/PasswordmailSend")
+	public String PasswordmailSend(Model model,UserDTO dto,final HttpServletRequest req)throws Exception {
+		MimeMessagePreparator pre = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception{
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+				
+				//인증코드 세션에 담아 제한시간 설정하기
+				Random rd =new Random();
+				int joinCode = rd.nextInt(9000)+1000;
+				HttpSession session = req.getSession();
+				//인증번호 세션에 저장
+				session.setAttribute("joinCode", joinCode);
+				System.out.println("컨트롤러(mailSend)에서 생성한 인증코드 "+"\n"+joinCode);
+				System.out.println("컨트롤러(mailSend) 세션에 저장된 코드" +"\n"+ session.getAttribute("joinCode"));
+				//인증번호 유효시간 10분
+				session.setMaxInactiveInterval(600); // 인증유효 10분
+				
+				String email = req.getParameter("email");
+				System.out.println("컨트롤러(mailSend)에서 보낼 이메일 주소 "+"\n"+email);
+				helper.setTo(email);
+				helper.setSubject("우동에서 인증번호를 보냅니다");
+				helper.setText("인증번호 :" + joinCode+"\n"+"가입창으로 돌아가 입력해주세요");
+				}
+			};
+			
+			model.addAttribute("email",req.getParameter("email"));
+			model.addAttribute("id", req.getParameter("email"));		
+			mailSender.send(pre);
+			model.addAttribute("kakaoLogin", "카카오 로그인 성공"+ "\n"+"사용하실 닉네임을 설정해주세요 ");
+			return "user/userDetail";
+	}
+	
+	
 	
 }

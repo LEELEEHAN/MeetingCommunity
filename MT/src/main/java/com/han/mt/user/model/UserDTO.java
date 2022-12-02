@@ -19,9 +19,23 @@ public class UserDTO {
 	private String profile;
 	private String kakao;
 	private String admin;
+	private String backUpEmail;
+	private String tempPass;
 
 	
 	
+	public String getBackUpEmail() {
+		return backUpEmail;
+	}
+	public void setBackUpEmail(String backUpEmail) {
+		this.backUpEmail = backUpEmail;
+	}
+	public String getTempPass() {
+		return tempPass;
+	}
+	public void setTempPass(String tempPass) {
+		this.tempPass = tempPass;
+	}
 	public String getAdmin() {
 		return admin;
 	}
@@ -114,12 +128,12 @@ public class UserDTO {
 	}
 	@Override
 	public String toString() {
-		return "UserDTO [email=" + email + "password=" + password + ", name=" + name + ", nickName=" + nickName + ", birth="
-				+ birth + ", phone=" + phone + ", gender=" + gender + ", hidden=" + hidden
-				+ ", deleted=" + deleted + ", admin=" + admin + ", dateLog=" + deleteDate + ", dateLog=" + dateLog + ", mannerPoint="
-				+ mannerPoint + ", profile=" + profile + "]"+"\n";
+		return "UserDTO [email=" + email + ", password=" + password + ", name=" + name + ", nickName=" + nickName
+				+ ", birth=" + birth + ", phone=" + phone + ", gender=" + gender + ", hidden=" + hidden + ", deleted="
+				+ deleted + ", deleteDate=" + deleteDate + ", dateLog=" + dateLog + ", mannerPoint=" + mannerPoint
+				+ ", profile=" + profile + ", kakao=" + kakao + ", admin=" + admin + ", backUpEmail=" + backUpEmail
+				+ ", tempPass=" + tempPass + "]"+"\n";
+	
 	}
-	
-	
 	
 }

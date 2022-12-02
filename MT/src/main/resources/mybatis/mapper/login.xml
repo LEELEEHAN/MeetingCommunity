@@ -37,12 +37,21 @@ SELECT EMAIL
   FROM USERTABLE
  WHERE NAME = #{name}
    AND PHONE = #{phone}
+   AND BIRTH = #{birth}
 </select>
 
 <select id="idChk" resultType="int">
 SELECT count(*) 
   FROM USERTABLE
  WHERE EMAIL = #{email}
+</select>
+
+<select id="userCheck" resultType="int">
+SELECT count(*) 
+  FROM USERTABLE
+ WHERE EMAIL = #{email}
+   AND BIRTH = #{birth}
+   AND NAME = #{name}
 </select>
 
 <insert id="signup"  parameterType="UserDTO">

@@ -8,38 +8,38 @@
 
 <html>
 <head>
-<c:url var="bs5" value="/static/bs5" />
-<c:url var="jQuery" value="/static/js" />
-<link rel="stylesheet" type="text/css" href="${bs5}/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-<script type="text/javascript" src="${bs5}/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="${jQuery}/jquery-3.6.0.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+
+
+	<%@ include file="../module/head.jsp" %>
+	<%@ include file="../module/nav.jsp" %>
+<title>아이디 찾기</title>
 <script type="text/javascript">
-		
-		function idChk(){
+		function nickCheck(){
 
 			if($("#name").val()==""){
-				alert("아이디를 입력해주세요.");
+				alert("이름를 입력해주세요.");
 				$("#name").focus();
+				return false;
+				}
+			if($("#phone").val()==""){
+				alert("휴대전화번호를 입력해주세요.");
+				$("#phone").focus();
 				return false;
 				}
 			if($("#name").val()!=""){
 				$.ajax({
-					url : "./idChk",
+					url : "/mt/findId",
 					type : "POST",
 					data : {
-						id : $("#name").val()
+						name : $("#name").val(),
+						phone : $("#phone").val()
 						},
+					dataType: "json",
 					success : function(data){
-						if(data != 1){
-							alert("중복된 아이디입니다.");
-						}else if(data == 1){
-							alert("사용가능한 아이디입니다.");
+						if(data.code === success){
+							alert(data.user);
+						}else if(data.code === fail){
+							alert("계정이 조회되지않습니다.");
 						}
 					}
 				})
@@ -56,14 +56,16 @@
 		<form action="./findId" method="post" id="form">
 			
 			아이디 
-			<input class="form-control" type="text" name="name" id="name"/>
-			<button class="idChk btn btn-warning" style="float:right" type="button" id="idChk" onclick="fn_idChk();" value="N">
-				중복확인
-			</button>
-			
+			<input class="form-control" type="text" name="name" id="name"/>	
 			핸드폰번호 
 			<input class="form-control" type="text" name="phone"  id="phone"/>
 			<br>
+			생년월일 
+			<input class="form-control" type="date" name="birth"  id="birth"placeholder="birth"/>
+			<br>
+			<button class="w-100 btn btn-lg btn-warning" style="float:right" type="button" id="idChange" onclick="nickCheck();" value="N">
+				아이디바꾸기
+			</button>
 		</form>
 	</div>
 </main>

@@ -96,16 +96,14 @@ public class LogintService {
 	}
 
 
-	public String findId(HttpSession session, UserDTO dto) throws Exception {
+	public String findId(UserDTO dto) throws Exception {
 		String idList = dao.findId(dto);
 		System.out.println("서비스(findId) 아이디 중복조뢰 리스트:"+idList);
 
 		if(idList==null) {
 			System.out.println("아이디 조회 실패 세션저장");
-			session.setAttribute("findIdResult", "해당계정이 없습니다");
 		} else {
 			System.out.println("받은 값으로 조회결과"+idList);
-			session.setAttribute("findId", idList);
 		}
 		return idList;			
 	}
@@ -143,7 +141,7 @@ public class LogintService {
 		
 		if(signup) {
 			System.out.println("서비스(signupDetail) 받은 아이디:" +dto.getEmail().toString());
-			boolean signupDetail = dao.signupDetail(dto.getEmail());
+			boolean signupDetail = dao.signupDetail(dto);
 			
 			if(signupDetail) {
 				fileDao.setProfile(dto.getEmail());
@@ -166,7 +164,7 @@ public class LogintService {
 		boolean signup = dao.kakaoSignup(dto);
 		if(signup) {
 			System.out.println("서비스(signupDetail) 받은 아이디:" +dto.getEmail().toString());
-			boolean signupDetail = dao.signupDetail(dto.getEmail());
+			boolean signupDetail = dao.signupDetail(dto);
 			FileUploadDTO image = new FileUploadDTO();
 			if(signupDetail) {
 				UserDTO data = dao.kakaoLogin(dto.getEmail());
@@ -440,6 +438,19 @@ public class LogintService {
 		System.out.println("서비스(nickChk) : res "+res);
 		
 		return res;
+	}
+
+
+	public int userCheck(UserDTO dto) {
+		boolean result = dao.userCheck(dto);
+		int num;
+		if(result) {
+			System.out.println("서비스(userCheck) : 받은값 "+dto);
+			num = 1;
+		} else {
+			num=0;
+		}
+		return num;
 	}
 	
 }
