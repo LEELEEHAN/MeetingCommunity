@@ -13,6 +13,7 @@
 		<typeAlias type="com.han.mt.social.model.SocialVO" alias="socialVo" />
 		<typeAlias type="com.han.mt.social.model.SocialMemberDTO" alias="socialMemberDto" />
 		<typeAlias type="com.han.mt.user.model.UserDTO" alias="userDto" />
+		<typeAlias type="com.han.mt.user.model.FavCategory" alias="favCategory" />
 		<typeAlias type="com.han.mt.club.model.ClubDTO" alias="clubDto" />
 		<typeAlias type="com.han.mt.club.model.ClubDynamicDTO" alias="clubDynamicDto" />
 		<typeAlias type="com.han.mt.club.model.ClubVO" alias="clubVo" />

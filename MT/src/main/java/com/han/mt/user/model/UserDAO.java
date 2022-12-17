@@ -38,4 +38,10 @@ public class UserDAO {
 		return re ==1? true: false;
 	}
 
+	public void setCategory(FavCategory dto) {
+		String mapperId =String.format(mapper,"setCategory");
+		session.insert(mapperId,dto);
+		
+	}
+
 }

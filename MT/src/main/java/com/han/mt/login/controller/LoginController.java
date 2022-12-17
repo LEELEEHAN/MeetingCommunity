@@ -87,6 +87,11 @@ public class LoginController {
 			System.out.println("로그인 실패: 비밀번호 틀림" );
             model.addAttribute("loginMsg","계정을 확인해주세요");
     		return"user/login";		
+				
+		case 7:
+			System.out.println("패스워드를 변경해주세요" );
+            model.addAttribute("loginMsg","패스워드를 변경해주세요");
+			return "user/passChange";
 		}
 		return"home";
 
@@ -134,14 +139,36 @@ public class LoginController {
 
         return json.toJSONString();
 		
-	}
-	
+	} 
+
 	
 	@PostMapping(value="/idChk")//아이디 중복체크
 	@ResponseBody
-	public int idChk(@RequestParam String email,HttpSession session,@RequestParam String type) throws Exception{
-		System.out.println("컨트롤러(idChk) : 받은값 "+email);
-		int result = service.idChk(email,session,type);
+	public int idChk(@ModelAttribute UserDTO dto,HttpSession session,@RequestParam String type) throws Exception{
+		System.out.println("컨트롤러(idChk) : 받은값 "+dto.getEmail());
+		int result = service.idChk(dto,session,type);
+		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);
+		
+		return result;
+	}
+
+
+	
+	@PostMapping(value="/passCheck")//아이디 중복체크
+	@ResponseBody
+	public int passCheck(@ModelAttribute UserDTO dto,HttpSession session) throws Exception{
+		System.out.println("컨트롤러(passCheck) : 받은값 "+dto);
+		int result = service.passCheck(dto,session);
+		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);
+		return result;
+	}
+
+	
+	@PostMapping(value="/setPassword")//아이디 중복체크
+	@ResponseBody
+	public int setPassword(@ModelAttribute UserDTO dto,HttpSession session) throws Exception{
+		System.out.println("컨트롤러(passCheck) : 받은값 "+dto);
+		int result = service.setPassword(dto,session);
 		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);
 		
 		return result;
@@ -152,11 +179,11 @@ public class LoginController {
 
 	@PostMapping(value="/userCheck")//유저ㅗ 중복체크
 	@ResponseBody
-	public int userCheck(@ModelAttribute UserDTO dto,@RequestParam String email,HttpSession session,@RequestParam String type) throws Exception{
+	public int userCheck(@ModelAttribute UserDTO dto,HttpSession session) throws Exception{
 		
 		System.out.println("컨트롤러(userCheck) : 받은값 "+dto);
 		int result = service.userCheck(dto);
-		System.out.println("컨트롤러(userCheck) : 중복확인 결과"+result);
+		System.out.println("컨트롤러(userCheck)결과 (1 :비번이 같음 0:비번다름)"+result);
 		
 		return result;
 	}
@@ -178,7 +205,9 @@ public class LoginController {
 		System.out.println("컨트롤(kakaoLogin) 카카오서버에서 받아온 name : " +"\n"+ userInfo.get("nickname"));
 		System.out.println("컨트롤(kakaoLogin) 카카오서버에서 받아온 email : " +"\n"+ userInfo.get("email"));
 		System.out.println("컨트롤(kakaoLogin) 카카오서버에서 받아온 gender : " +"\n"+ userInfo.get("gender"));
-		int result = service.idChk(userInfo.get("email").toString(),session,"email");
+		UserDTO dto = new UserDTO();
+		dto.setEmail(userInfo.get("email").toString());
+		int result = service.idChk(dto,session,"email");
 			if(result == 0) {
 				service.kakaoLogin(userInfo.get("email").toString(),session);
 			return "home";					
@@ -270,7 +299,7 @@ public class LoginController {
 	
 		if(dto.getKakao().equals("kakao")) {
 			System.out.println("컨트롤(userDetail): kakao 있다");
-			signup = service.kakaoSignup(dto,session);
+			signup = service.kakaoSignup(dto,session,dto.getKakao());
 		} else {
 			signup = service.signup(dto,session);
 			System.out.println("컨트롤(userDetail): kakao 없다");	
@@ -296,7 +325,7 @@ public class LoginController {
 		
 		if(dto.getKakao().equals("kakao")) {
 			System.out.println("컨트롤(userDetail): kakao 있다");
-			signup = service.kakaoSignup(dto,session);			
+			signup = service.kakaoSignup(dto,session,dto.getKakao());			
 		} else {
 			signup = service.signup(dto,session);
 			System.out.println("컨트롤(userDetail): kakao 없다");			
@@ -315,8 +344,8 @@ public class LoginController {
 	
 	//================================================================================================
 
-	@PostMapping(value="/emailPasswordRESET")//이메일 중복확인후 해당메일로 인증번호 전송
-	public String emailPasswordRESET(Model model,HttpSession session,@RequestParam String email)throws Exception{
+	@PostMapping(value="/passwordSend")//이메일 중복확인후 해당메일로 인증번호 전송
+	public String emailPasswordRESET(Model model,HttpSession session,@RequestParam String email,String type)throws Exception{
 		System.out.println("아이디 인증 JSP에서 받은 값:"+ email);
 		session.setAttribute("id",email);
 		model.addAttribute("email",email);
@@ -326,28 +355,24 @@ public class LoginController {
 	} 
 	//인증메일 전송
 	@PostMapping(value="/PasswordmailSend")
-	public String PasswordmailSend(Model model,UserDTO dto,final HttpServletRequest req)throws Exception {
+	public String PasswordmailSend(Model model,UserDTO dto,final HttpServletRequest req,String type)throws Exception {
 		MimeMessagePreparator pre = new MimeMessagePreparator() {
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception{
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
-				
-				//인증코드 세션에 담아 제한시간 설정하기
 				Random rd =new Random();
-				int joinCode = rd.nextInt(9000)+1000;
-				HttpSession session = req.getSession();
-				//인증번호 세션에 저장
-				session.setAttribute("joinCode", joinCode);
-				System.out.println("컨트롤러(mailSend)에서 생성한 인증코드 "+"\n"+joinCode);
-				System.out.println("컨트롤러(mailSend) 세션에 저장된 코드" +"\n"+ session.getAttribute("joinCode"));
-				//인증번호 유효시간 10분
-				session.setMaxInactiveInterval(600); // 인증유효 10분
 				
+				int resetPassword = rd.nextInt(90000000)+10000000;
+				String type = req.getParameter("type");
+				HttpSession session = req.getSession();
+				System.out.println("컨트롤러(mailSend)에서 생성한 임시 비밀번호 "+"\n"+resetPassword);
+				System.out.println("컨트롤러(mailSend)type"+"\n"+type);
 				String email = req.getParameter("email");
+				service.resetPass(email,resetPassword);
 				System.out.println("컨트롤러(mailSend)에서 보낼 이메일 주소 "+"\n"+email);
 				helper.setTo(email);
-				helper.setSubject("우동에서 인증번호를 보냅니다");
-				helper.setText("인증번호 :" + joinCode+"\n"+"가입창으로 돌아가 입력해주세요");
+				helper.setSubject("우동에서 임시 비밀번호를 보냅니다");
+				helper.setText("임시비밀번호 :" + resetPassword+"\n"+"로그인후 패스워드를 변경 해주세요");
 				}
 			};
 			

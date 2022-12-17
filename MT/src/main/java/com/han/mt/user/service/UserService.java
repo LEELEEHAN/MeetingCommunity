@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.han.mt.login.model.LoginDAO;
 import com.han.mt.social.model.SocialDTO;
+import com.han.mt.user.model.FavCategory;
 import com.han.mt.user.model.UserDAO;
 import com.han.mt.user.model.UserDTO;
 
@@ -54,5 +55,11 @@ public class UserService {
 		}
 		
 		return result;
+	}
+
+	public void setCategory(FavCategory cate, String email) {
+		FavCategory dto = new FavCategory();
+		dao.setCategory(dto);
+		
 	}
 }

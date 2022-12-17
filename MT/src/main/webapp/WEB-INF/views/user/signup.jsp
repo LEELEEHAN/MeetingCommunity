@@ -49,14 +49,14 @@
 					success : function(data){
 						if(data != 1){
 							$("#idChk").attr("value", "N");
-							alert("해당 계정은 존재하는 아이디입니다.");
+							alert("가입이력이 존재하는 아이디입니다.");
 						}else if(data == 1){
 							$.ajax({
 								url : "./emailRes",
 								type : "POST",
 								data : {
 									email : $("#email").val(),
-									
+									type : "sign"
 									},
 								success : function(data){
 									$("#email").attr("readonly","true");

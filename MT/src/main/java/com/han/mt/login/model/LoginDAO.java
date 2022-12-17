@@ -30,6 +30,18 @@ public class LoginDAO {
 
 		return resutl;
 	}
+	public boolean login2(LoginVO vo) throws Exception{
+		String mapperId =String.format(mapper,"getAdminLogin");
+		List<UserDTO> data = session.selectList(mapperId,vo);
+		boolean resutl;
+		if(data.isEmpty()) {
+			resutl = false;
+		}else {
+			resutl =true;
+		}
+
+		return resutl;
+	}
 	
 	public UserDTO getLogin(LoginVO vo) throws Exception{
 		String mapperId =String.format(mapper,"login");
@@ -101,6 +113,20 @@ public class LoginDAO {
 		return result;
 	}
 
+
+	public boolean userJCheck(UserDTO dto) throws Exception{
+		String mapperId =String.format(mapper,"userJCheck");
+		boolean result;
+		int idChk= session.selectOne(mapperId,dto);
+		if(idChk<1){
+			result = true;
+		}else {
+			result = false;
+		}
+		System.out.println("DAO(userJCheck) 중복닉네임 조회결과 :" +result);
+		return result;
+	}
+
 	public boolean setNickName(UserDTO dto) {
 		String mapperId =String.format(mapper,"setNickName");
 		int result = session.update(mapperId,dto);
@@ -162,17 +188,54 @@ public class LoginDAO {
 		return data;
 	}
 
-	public boolean userCheck(UserDTO dto) {
+	public int userCheck(UserDTO dto) {
 		String mapperId =String.format(mapper,"userCheck");
-		int count = session.selectOne(mapperId,dto);
-		boolean result;
-		if(count<1){
-			result = true;
-		}else {
-			result = false;
+		String user = session.selectOne(mapperId,dto);//검색된 갯수
+		System.out.println("DAO(userCheck) : "+user);
+		int count=1;
+		if(user==null) {
+			count=0;
 		}
+		return count;
+	}
+
+	public boolean kakaoSignupDetail(UserDTO dto) {
+		String mapperId =String.format(mapper,"kakaoSignupDetail");
+		int result = session.insert(mapperId,dto);
+		System.out.println("DAO(signupDetail) 결과 :" +result);
+		
+		return result ==1? true : false;
+	}
+
+	public int resetPassword(UserDTO dto) {
+		String mapperId =String.format(mapper,"resetPassword");
+		String mapperId2 =String.format(mapper,"resetPassword2");
+		System.out.println("DAO(resetPassword) : data "+dto);
+		int result = session.update(mapperId,dto);
+		int result2 = session.update(mapperId2,dto);
+		System.out.println("DAO(resetPassword) : result "+result);
+		System.out.println("DAO(resetPassword) : result "+result2);
 		return result;
 	}
 
-	
+
+	public int passCheck(UserDTO dto) {
+		String mapperId =String.format(mapper,"passCheck");
+		int count = session.selectOne(mapperId,dto);//검색된 갯수
+		System.out.println("DAO(userCheck) : "+count);
+		
+		return count;
+	}
+
+	public int setPassword(UserDTO dto) {
+		System.out.println("DAO(setPassword) : data "+dto);
+		String mapperId =String.format(mapper,"setPassword");
+		String mapperI2d =String.format(mapper,"setPassword2");
+		int result = session.update(mapperId,dto);
+		int result2 = session.update(mapperI2d,dto);
+		if(result2 !=1) {
+			result =0;
+		}
+		return result;
+	}
 }

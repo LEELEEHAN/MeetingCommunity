@@ -20,7 +20,10 @@ import com.han.mt.club.model.ClubDTO;
 import com.han.mt.fileUpload.model.FileUploadDTO;
 import com.han.mt.fileUpload.service.FileUploadService;
 import com.han.mt.login.service.LogintService;
+import com.han.mt.social.service.SocialService;
+import com.han.mt.user.model.FavCategory;
 import com.han.mt.user.model.UserDTO;
+import com.han.mt.user.service.FavCategoryService;
 import com.han.mt.user.service.UserService;
 
 
@@ -37,6 +40,8 @@ public class UserController {
 	private LogintService loginService; 
 	@Autowired
 	private FileUploadService fileUploadService;
+	@Autowired
+	private SocialService socialService;
 	
 	@GetMapping(value="")
 	public String myPage(HttpServletRequest request,Model model,HttpSession session,
@@ -93,7 +98,9 @@ public class UserController {
 	@ResponseBody
 	public int idChk(@RequestParam String nickName,HttpSession session,@RequestParam String type) throws Exception{
 		System.out.println("컨트롤러(idChk) : 받은값 "+nickName);
-		int result = loginService.idChk(nickName,session,type);
+		UserDTO dto = new UserDTO();
+		dto.setNickName(nickName);
+		int result = loginService.idChk(dto,session,type);
 		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);		
 		return result;
 	}
@@ -137,6 +144,36 @@ public class UserController {
 
         return json.toJSONString();
 		
+	}
+
+	@GetMapping(value="/passChange") //로그인 화면 띄우기
+	public String login (HttpSession session) {	
+		System.out.println("컨트롤(login) 로그인 메서드 동작");
+		return"user/passChange";		
+	}
+	
+	
+	@GetMapping(value="/favorite")
+	public String favorite(HttpServletRequest request,Model model,HttpSession session,
+			@SessionAttribute("loginData") UserDTO user) throws Exception {
+		System.out.println("마이페이지수정 데이터 전송, 로그인 데이타 :"+user);
+
+		model.addAttribute("field",socialService.getCategory());
+		return"user/favorite";
+	}
+	
+	
+	@PostMapping(value="/favorite")
+	public String favorite(HttpServletRequest request,Model model,HttpSession session,
+			@SessionAttribute("loginData") UserDTO user,@ModelAttribute UserDTO dto,
+			@RequestParam("category") FavCategory[] cates) throws Exception {
+		System.out.println("마이페이지수정 데이터 전송, 로그인 데이타 :"+user);
+		System.out.println("마이페이지수정 데이터 전송, files 데이타 :"+cates);
+		
+		for(FavCategory cate: cates) {
+			service.setCategory(cate,user.getEmail());
+		}					
+		return"user/mypage";
 	}
 	
 }

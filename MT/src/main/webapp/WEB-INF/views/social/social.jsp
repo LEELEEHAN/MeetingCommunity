@@ -24,7 +24,7 @@
 <body>
     <div id="msgStack"></div>
     <header>
-   	 	<div class ="category-list" style="text-align:center">
+   	 	<div class ="category-list text-center ms-auto list-group">
             <table class="text-center text-center" >
                 <tr id="category" name="category">
                     <td onclick="location.href='./social'">전체보기</td>
@@ -58,7 +58,7 @@
 		        </form>
 	        </c:if>
         </div>
-        <div class="text-center">
+        <div class="list-group ms-auto ">
             <table style="text-align: center;border:1px solid #dddddd">
 				<c:if test="${not empty list}">
 					<c:forEach items="${list}" var="list">

@@ -10,7 +10,7 @@
 	<%@ include file="../module/head.jsp" %>
 	<%@ include file="../module/nav.jsp" %>
 </head>
-<body class="text-center container">
+<body class="text-center">
 		<div class="mb-1">
 	        <form method="get">
 				<div >			

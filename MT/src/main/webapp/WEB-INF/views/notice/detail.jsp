@@ -34,16 +34,19 @@
 	<div>
 		<p>${data.content}</p>
 	</div>
-	<div class="row mb-1">
-				<ul class="col-4 ms-auto list-group">
-				<c:forEach items="${download}" var="file">
-					<c:url var="downUrl" value="${file.url}/${file.uuidName}" />
-					<li class="list-group-item text-truncate">
-						<a class="text-info text-decoration-none" href="${downUrl}" download="${file.fileName}">${file.fileName}</a>
-					</li>
-				</c:forEach>
-				</ul>
-			</div>
+	<div class="text-center">
+	<c:if test="${not empty download}">
+		<ul class="text-center">
+		<h3>첨부 파일</h3>
+		<c:forEach items="${download}" var="file">
+			<c:url var="downUrl" value="${file.url}/${file.uuidName}" />
+			<li class="list-group-item text-truncate">
+				<a class="text-info text-decoration-none" href="${downUrl}" download="${file.fileName}">${file.fileName}</a>
+			</li>
+		</c:forEach>
+		</ul>
+	</c:if>
+	</div>
 </div>
 <div class="text-center">
 		<form action="./delete" method="post">	

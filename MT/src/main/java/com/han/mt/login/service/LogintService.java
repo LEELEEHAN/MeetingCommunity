@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
@@ -44,7 +45,7 @@ public class LogintService {
 
 		FileUploadDTO image = new FileUploadDTO();
 		if(vo.getAdmin().equals("admin")) {
-			boolean result2 = dao.login(vo);
+			boolean result2 = dao.login2(vo);
 			if(result2) {
 				data = dao.getAdminLogin(vo);
 				System.out.println("서비스(getLogin) : 로그인 메서드 실행"+data);
@@ -79,7 +80,8 @@ public class LogintService {
 				session.setAttribute("loginId", data.getEmail());	
 				session.setAttribute("image", image);			
 				session.setAttribute("joinSocial",userDao.joinSocial(data.getEmail()));
-				session.setAttribute("joinClub",userDao.joinClub(data.getEmail()));			
+				session.setAttribute("joinClub",userDao.joinClub(data.getEmail()));	
+				if(data.getTempPass().equals("Y")) {return 7;}		
 			} else {
 				boolean searchId = dao.searchId(vo.getEmail());
 				System.out.println(searchId);
@@ -110,10 +112,10 @@ public class LogintService {
 
 	
 	//아이디 체크, 닉네임 중복 체크
-	public int idChk(String nickName,HttpSession session,String type) throws Exception{
+	public int idChk(UserDTO dto,HttpSession session,String type) throws Exception{
 		int chek;
 		if(type.equals("email")) {
-			boolean result = dao.idChk(nickName);
+			boolean result = dao.idChk(dto.getEmail());
 			System.out.println("서비스(idChk) 아이디 중복 확인 결과:"+result);
 			session.setAttribute("idCheckResult", result);
 			if(result) {
@@ -121,8 +123,17 @@ public class LogintService {
 			} else {
 				chek=0;
 			}
+		} else if(type.equals("pass"))  {
+			boolean result = dao.userJCheck(dto);
+			System.out.println("서비스(userCheck) 닉네임 중복 확인 결과:"+result);
+			session.setAttribute("nickCheckResult", result);
+			if(result) {
+				chek =1;
+			} else {
+				chek=0;
+			}
 		} else {
-			boolean result = dao.nickNameCheck(nickName);
+			boolean result = dao.nickNameCheck(dto.getNickName());
 			System.out.println("서비스(nickNameCheck) 닉네임 중복 확인 결과:"+result);
 			session.setAttribute("nickCheckResult", result);
 			if(result) {
@@ -160,13 +171,18 @@ public class LogintService {
 	}
 	
 	//카카오 로그인
-	public boolean kakaoSignup(UserDTO dto, HttpSession session) {
+	public boolean kakaoSignup(UserDTO dto, HttpSession session,String kakao) {
+		Random rd =new Random();
+		int resetPassword = rd.nextInt(90000000)+10000000;
+		int resetPassword2 = rd.nextInt(90000000)+10000000;
+		dto.setPassword(resetPassword+"kakao"+resetPassword2);
 		boolean signup = dao.kakaoSignup(dto);
 		if(signup) {
 			System.out.println("서비스(signupDetail) 받은 아이디:" +dto.getEmail().toString());
-			boolean signupDetail = dao.signupDetail(dto);
+			boolean signupDetail = dao.kakaoSignupDetail(dto);
 			FileUploadDTO image = new FileUploadDTO();
 			if(signupDetail) {
+				fileDao.setProfile(dto.getEmail());
 				UserDTO data = dao.kakaoLogin(dto.getEmail());
 				image = fileDao.getProfile(dto.getEmail());
 				session.setAttribute("loginData", data);		
@@ -346,7 +362,7 @@ public class LogintService {
 					result += line;
 				}
 				System.out.println("response body: " + result);
-				System.out.println("카카오 로그인 2서비스 1");
+				System.out.println("카카오 로그인 2서비스 1"); 
 
 				// Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
 	            JsonParser parser = new JsonParser();
@@ -442,15 +458,42 @@ public class LogintService {
 
 
 	public int userCheck(UserDTO dto) {
-		boolean result = dao.userCheck(dto);
-		int num;
-		if(result) {
-			System.out.println("서비스(userCheck) : 받은값 "+dto);
-			num = 1;
-		} else {
-			num=0;
+		System.out.println("서비스(userCheck) : 받은값 "+dto);
+		int result = dao.userCheck(dto);
+		return result;
+	}
+
+
+	public void resetPass(String email, int resetPassword) {
+		UserDTO dto = new UserDTO();
+		dto.setEmail(email);
+		String pass = String.valueOf(resetPassword);
+		dto.setPassword(pass);
+		int result = dao.resetPassword(dto);
+		
+	}
+
+
+	public int passCheck(UserDTO dto, HttpSession session) {
+		int result = dao.passCheck(dto);
+
+		return result;
+	}
+
+
+	public int setPassword(UserDTO dto, HttpSession session) {
+		int result = dao.setPassword(dto);
+		if(result >=1) {
+			System.out.println("로그아웃" );
+			session.removeAttribute("loginData");
+			session.removeAttribute("loginId");
+			session.removeAttribute("joinSocial");
+			session.removeAttribute("joinClub");
+			session.removeAttribute("adminAcc");
+			session.removeAttribute("image");	
 		}
-		return num;
+
+		return result;
 	}
 	
 }

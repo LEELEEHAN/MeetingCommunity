@@ -162,6 +162,9 @@ function uploadCheck(element) {
 		<c:if test="${empty mypage}">	
 			<button class="btn btn-outline-dark" type="button" onclick="location.href='/mt/mypage/modify'">
 				수정하기
+			</button>		
+			<button class="btn btn-outline-dark" type="button" onclick="location.href='/mt/mypage/passChange'">
+				비밀번호 변경
 			</button>	
 		</c:if>
 		<c:if test="${not empty mypage}">	

@@ -15,8 +15,8 @@
 <body>
     <div id="msgStack"></div>
     <header>
-   	 	<div class ="category-list text-center">
-            <table class="text-center">
+   	 	<div class ="category-list text-center ms-auto list-group">
+            <table class="center">
                 <tr id="category" name="category">
                     <td onclick="location.href='./club'">전체보기</td>
                     <c:if test="${not empty field}">
@@ -33,7 +33,7 @@
 	        <form method="get">
 	            <div class="col-xs-8">
 		            <input type="text" id="social-search" class="form-searchBar" name="search">
-		            <button type="submit" id="btnSearch" class="btn btn=primary">찾기</button>
+		            <button type="submit" id="btnSearch" class="btn btn-sm btn-outline-dark">찾기</button>
 	    		</div>        
 	        </form>
 			<c:if test="${not empty sessionScope.loginData}">   
@@ -41,7 +41,7 @@
 		    		<div class="col-xs-2">
 						<input type="hidden" name="nickName" value="${sessionScope.nickName}">
 						<input type="hidden" name="id" value="${sessionScope.id}">
-			           	<button type="submit" id="create-button" class="createButton" 
+			           	<button type="submit" id="create-button" class="btn btn-sm btn-outline-dark" 
 			           	onclick="location.href='./club/create'">  
 			        	 	만들기
 			        	 </button>           
@@ -49,7 +49,7 @@
 		        </form>
 	        </c:if>
         </div>
-        <div>
+        <div class="list-group ms-auto ">
             <table style="text-align: center;border:1px solid #dddddd">
 				<c:if test="${not empty list}">
 					<c:forEach items="${list}" var="list">

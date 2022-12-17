@@ -6,10 +6,18 @@
 SELECT *
   FROM USERTABLE u
 LEFT JOIN USERDETAIL d
-    ON u.EMAIL = d.ID
+    ON u.EMAIL = d.ID 
  WHERE u.EMAIL = #{email}
    AND u.PASSWORD = #{password}
    AND d.DELETED = 'N'
+</select>
+<select id="login2" resultType="userDto">
+SELECT *
+  FROM USERTABLE u
+LEFT JOIN USERDETAIL d
+    ON u.EMAIL = d.ID
+ WHERE u.EMAIL = #{email}
+   AND u.PASSWORD = #{password}
 </select>
 <select id="searchUserEmail" resultType="userDto">
 SELECT *
@@ -46,11 +54,18 @@ SELECT count(*)
  WHERE EMAIL = #{email}
 </select>
 
-<select id="userCheck" resultType="int">
+<select id="userCheck" resultType="UserDTO">
+SELECT EMAIL 
+  FROM USERTABLE
+ WHERE PHONE = #{phone}
+   AND BIRTH = #{birth}
+   AND NAME = #{name}
+</select>
+<select id="userJCheck" resultType="int">
 SELECT count(*) 
   FROM USERTABLE
- WHERE EMAIL = #{email}
-   AND BIRTH = #{birth}
+ WHERE PHONE = #{phone}
+   AND EMAIL = #{email}
    AND NAME = #{name}
 </select>
 
@@ -63,9 +78,9 @@ VALUES
 
 <insert id="kakaoSignup"  parameterType="UserDTO">
 INSERT INTO USERTABLE
-(NAME,PASSWORD,PHONE,EMAIL,NICKNAME)
+(NAME,PASSWORD,PHONE,EMAIL,NICKNAME,BIRTH)
 VALUES
-(#{name},#{password},#{phone},#{email},#{nickName})
+(#{name},#{password},kakaoNum.NEXTVAL,#{email},#{nickName},SYSDATE)
 </insert>
 
 
@@ -74,6 +89,12 @@ INSERT INTO USERDETAIL
 (ID)
 VALUES
 (#{email})
+</insert>
+<insert id="kakaoSignupDetail"  parameterType="UserDTO">
+INSERT INTO USERDETAIL
+(ID,KAKAOAUTH)
+VALUES
+(#{email},'Y')
 </insert>
 
 
@@ -134,4 +155,38 @@ SELECT *
    AND d.DELETED = 'N'
 </select>
 
+
+<update id="resetPassword">
+UPDATE USERDETAIL
+   SET TEMPPASS = 'Y'
+ WHERE id=#{email}
+</update>
+
+<update id="resetPassword2">
+UPDATE USERTABLE
+   SET PASSWORD=#{password}
+ WHERE EMAIl=#{email}
+</update>
+<select id="passCheck" resultType="int">
+SELECT count(*)
+  FROM USERTABLE u
+LEFT JOIN USERDETAIL d
+    ON u.EMAIL = d.ID
+ WHERE u.EMAIL = #{email}
+   AND u.PASSWORD = #{password}
+   AND d.DELETED = 'N'
+</select>
+
+<update id="setPassword">
+UPDATE USERTABLE
+   SET PASSWORD=#{password}
+ WHERE EMAIL=#{email}
+ AND NAME =#{name}
+</update>
+
+<update id="setPassword2">
+UPDATE USERDETAIL
+   SET TEMPPASS='N'
+ WHERE ID=#{email}
+</update>
 </mapper>

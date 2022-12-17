@@ -17,7 +17,7 @@
 	<title>우동- 로그인</title>
 </c:if>
 </head>
-<body>
+<body> 
 <section>
 	<div class="text-center">
 		<c:choose>
@@ -29,23 +29,28 @@
 					<c:if test="${empty admin}">
 						<input type="hidden" name="admin" id="admin" value="user">
 					</c:if>
+					<br>
+					이메일 
+					<br>
 					<input type="text" name="email">
+					<br>
+					비밀번호
 					<br>
 					<input type="password" name="password">
 					<br>
-					<button type="submit">로그인</button>
+					<button  class="btn btn-sm btn-outline-dark" type="submit">로그인</button>
 					<div class="text-center">
-						<button type="button" onclick="location.href='/mt/login/findId'">ID/PW찾기</button>						
+						<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='/mt/login/findId'">ID/PW찾기</button>						
 						<c:if test="${empty admin}">
-							<button type="button" onclick="location.href='./sign'">회원가입</button>
+							<button  class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='./sign'">회원가입</button>
 						</c:if>				
 					</div>
 				</form>
 				
 				<c:if test="${empty admin}">
-					<div class="text-center mb-2 d-grid">
+					<div class="text-center">
 						<p>간편 로그인</p>
-						<button type="button" onclick="location.href='https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=fb5709f6ea71c441a41f751304f20053&redirect_uri=http://localhost:8080/mt/login/kakaoLogin'">카카오 로그인</button>			
+						<button  class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=fb5709f6ea71c441a41f751304f20053&redirect_uri=http://localhost:8080/mt/login/kakaoLogin'">카카오 로그인</button>			
 					</div>
 				</c:if>
 			</c:when>	
@@ -53,8 +58,8 @@
 				<div>
 					<p>${sessionScope.loginData.email}</p>
 					<p>${sessionScope.loginData.nickName}</p>
-					<button type="button" onclick="location.href='/mt/login/logout'">로그아웃</button>
-					<button type="button" onclick="location.href='/mt/mypage'">마이페이지</button>
+					<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='/mt/login/logout'">로그아웃</button>
+					<button class="btn btn-sm btn-outline-dark" type="button" onclick="location.href='/mt/mypage'">마이페이지</button>
 				</div>
 			</c:otherwise>
 		</c:choose>	

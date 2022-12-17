@@ -12,7 +12,7 @@
 						<li class="page-item">
 							<a class="page-link" href="${boardPagingUrl}?page=1"><<</a>
 						</li>
-						<li class="page-item"><a class="page-link"
+						<li class="page-item btn btn-sm btn-outline-dark"><a class="page-link"
 							href="${boardPagingUrl}?page=${pageData.prevPageNumber}">Prev</a>
 						</li>
 					</c:if>
@@ -20,10 +20,10 @@
 						<c:url var="boardPagingUrl" value="${type}">
 							<c:param name="category">${keyword}</c:param>
 						</c:url>
-							<li class="page-item">
+							<li class="page-item btn btn-sm btn-outline-dark">
 							<a class="page-link" href="${boardPagingUrl}&page=1"><<</a>
 						</li>
-						<li class="page-item"><a class="page-link"
+						<li class="page-item btn btn-sm btn-outline-dark"><a class="page-link"
 							href="${boardPagingUrl}$page=${pageData.prevPageNumber}">Prev</a>
 						</li>
 					</c:if>
