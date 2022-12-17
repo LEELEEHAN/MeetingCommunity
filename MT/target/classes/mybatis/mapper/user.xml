@@ -7,15 +7,6 @@ SELECT *
 FROM USERTABLES
 WHERE NICKNAME = #{NICKNAME}
 </select>
-<select id="joinClub" resultType="socialDto">
-SELECT m.SOCIALNUM, s.TITLE, s.category, m.auth
-  FROM SOCIALMEMBER m
-  JOIN SOCIAL s
-    ON m.SOCIALNUM=s.SOCIALNUM
- WHERE ID = #{id}
-   AND s.SOCIALCLUB ='C'
-ORDER BY AUTH
-</select>
 <select id="joinSocial" resultType="socialDto">
 SELECT m.SOCIALNUM, s.TITLE, s.category, m.auth
   FROM SOCIALMEMBER m
@@ -23,6 +14,15 @@ SELECT m.SOCIALNUM, s.TITLE, s.category, m.auth
     ON m.SOCIALNUM=s.SOCIALNUM
  WHERE ID = #{id}
    AND s.SOCIALCLUB ='S'
+ORDER BY AUTH
+</select>
+<select id="joinClub" resultType="socialDto">
+SELECT m.SOCIALNUM, s.TITLE, s.category, m.auth
+  FROM SOCIALMEMBER m
+  JOIN SOCIAL s
+    ON m.SOCIALNUM=s.SOCIALNUM
+ WHERE ID = #{id}
+   AND s.SOCIALCLUB ='C'
 ORDER BY AUTH
 </select>
 <update id="updateProfile">

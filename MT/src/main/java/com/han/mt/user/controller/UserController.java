@@ -153,15 +153,6 @@ public class UserController {
 	}
 	
 	
-	@GetMapping(value="/favorite")
-	public String favorite(HttpServletRequest request,Model model,HttpSession session,
-			@SessionAttribute("loginData") UserDTO user) throws Exception {
-		System.out.println("마이페이지수정 데이터 전송, 로그인 데이타 :"+user);
-
-		model.addAttribute("field",socialService.getCategory());
-		return"user/favorite";
-	}
-	
 	
 	@PostMapping(value="/favorite")
 	public String favorite(HttpServletRequest request,Model model,HttpSession session,
@@ -174,6 +165,15 @@ public class UserController {
 			service.setCategory(cate,user.getEmail());
 		}					
 		return"user/mypage";
+	}
+	
+	@GetMapping(value="/favorite")
+	public String favorite(HttpServletRequest request,Model model,HttpSession session,
+			@SessionAttribute("loginData") UserDTO user) throws Exception {
+		System.out.println("마이페이지수정 데이터 전송, 로그인 데이타 :"+user);
+
+		model.addAttribute("field",socialService.getCategory());
+		return"user/favorite";
 	}
 	
 }

@@ -141,7 +141,7 @@ public class LoginController {
 		
 	} 
 
-	
+	   
 	@PostMapping(value="/idChk")//아이디 중복체크
 	@ResponseBody
 	public int idChk(@ModelAttribute UserDTO dto,HttpSession session,@RequestParam String type) throws Exception{
