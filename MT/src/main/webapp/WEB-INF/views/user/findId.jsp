@@ -43,7 +43,7 @@ function nickCheck(){
 			}else if(data.code === "fail"){
 				alert("계정이 조회되지않습니다.");
 			}
-		}
+		}   
 	})
 }
 
