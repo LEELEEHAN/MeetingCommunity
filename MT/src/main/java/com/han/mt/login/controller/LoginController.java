@@ -161,7 +161,7 @@ public class LoginController {
 		int result = service.passCheck(dto,session);
 		System.out.println("컨트롤러(idChk) : 중복확인 결과"+result);
 		return result;
-	}
+	}  
 
 	
 	@PostMapping(value="/setPassword")//아이디 중복체크
