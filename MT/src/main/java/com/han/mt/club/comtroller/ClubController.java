@@ -58,7 +58,7 @@ public class ClubController {
 			list =service.getClubTitle(search);
 			model.addAttribute("search",search);	
 		}
-
+  
 		System.out.println("컨트롤(getClub) 정보"+"\n"+list);
 		Paging paging = new Paging(list, page, 10);
 		model.addAttribute("field",socialService.getCategory());
@@ -68,7 +68,7 @@ public class ClubController {
 		model.addAttribute("type", "club");
 		return "club/social";
 	}
-	
+	  
 	
 	@GetMapping(value = "/detail")
 	public String socialDetail(Model model,HttpSession session,
@@ -81,6 +81,7 @@ public class ClubController {
 				model.addAttribute("chk","true");
 			}
 		}
+		
 		
 		BoardDTO dto = new BoardDTO();
 		dto.setSocialNum(id);
